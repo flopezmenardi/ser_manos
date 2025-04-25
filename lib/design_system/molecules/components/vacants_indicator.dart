@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../tokens/colors.dart';
-
 import '../../atoms/person_icon.dart';
-import '../../tokens/colors.dart';
+import '../../tokens/typography.dart';
 
 class VacantsIndicator extends StatelessWidget {
   final int vacants;
@@ -36,9 +35,9 @@ class VacantsIndicator extends StatelessWidget {
         children: [
           Text(
             'Vacantes:',
-            style: TextStyle(
+            style: AppTypography.body2.copyWith(
               color: AppColors.neutral75,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w500, // Or just leave default if body2 is 400 normally
             ),
           ),
           const SizedBox(width: 8),
@@ -46,7 +45,7 @@ class VacantsIndicator extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             '$vacants',
-            style: TextStyle(
+            style: AppTypography.body2.copyWith(
               color: textColor,
               fontWeight: FontWeight.bold,
             ),
