@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../tokens/app_grid.dart'; // assuming your tokens live here
+
+import '../../tokens/grid.dart';
 
 enum StatusBarVariant {
   main,
@@ -11,9 +12,9 @@ class StatusBar extends StatelessWidget {
   final StatusBarVariant variant;
 
   const StatusBar({
-    Key? key,
+    super.key,
     required this.variant,
-  }) : super(key: key);
+  });
 
   Color get _backgroundColor {
     switch (variant) {

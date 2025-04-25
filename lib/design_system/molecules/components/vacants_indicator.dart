@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../atoms/person_icon.dart';
+import '../../tokens/colors.dart';
+
 class VacantsIndicator extends StatelessWidget {
   final int vacants;
 
