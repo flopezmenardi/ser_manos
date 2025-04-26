@@ -21,34 +21,38 @@ class PostulationConfirmationModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 328,
-        padding: const EdgeInsets.all(24),
+        width: 280,
+        padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: AppColors.neutral0,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(4),
           boxShadow: AppShadows.shadow3,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              'Te estas por postular a',
-              style: AppTypography.subtitle1.copyWith(
-                color: AppColors.neutral100,
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'Te estas por postular a',
+                style: AppTypography.subtitle1.copyWith(
+                  color: AppColors.neutral100,
+                ),
               ),
-              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
-            Text(
-              projectName,
-              style: AppTypography.headline2.copyWith(
-                color: AppColors.neutral100,
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                projectName,
+                style: AppTypography.headline2.copyWith(
+                  color: AppColors.neutral100,
+                ),
               ),
-              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextOnlySermanosButton(text: 'Cancelar', onPressed: onCancel),
                 TextOnlySermanosButton(text: 'Confirmar', onPressed: onConfirm),
