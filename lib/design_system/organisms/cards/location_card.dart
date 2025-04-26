@@ -1,0 +1,93 @@
+import 'package:flutter/material.dart';
+import 'package:ser_manos/design_system/molecules/buttons/floating_button.dart';
+import '../../tokens/colors.dart';
+import '../../tokens/typography.dart';
+
+class LocationCard extends StatelessWidget {
+  final String address;
+  final VoidCallback? onIconPressed;
+
+  const LocationCard({
+    super.key,
+    required this.address,
+    this.onIconPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 328,
+      height: 92,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: AppColors.neutral10,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Container(
+            width: double.infinity,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.secondary25,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(4),
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Información de perfil',
+              style: AppTypography.subtitle1.copyWith(
+                color: AppColors.neutral100,
+              ),
+            ),
+          ),
+          // Bottom (texts + icon)
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              color: AppColors.neutral10,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Texts
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'DIRECCIÓN',
+                          style: AppTypography.overline.copyWith(
+                            color: AppColors.neutral75,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          address,
+                          style: AppTypography.body1.copyWith(
+                            color: AppColors.neutral100,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  // IconButton
+                  FloatingButton(
+                    icon: Icons.location_on,
+                    onPressed: () {print('Location icon pressed');},
+                    isEnabled: true,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
