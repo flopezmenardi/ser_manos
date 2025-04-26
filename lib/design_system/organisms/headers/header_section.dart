@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ser_manos/design_system/atoms/icons.dart';
 import 'package:ser_manos/design_system/tokens/colors.dart';
+import 'package:ser_manos/design_system/tokens/typography.dart';
 
 class HeaderSectionSermanos extends StatelessWidget {
   final String title;
@@ -17,7 +18,7 @@ class HeaderSectionSermanos extends StatelessWidget {
     return Container(
       height: 64,
       width: double.infinity,
-      color: AppColors.secondary50,
+      color: AppColors.secondary90,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -25,16 +26,15 @@ class HeaderSectionSermanos extends StatelessWidget {
             left: 16,
             child: GestureDetector(
               onTap: onBack,
-              child: AppIcons.getBackIcon(state: IconState.defaultState),
+              child: AppIcons.getBackIcon(state: IconState.disabled),
             ),
           ),
           Center(
             child: Text(
               title,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(color: Colors.white),
+              style: AppTypography.subtitle1.copyWith(
+                color: AppColors.neutral0,
+              ),
             ),
           ),
         ],
