@@ -36,7 +36,7 @@ class ModalSermanos extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TextOnlySermanosButton(text: cancelText, onPressed: onCancel),
               TextOnlySermanosButton(text: confimationText, onPressed: onConfirm)
