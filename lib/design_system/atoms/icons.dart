@@ -44,6 +44,11 @@ class AppIcons {
     return Icon(Icons.navigation, color: _getColor(state));
   }
 
+  static Icon getLocationIcon({required IconState state}) {
+    return Icon(Icons.location_on, color: _getColor(state));
+  }
+
+
   // EXCEPTIONS
 
   static Icon getPersonIcon(Color color) {
@@ -53,6 +58,7 @@ class AppIcons {
   static Icon getErrorIcon(Color color) {
     return Icon(Icons.error_outline, color: color);
   }
+
 
   // PRIVATE
 
