@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../tokens/typography.dart';
+
 import '../../tokens/colors.dart';
 
 class TextOnlySermanosButton extends StatelessWidget {
@@ -23,12 +23,7 @@ class TextOnlySermanosButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         textStyle: const TextStyle(fontSize: 14),
       ),
-      child: Text(
-        text,
-        style: AppTypography.button.copyWith(
-          color: isEnabled ? AppColors.neutral0 : AppColors.neutral50,
-        ),
-      ),
+      child: Text(text),
     );
   }
 }

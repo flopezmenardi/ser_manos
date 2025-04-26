@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/design_system/molecules/buttons/text_button.dart';
 
-import '../../molecules/buttons/text_button.dart';
 import '../../tokens/colors.dart';
+import '../../tokens/grid.dart';
 import '../../tokens/typography.dart';
-
-class AppGrid {
-  static const double screenWidth = 360;
-  static const double screenHeight = 640;
-  static const double horizontalMargin = 16;
-}
 
 class NewsCard extends StatelessWidget {
   final String imagePath;
@@ -29,13 +24,15 @@ class NewsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: AppGrid.screenWidth - 2 * AppGrid.horizontalMargin,
       height: 156,
+      width: AppGrid.screenWidth - 2 * AppGrid.horizontalMargin,
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        elevation: 4,
         clipBehavior: Clip.antiAlias,
+        elevation: 4,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Image section
             SizedBox(
@@ -43,18 +40,16 @@ class NewsCard extends StatelessWidget {
               height: 156,
               child: Image.asset(imagePath, fit: BoxFit.cover),
             ),
-
             // Text section
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       report,
-                      style: AppTypography.headline2.copyWith(
+                      style: AppTypography.overline.copyWith(
                         color: AppColors.neutral75,
                       ),
                       maxLines: 1,
@@ -75,10 +70,9 @@ class NewsCard extends StatelessWidget {
                       style: AppTypography.body2.copyWith(
                         color: AppColors.neutral75,
                       ),
-                      maxLines: 2,
+                      maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const Spacer(),
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextOnlySermanosButton(

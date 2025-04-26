@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+
+import '../../atoms/error_icon.dart';
 import '../../tokens/colors.dart';
 import '../../tokens/typography.dart';
-import '../../atoms/error_icon.dart';
 
 class AppInput extends StatelessWidget {
   final String label;
@@ -27,19 +28,21 @@ class AppInput extends StatelessWidget {
     this.suffixIcon,
   });
 
+  get style => null;
+
   @override
   Widget build(BuildContext context) {
     final Color fillColor = isEnabled ? Colors.white : AppColors.neutral10;
-    final Color baseBorderColor = hasError
-        ? AppColors.error100
-        : isEnabled
+    final Color baseBorderColor =
+        hasError
+            ? AppColors.error100
+            : isEnabled
             ? AppColors.neutral50
             : AppColors.neutral25;
 
     // Automatically include error icon if hasError is true
-    final Widget? effectiveSuffixIcon = hasError
-        ? ErrorIcon.get(style: style, state: state)
-        : suffixIcon;
+    final Widget? effectiveSuffixIcon =
+        hasError ? ErrorIcon.get(style: style, state: style) : suffixIcon;
 
     return TextFormField(
       controller: controller,
@@ -57,15 +60,14 @@ class AppInput extends StatelessWidget {
         fillColor: fillColor,
         suffixIcon: effectiveSuffixIcon,
         labelStyle: AppTypography.body2.copyWith(
-          color: hasError
-              ? AppColors.error100
-              : isEnabled
+          color:
+              hasError
+                  ? AppColors.error100
+                  : isEnabled
                   ? AppColors.neutral75
                   : AppColors.neutral50,
         ),
-        hintStyle: AppTypography.body1.copyWith(
-          color: AppColors.neutral50,
-        ),
+        hintStyle: AppTypography.body1.copyWith(color: AppColors.neutral50),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
           borderSide: BorderSide(color: baseBorderColor),
@@ -73,7 +75,8 @@ class AppInput extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
           borderSide: BorderSide(
-              color: hasError ? AppColors.error100 : AppColors.secondary200),
+            color: hasError ? AppColors.error100 : AppColors.secondary200,
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
@@ -87,9 +90,7 @@ class AppInput extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
           borderSide: BorderSide(color: AppColors.error100),
         ),
-        errorStyle: AppTypography.caption.copyWith(
-          color: AppColors.error100,
-        ),
+        errorStyle: AppTypography.caption.copyWith(color: AppColors.error100),
       ),
     );
   }
