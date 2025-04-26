@@ -32,8 +32,8 @@ class VolunteeringCard extends StatelessWidget {
         ),
         clipBehavior: Clip.antiAlias,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Top: Image
             SizedBox(
               width: double.infinity,
               height: 138,
@@ -42,66 +42,69 @@ class VolunteeringCard extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 232,
-                    height: 72,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          category.toUpperCase(),
-                          style: AppTypography.overline.copyWith(
-                            color: AppColors.neutral50,
+            // Bottom: Content
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16), // top:8px, left/right/bottom:16px
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Left Column constrained
+                    SizedBox(
+                      width: 232,
+                      height: 72,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            category.toUpperCase(),
+                            style: AppTypography.overline.copyWith(
+                              color: AppColors.neutral50,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          title,
-                          style: AppTypography.subtitle1.copyWith(
-                            color: AppColors.neutral100,
+                          const SizedBox(height: 4),
+                          Text(
+                            title,
+                            style: AppTypography.subtitle1.copyWith(
+                              color: AppColors.neutral100,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 8),
-                        VacantsIndicator(
-                          vacants: vacancies,
-                        ),
-                      ],
+                          const Spacer(),
+                          // Finally your indicator
+                          VacantsIndicator(vacants: vacancies),
+                        ],
+                      ),
                     ),
-                  ),
-                  const Spacer(),
-                  SizedBox(
-                    width: 64,
-                    height: 24,
-                    child: Row(
+                    // Right Column (icon buttons)
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        IconButton(
-                          icon: const Icon(Icons.favorite_border),
-                          color: AppColors.primary100,
-                          iconSize: 24,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                          onPressed: onFavoritePressed,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.location_on_outlined),
-                          color: AppColors.primary100,
-                          iconSize: 24,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                          onPressed: onLocationPressed,
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.favorite_border),
+                              color: AppColors.primary100,
+                              iconSize: 24,
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              onPressed: onFavoritePressed,
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.location_on_outlined),
+                              color: AppColors.primary100,
+                              iconSize: 24,
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              onPressed: onLocationPressed,
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
