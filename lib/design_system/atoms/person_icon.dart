@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
+
 import '../tokens/colors.dart';
 
-enum PersonIconState {
-  defaultState,
-  enabled,
-  selected,
-}
+enum PersonIconState { defaultState, enabled, selected }
 
 class PersonIcon {
   static Icon get({required PersonIconState state}) {
-    return Icon(Icons.person, color: _getColor(state));
+    return Icon(size: 20, Icons.person, color: _getColor(state));
   }
 
   static Color _getColor(PersonIconState state) {

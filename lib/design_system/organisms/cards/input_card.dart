@@ -58,7 +58,7 @@ class _InputCardState extends State<InputCard> {
           if (states.contains(WidgetState.selected)) {
             return AppColors.primary100;
           }
-          return AppColors.primary100; // unselected color
+          return AppColors.primary100;
         }),
       ),
       child: Row(
