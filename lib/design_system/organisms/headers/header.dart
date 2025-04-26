@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ser_manos/design_system/atoms/icons.dart';
 import 'package:ser_manos/design_system/tokens/colors.dart';
+import 'package:ser_manos/design_system/tokens/typography.dart';
 
 class HeaderSermanos extends StatelessWidget {
   final int selectedIndex;
@@ -26,9 +26,9 @@ class HeaderSermanos extends StatelessWidget {
               children: [
                 // Placeholder for logo/icon
                 Image.asset(
-                  'assets/logo_rectangular.png', // Replace with actual logo path
+                  'assets/logos/logo_rectangular.png',
                   height: 25,
-                ),
+                )
               ],
             ),
           ),
@@ -52,16 +52,24 @@ class HeaderSermanos extends StatelessWidget {
       child: GestureDetector(
         onTap: () => onTabSelected(index),
         child: Container(
+          height: 52,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             color: isSelected ? AppColors.secondary200 : AppColors.secondary100,
+                      border: isSelected
+              ? const Border(
+                  bottom: BorderSide(
+                    color: AppColors.neutral25,
+                    width: 3,
+                  ),
+                )
+              : null,
           ),
           alignment: Alignment.center,
           child: Text(
             label,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+            style: AppTypography.button.copyWith(
+              color: AppColors.neutral25,
             ),
           ),
         ),
