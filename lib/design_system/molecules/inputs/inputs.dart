@@ -10,10 +10,11 @@ class AppInput extends StatelessWidget {
   final bool isEnabled;
   final bool hasError;
   final String? supportingText;
-  final TextEditingController controller;
+  // final TextEditingController controller;
   final VoidCallback? onTap;
   final bool readOnly;
   final Widget? suffixIcon;
+  final bool obscureText;
 
   const AppInput({
     super.key,
@@ -22,10 +23,11 @@ class AppInput extends StatelessWidget {
     this.isEnabled = true,
     this.hasError = false,
     this.supportingText,
-    required this.controller,
+    // required this.controller,
     this.onTap,
     this.readOnly = false,
     this.suffixIcon,
+    this.obscureText = false,
   });
 
   get style => null;
@@ -45,10 +47,11 @@ class AppInput extends StatelessWidget {
         hasError ? ErrorIcon.get(style: style, state: style) : suffixIcon;
 
     return TextFormField(
-      controller: controller,
+      // controller: controller,
       enabled: isEnabled,
       readOnly: readOnly,
       onTap: onTap,
+      obscureText: obscureText,
       style: AppTypography.body1.copyWith(
         color: isEnabled ? AppColors.neutral100 : AppColors.neutral50,
       ),

@@ -3,10 +3,10 @@ import '../../tokens/colors.dart';
 import '../../tokens/typography.dart';
 import '../../molecules/buttons/short_button.dart'; 
 
-class UploadProfilePictureCellule extends StatelessWidget {
+class UploadProfilePicture extends StatelessWidget {
   final VoidCallback onUploadPressed;
 
-  const UploadProfilePictureCellule({
+  const UploadProfilePicture({
     super.key,
     required this.onUploadPressed,
   });
