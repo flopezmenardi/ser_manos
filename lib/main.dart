@@ -11,10 +11,13 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: PostulationConfirmationModal(
-        projectName: "Un Techo para mi Pais",
-        onConfirm: () => print("something"),
-        onCancel: () => print("another something"),
+      home: Material(
+        color: Colors.transparent,
+        child: PostulationConfirmationModal(
+          projectName: "Un Techo para mi Pais",
+          onConfirm: () => print("something"),
+          onCancel: () => print("another something"),
+        ),
       ),
     );
   }
