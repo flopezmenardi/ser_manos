@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/design_system/molecules/inputs/search_input.dart';
 
 import '../../../design_system/organisms/cards/volunteer_card.dart';
 import '../../../design_system/organisms/headers/header.dart';
@@ -24,8 +25,7 @@ class _VolunteeringListPageState extends State<VolunteeringListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          AppColors.secondary25, // matches the light blue background
+      backgroundColor: AppColors.secondary10,
       body: Column(
         children: [
           HeaderSermanos(
@@ -37,12 +37,9 @@ class _VolunteeringListPageState extends State<VolunteeringListPage> {
               padding: const EdgeInsets.all(16),
               children: [
                 // Search bar placeholder
-                Container(
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                SearchInput(
+                  mode: SearchInputMode.map,
+                  controller: TextEditingController(),
                 ),
                 const SizedBox(height: 24),
 
@@ -57,7 +54,7 @@ class _VolunteeringListPageState extends State<VolunteeringListPage> {
 
                 // Static list of VolunteeringCards
                 VolunteeringCard(
-                  imagePath: 'assets/images/novedades.jpg',
+                  imagePath: 'assets/images/home1.jpg',
                   category: 'Acción Social',
                   title: 'Un Techo para mi País',
                   vacancies: 10,
@@ -66,7 +63,7 @@ class _VolunteeringListPageState extends State<VolunteeringListPage> {
                 ),
                 const SizedBox(height: 16),
                 VolunteeringCard(
-                  imagePath: 'assets/images/novedades.jpg',
+                  imagePath: 'assets/images/home2.jpg',
                   category: 'Acción Social',
                   title: 'Manos caritativas',
                   vacancies: 10,
