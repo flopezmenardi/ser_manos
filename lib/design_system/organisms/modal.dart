@@ -38,8 +38,8 @@ class ModalSermanos extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              TextOnlySermanosButton(text: cancelText, onPressed: onCancel),
-              TextOnlySermanosButton(text: confimationText, onPressed: onConfirm)
+              TextOnlyButton(text: cancelText, onPressed: onCancel),
+              TextOnlyButton(text: confimationText, onPressed: onConfirm)
             ],
           ),
         ],

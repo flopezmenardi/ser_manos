@@ -80,7 +80,7 @@ class NewsCard extends StatelessWidget {
                       ),
                       Align(
                         alignment: Alignment.centerRight,
-                        child: TextOnlySermanosButton(
+                        child: TextOnlyButton(
                           text: 'Leer más',
                           onPressed: onConfirm,
                         ),

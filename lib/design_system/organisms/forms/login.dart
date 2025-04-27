@@ -3,13 +3,13 @@ import '../../molecules/inputs/inputs.dart';
 import '../../tokens/colors.dart';
 
 class LoginForms extends StatelessWidget {
-  // final TextEditingController emailController;
-  // final TextEditingController passwordController;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
 
   const LoginForms({
     super.key,
-    // required this.emailController,
-    // required this.passwordController,
+    required this.emailController,
+    required this.passwordController,
   });
 
   @override
@@ -20,21 +20,19 @@ class LoginForms extends StatelessWidget {
         AppInput(
           label: 'Email',
           placeholder: 'Ej: juanbarcena@mail.com',
-          // controller: emailController,
+          controller: emailController,
         ),
         const SizedBox(height: 24),
-        // _PasswordInput(controller: passwordController),
-        _PasswordInput(),
+        _PasswordInput(controller: passwordController),
       ],
     );
   }
 }
 
 class _PasswordInput extends StatefulWidget {
-  // final TextEditingController controller;
+  final TextEditingController controller;
 
-  // const _PasswordInput({required this.controller});
-  const _PasswordInput();
+  const _PasswordInput({required this.controller});
 
   @override
   State<_PasswordInput> createState() => _PasswordInputState();
@@ -54,7 +52,7 @@ class _PasswordInputState extends State<_PasswordInput> {
     return AppInput(
       label: 'Contraseña',
       placeholder: 'Ej: ABCD1234',
-      // controller: widget.controller,
+      controller: widget.controller,
       obscureText: _obscureText,
       suffixIcon: IconButton(
         icon: Icon(

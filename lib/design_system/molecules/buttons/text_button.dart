@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../tokens/colors.dart';
 
-class TextOnlySermanosButton extends StatelessWidget {
+class TextOnlyButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isEnabled;
 
-  const TextOnlySermanosButton({
+  const TextOnlyButton({
     super.key,
     required this.text,
     required this.onPressed,
