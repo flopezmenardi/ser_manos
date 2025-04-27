@@ -14,7 +14,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       color: Colors.white,
       home: const Scaffold(
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.white,
         body: VolunteeringListPage(),
       ),
     );
