@@ -1,29 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/design_system/tokens/colors.dart';
 
 import '../../tokens/grid.dart';
 
-enum StatusBarVariant {
-  main,
-  form,
-  detail,
-}
+enum StatusBarVariant { main, form, detail }
 
 class StatusBar extends StatelessWidget {
   final StatusBarVariant variant;
 
-  const StatusBar({
-    super.key,
-    required this.variant,
-  });
+  const StatusBar({super.key, required this.variant});
 
   Color get _backgroundColor {
     switch (variant) {
       case StatusBarVariant.main:
-        return Colors.lightBlue;
+        return AppColors.secondary90;
       case StatusBarVariant.form:
-        return Colors.white;
+        return AppColors.neutral0;
       case StatusBarVariant.detail:
-        return Colors.black;
+        return AppColors.neutral100;
     }
   }
 
