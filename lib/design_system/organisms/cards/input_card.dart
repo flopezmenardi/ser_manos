@@ -17,7 +17,6 @@ class _InputCardState extends State<InputCard> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 152,
       width: AppGrid.screenWidth - 2 * AppGrid.horizontalMargin,
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
