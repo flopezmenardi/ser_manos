@@ -1,14 +1,21 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
 import '../../tokens/colors.dart';
 import '../../tokens/typography.dart';
 
 class InformationCard extends StatelessWidget {
+  final String title;
+  final String firstLabel;
   final String firstContent;
+  final String secondLabel;
   final String secondContent;
 
   const InformationCard({
     super.key,
+    required this.title,
+    required this.firstLabel,
     required this.firstContent,
+    required this.secondLabel,
     required this.secondContent,
   });
 
@@ -37,7 +44,7 @@ class InformationCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             alignment: Alignment.centerLeft,
             child: Text(
-              'Título',
+              title,
               style: AppTypography.subtitle1.copyWith(
                 color: AppColors.neutral100,
               ),
@@ -49,14 +56,13 @@ class InformationCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // First pair
                 Text(
-                  'LABEL',
+                  firstLabel,
                   style: AppTypography.overline.copyWith(
                     color: AppColors.neutral75,
                   ),
                 ),
-                const SizedBox(height: 2), // slight space between label and content
+                const SizedBox(height: 2),
                 Text(
                   firstContent,
                   style: AppTypography.body1.copyWith(
@@ -64,9 +70,8 @@ class InformationCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                // Second pair
                 Text(
-                  'LABEL',
+                  secondLabel,
                   style: AppTypography.overline.copyWith(
                     color: AppColors.neutral75,
                   ),

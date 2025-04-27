@@ -25,7 +25,6 @@ class NewsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 156,
       width: AppGrid.screenWidth - 2 * AppGrid.horizontalMargin,
       child: Container(
         decoration: BoxDecoration(
@@ -48,7 +47,7 @@ class NewsCard extends StatelessWidget {
               // Text section
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

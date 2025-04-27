@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 enum ProfilePictureSize { small, large }
 
 class ProfilePicture extends StatelessWidget {
-  final String imagePath; // you can make it an asset path or network URL
+  final String imagePath;
   final ProfilePictureSize size;
 
   const ProfilePicture({

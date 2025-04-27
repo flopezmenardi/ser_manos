@@ -3,9 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:ser_manos/features/auth/screens/enter_screen.dart';
 import 'package:ser_manos/features/auth/screens/login_screen.dart';
 import 'package:ser_manos/features/auth/screens/register_screen.dart';
-import 'package:ser_manos/features/auth/screens/welcome_screen.dart';
 
 import 'features/home/screens/home_screen.dart';
+import 'features/profile/profile_screen.dart';
 
 void main() {
   runApp(const MainApp());
@@ -13,18 +13,12 @@ void main() {
 
 final GoRouter _router = GoRouter(
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const WelcomeScreen(),
-    ),
+    GoRoute(path: '/', builder: (context, state) => const ProfilePage()),
     GoRoute(
       path: '/initial',
       builder: (context, state) => const InitialScreen(),
     ),
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginScreen(),
-    ),
+    GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     GoRoute(
       path: '/register',
       builder: (context, state) => const RegisterScreen(),
