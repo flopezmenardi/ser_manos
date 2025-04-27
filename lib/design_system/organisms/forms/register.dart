@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import '../../molecules/inputs/inputs.dart';
 
 class RegisterForms extends StatelessWidget {
-  // final TextEditingController nameController;
-  // final TextEditingController lastNameController;
-  // final TextEditingController emailController;
-  // final TextEditingController passwordController;
+  final TextEditingController nameController;
+  final TextEditingController lastNameController;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
 
   const RegisterForms({
     super.key,
-    // required this.nameController,
-    // required this.lastNameController,
-    // required this.emailController,
-    // required this.passwordController,
+    required this.nameController,
+    required this.lastNameController,
+    required this.emailController,
+    required this.passwordController,
   });
 
   @override
@@ -23,25 +23,25 @@ class RegisterForms extends StatelessWidget {
         AppInput(
           label: 'Nombre',
           placeholder: 'Ej: Juan',
-          // controller: nameController,
+          controller: nameController,
         ),
         const SizedBox(height: 24),
         AppInput(
           label: 'Apellido',
           placeholder: 'Ej: Barcena',
-          // controller: lastNameController,
+          controller: lastNameController,
         ),
         const SizedBox(height: 24),
         AppInput(
           label: 'Email',
           placeholder: 'Ej: juanbarcena@mail.com',
-          // controller: emailController,
+          controller: emailController,
         ),
         const SizedBox(height: 24),
         AppInput(
           label: 'Contraseña',
           placeholder: 'Ej: ABCD1234',
-          // controller: passwordController,
+          controller: passwordController,
         ),
       ],
     );

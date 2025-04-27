@@ -54,8 +54,8 @@ class PostulationConfirmationModal extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextOnlySermanosButton(text: 'Cancelar', onPressed: onCancel),
-                TextOnlySermanosButton(text: 'Confirmar', onPressed: onConfirm),
+                TextOnlyButton(text: 'Cancelar', onPressed: onCancel),
+                TextOnlyButton(text: 'Confirmar', onPressed: onConfirm),
               ],
             ),
           ],

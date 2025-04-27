@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import '../../tokens/typography.dart';
 import '../../tokens/colors.dart';
 
-class CTASermanosButton extends StatelessWidget {
+class CTAButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isEnabled;
 
-  const CTASermanosButton({
+  const CTAButton({
     super.key,
     required this.text,
     required this.onPressed,

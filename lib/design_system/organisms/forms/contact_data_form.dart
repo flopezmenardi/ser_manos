@@ -3,8 +3,13 @@ import 'package:ser_manos/design_system/molecules/inputs/inputs.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart'; 
 
 class ContactDataFormSermanos extends StatelessWidget {
+  final TextEditingController emailController;
+  final TextEditingController telephoneController;
+
   const ContactDataFormSermanos({
     super.key,
+    required this.emailController,
+    required this.telephoneController,
   });
 
   @override
@@ -33,6 +38,7 @@ class ContactDataFormSermanos extends StatelessWidget {
           AppInput(
             label: 'Teléfono',
             placeholder: 'Ej: +541178445459',
+            controller: telephoneController,
             // keyboardType: TextInputType.phone,
           ),
           const SizedBox(height: 16),
@@ -41,6 +47,7 @@ class ContactDataFormSermanos extends StatelessWidget {
           AppInput(
             label: 'Mail',
             placeholder: 'Ej: mimail@mail.com',
+            controller: emailController,
             // keyboardType: TextInputType.emailAddress,
           ),
         ],

@@ -10,7 +10,7 @@ class AppInput extends StatelessWidget {
   final bool isEnabled;
   final bool hasError;
   final String? supportingText;
-  // final TextEditingController controller;
+  final TextEditingController controller;
   final VoidCallback? onTap;
   final bool readOnly;
   final Widget? suffixIcon;
@@ -23,7 +23,7 @@ class AppInput extends StatelessWidget {
     this.isEnabled = true,
     this.hasError = false,
     this.supportingText,
-    // required this.controller,
+    required this.controller,
     this.onTap,
     this.readOnly = false,
     this.suffixIcon,

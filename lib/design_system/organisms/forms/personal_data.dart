@@ -6,11 +6,11 @@ import '../../organisms/cards/input_card.dart';
 import '../../organisms/cards/upload_profile_picture.dart';
 
 class PersonalData extends StatelessWidget {
-  // final TextEditingController birthDateController;
+  final TextEditingController birthDateController;
 
   const PersonalData({
     super.key,
-    // required this.birthDateController,
+    required this.birthDateController,
   });
 
   @override
@@ -31,7 +31,7 @@ class PersonalData extends StatelessWidget {
         AppInput(
           label: 'Fecha de nacimiento',
           placeholder: 'DD/MM/YYYY',
-          // controller: birthDateController,
+          controller: birthDateController,
         ),
         const SizedBox(height: 24),
 
