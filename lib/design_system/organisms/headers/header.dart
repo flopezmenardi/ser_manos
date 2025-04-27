@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart'; 
 import 'package:ser_manos/design_system/tokens/colors.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
 
-class HeaderSermanos extends StatelessWidget {
+class AppHeader extends StatelessWidget {
   final int selectedIndex;
-  final Function(int) onTabSelected;
 
-  const HeaderSermanos({
+  const AppHeader({
     super.key,
     required this.selectedIndex,
-    required this.onTabSelected,
   });
+
+  void _onTabSelected(BuildContext context, int index) {
+    switch (index) {
+      case 0:
+        context.go('/home');
+        break;
+      case 1:
+        context.go('/profile');
+        break;
+      case 2:
+        context.go('/news');
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +32,11 @@ class HeaderSermanos extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 41), // status bar space
+          const SizedBox(height: 41),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                // Placeholder for logo/icon
                 Image.asset(
                   'assets/logos/logo_rectangular.png',
                   height: 25,
@@ -35,9 +47,9 @@ class HeaderSermanos extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             children: [
-              _buildTab("Postularse", 0),
-              _buildTab("Mi perfil", 1),
-              _buildTab("Novedades", 2),
+              _buildTab(context, "Postularse", 0),
+              _buildTab(context, "Mi perfil", 1),
+              _buildTab(context, "Novedades", 2),
             ],
           )
         ],
@@ -45,25 +57,25 @@ class HeaderSermanos extends StatelessWidget {
     );
   }
 
-  Widget _buildTab(String label, int index) {
+  Widget _buildTab(BuildContext context, String label, int index) {
     final bool isSelected = selectedIndex == index;
 
     return Expanded(
       child: GestureDetector(
-        onTap: () => onTabSelected(index),
+        onTap: () => _onTabSelected(context, index),
         child: Container(
           height: 52,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             color: isSelected ? AppColors.secondary200 : AppColors.secondary100,
-                      border: isSelected
-              ? const Border(
-                  bottom: BorderSide(
-                    color: AppColors.neutral25,
-                    width: 3,
-                  ),
-                )
-              : null,
+            border: isSelected
+                ? const Border(
+                    bottom: BorderSide(
+                      color: AppColors.neutral25,
+                      width: 3,
+                    ),
+                  )
+                : null,
           ),
           alignment: Alignment.center,
           child: Text(

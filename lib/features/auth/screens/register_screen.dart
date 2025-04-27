@@ -5,7 +5,6 @@ import '../../../design_system/atoms/logos/logo_square.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
 import '../../../design_system/molecules/buttons/text_button.dart';
-import '../../../design_system/organisms/forms/login.dart'; 
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});

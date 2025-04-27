@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../design_system/atoms/logos/logo_square.dart'; // <- assuming you have your LogoSquare atom
+import '../../../design_system/atoms/logos/logo_square.dart'; 
 import '../../../design_system/tokens/typography.dart';
 import '../../../design_system/tokens/colors.dart';
-import '../../../design_system/molecules/buttons/cta_button.dart'; // <- your green call-to-action button
-import '../../../design_system/molecules/buttons/text_button.dart'; // <- your text button if customized
+import '../../../design_system/molecules/buttons/cta_button.dart'; 
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -12,16 +11,16 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.neutral0,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24), // horizontal padding
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween, // <- NEW: Space between top and bottom
+            mainAxisAlignment: MainAxisAlignment.spaceBetween, 
             children: [
               Column(
                 children: [
-                  const SizedBox(height: 144), // extra top space if needed
+                  const SizedBox(height: 144), 
                   LogoSquare(size: 150),
                   const SizedBox(height: 32),
                   Text(

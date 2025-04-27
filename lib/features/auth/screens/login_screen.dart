@@ -62,10 +62,10 @@ class _LoginScreenState extends State<LoginScreen> {
               Column(
                 children: [
                   CTAButton(
-                    text: 'Iniciar sesión',
+                    text: 'Iniciar Sesión',
                     isEnabled: _isFormFilled,
                     onPressed: () {
-                      context.go('/login');
+                      context.go('/home');
                     },
                   ),
                   const SizedBox(height: 16),

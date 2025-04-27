@@ -61,10 +61,7 @@ class _VolunteeringListPageState extends State<VolunteeringListPage> {
       backgroundColor: AppColors.secondary10,
       body: Column(
         children: [
-          HeaderSermanos(
-            selectedIndex: selectedIndex,
-            onTabSelected: onTabSelected,
-          ),
+          AppHeader(selectedIndex: selectedIndex),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(16),

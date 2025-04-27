@@ -4,14 +4,14 @@ import 'package:ser_manos/design_system/tokens/colors.dart';
 
 import '../../../design_system/organisms/cards/news_card.dart';
 
-class NewsList extends StatefulWidget {
-  const NewsList({super.key});
+class NewsScreen extends StatefulWidget {
+  const NewsScreen({super.key});
 
   @override
-  State<NewsList> createState() => _NewsListState();
+  State<NewsScreen> createState() => _NewsScreenState();
 }
 
-class _NewsListState extends State<NewsList> {
+class _NewsScreenState extends State<NewsScreen> {
   int selectedIndex = 2; // Default to "Novedades"
 
   final List<Map<String, String>> newsList = [
@@ -51,14 +51,7 @@ class _NewsListState extends State<NewsList> {
       backgroundColor: AppColors.secondary10,
       body: Column(
         children: [
-          HeaderSermanos(
-            selectedIndex: selectedIndex,
-            onTabSelected: (index) {
-              setState(() {
-                selectedIndex = index;
-              });
-            },
-          ),
+          AppHeader(selectedIndex: selectedIndex),
           Expanded(
             child: ListView.separated(
               padding: const EdgeInsets.all(16),

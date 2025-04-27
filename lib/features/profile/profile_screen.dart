@@ -9,8 +9,8 @@ import 'package:ser_manos/design_system/tokens/typography.dart';
 
 import '../../design_system/molecules/components/profile_picture.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +18,7 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: AppColors.neutral0,
       body: Column(
         children: [
-          HeaderSermanos(
-            selectedIndex: 1, // "Mi Perfil" selected
-            onTabSelected: (index) {
-              // Handle tab changes if needed
-            },
-          ),
+          AppHeader(selectedIndex: 1),
           Expanded(
             child: SingleChildScrollView(
               child: Padding(

@@ -12,7 +12,7 @@ class InitialScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.neutral0,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24), // horizontal padding
@@ -34,7 +34,7 @@ class InitialScreen extends StatelessWidget {
               Column(
                 children: [
                   CTAButton(
-                    text: 'Iniciar sesión',
+                    text: 'Iniciar Sesión',
                     onPressed: () {
                       //navigate to login screen
                       context.go('/login');
