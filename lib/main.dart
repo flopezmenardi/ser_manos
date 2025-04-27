@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/features/auth/screens/enter_screen.dart';
 import 'package:ser_manos/features/auth/screens/login_screen.dart';
+import 'package:ser_manos/features/auth/screens/register_screen.dart';
+import 'package:ser_manos/features/auth/screens/welcome_screen.dart';
 
 import 'features/home/screens/home_screen.dart';
 
@@ -13,11 +15,23 @@ final GoRouter _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const RegisterScreen(),
+      builder: (context, state) => const WelcomeScreen(),
+    ),
+    GoRoute(
+      path: '/initial',
+      builder: (context, state) => const InitialScreen(),
     ),
     GoRoute(
       path: '/login',
       builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (context, state) => const RegisterScreen(),
+    ),
+    GoRoute(
+      path: '/home',
+      builder: (context, state) => const VolunteeringListPage(),
     ),
   ],
 );

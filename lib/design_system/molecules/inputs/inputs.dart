@@ -47,7 +47,7 @@ class AppInput extends StatelessWidget {
         hasError ? ErrorIcon.get(style: style, state: style) : suffixIcon;
 
     return TextFormField(
-      // controller: controller,
+      controller: controller,
       enabled: isEnabled,
       readOnly: readOnly,
       onTap: onTap,

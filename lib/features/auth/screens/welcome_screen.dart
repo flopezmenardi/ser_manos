@@ -6,8 +6,8 @@ import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart'; // <- your green call-to-action button
 import '../../../design_system/molecules/buttons/text_button.dart'; // <- your text button if customized
 
-class InitialScreen extends StatelessWidget {
-  const InitialScreen({super.key});
+class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,12 @@ class InitialScreen extends StatelessWidget {
                   LogoSquare(size: 150),
                   const SizedBox(height: 32),
                   Text(
-                    '“El esfuerzo desinteresado para llevar alegría a los demás será el comienzo de una vida más feliz para nosotros”',
+                    '¡Bienvenido!',
+                    style: AppTypography.headline1,
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    'Nunca subestimes tu habilidad para mejorar la vida de alguien.',
                     style: AppTypography.subtitle1,
                     textAlign: TextAlign.center,
                   ),
@@ -34,21 +39,13 @@ class InitialScreen extends StatelessWidget {
               Column(
                 children: [
                   CTAButton(
-                    text: 'Iniciar sesión',
+                    text: 'Comenzar',
                     onPressed: () {
                       //navigate to login screen
-                      context.go('/login');
+                      context.go('/initial');
                     },
                   ),
-                  const SizedBox(height: 16),
-                  TextOnlyButton(
-                    text: 'Registrarse',
-                    onPressed: () {
-                      //navigate to register screen
-                      context.go('/register');
-                    },
-                  ),
-                  const SizedBox(height: 24), // <- distance from bottom
+                  const SizedBox(height: 84),
                 ],
               ),
             ],

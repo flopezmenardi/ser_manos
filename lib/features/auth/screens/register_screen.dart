@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/design_system/organisms/forms/register.dart';
 import '../../../design_system/atoms/logos/logo_square.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
 import '../../../design_system/molecules/buttons/text_button.dart';
 import '../../../design_system/organisms/forms/login.dart'; 
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   bool get _isFormFilled =>
-      emailController.text.isNotEmpty && passwordController.text.isNotEmpty;
+      nameController.text.isNotEmpty && lastNameController.text.isNotEmpty && emailController.text.isNotEmpty && passwordController.text.isNotEmpty;
 
   @override
   void initState() {
     super.initState();
+    nameController.addListener(_updateState);
+    lastNameController.addListener(_updateState);
     emailController.addListener(_updateState);
     passwordController.addListener(_updateState);
   }
@@ -33,6 +38,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
+    nameController.dispose();
+    lastNameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -50,10 +57,12 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Column(
                 children: [
-                  const SizedBox(height: 96),
+                  const SizedBox(height: 24),
                   const LogoSquare(size: 150),
                   const SizedBox(height: 32),
-                  LoginForms(
+                  RegisterForms(
+                    nameController: nameController,
+                    lastNameController: lastNameController,
                     emailController: emailController,
                     passwordController: passwordController,
                   ),
@@ -62,17 +71,17 @@ class _LoginScreenState extends State<LoginScreen> {
               Column(
                 children: [
                   CTAButton(
-                    text: 'Iniciar sesión',
+                    text: 'Registrarse',
                     isEnabled: _isFormFilled,
                     onPressed: () {
-                      context.go('/login');
+                      context.go('/home');
                     },
                   ),
                   const SizedBox(height: 16),
                   TextOnlyButton(
-                    text: 'No tengo cuenta',
+                    text: 'Ya tengo cuenta',
                     onPressed: () {
-                      context.go('/register');
+                      context.go('/login');
                     },
                   ),
                   const SizedBox(height: 24),
