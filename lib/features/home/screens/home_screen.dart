@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/molecules/inputs/search_input.dart';
 import 'package:ser_manos/design_system/organisms/cards/volunteer_card.dart';
 import 'package:ser_manos/design_system/organisms/headers/header.dart';
@@ -82,7 +83,7 @@ class _VolunteeringListPageState extends State<VolunteeringListPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  CurrentVolunteerCardSermanos(
+                  CurrentVolunteerCard(
                     category: currentVolunteer!['category']!,
                     name: currentVolunteer!['name']!,
                   ),
@@ -119,13 +120,23 @@ class _VolunteeringListPageState extends State<VolunteeringListPage> {
                   ...volunteeringList.map((item) {
                     return Column(
                       children: [
-                        VolunteeringCard(
-                          imagePath: item['imagePath'],
-                          category: item['category'],
-                          title: item['title'],
-                          vacancies: item['vacancies'],
-                          onFavoritePressed: () {},
-                          onLocationPressed: () {},
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent, // important: allows child buttons to still work
+                          onTap: () {
+                            context.go('/volunteering/1');
+                          },
+                          child: VolunteeringCard(
+                            imagePath: item['imagePath'],
+                            category: item['category'],
+                            title: item['title'],
+                            vacancies: item['vacancies'],
+                            onFavoritePressed: () {
+                              // handle heart icon pressed
+                            },
+                            onLocationPressed: () {
+                              // handle location icon pressed
+                            },
+                          ),
                         ),
                         const SizedBox(height: 16),
                       ],

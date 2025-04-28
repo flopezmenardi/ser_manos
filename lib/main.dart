@@ -4,6 +4,7 @@ import 'package:ser_manos/features/auth/screens/enter_screen.dart';
 import 'package:ser_manos/features/auth/screens/login_screen.dart';
 import 'package:ser_manos/features/auth/screens/register_screen.dart';
 import 'package:ser_manos/features/auth/screens/welcome_screen.dart';
+import 'package:ser_manos/features/home/screens/volunteer_detail.dart';
 import 'package:ser_manos/features/news/screens/news_details_screen.dart';
 import 'package:ser_manos/features/news/screens/news_screen.dart';
 import 'package:ser_manos/features/profile/profile_modal_screen.dart';
@@ -46,6 +47,10 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/profile/edit',
       builder: (context, state) => const ProfileModalScreen(),
+    ),
+    GoRoute(
+      path: '/volunteering/1',
+      builder: (context, state) => const VolunteeringDetailScreen(),
     ),
   ],
 );

@@ -4,11 +4,11 @@ import 'package:ser_manos/design_system/atoms/icons.dart';
 import 'package:ser_manos/design_system/tokens/shadow.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart'; // Assuming `getMapIcon` lives here
 
-class CurrentVolunteerCardSermanos extends StatelessWidget {
+class CurrentVolunteerCard extends StatelessWidget {
   final String category;
   final String name;
 
-  const CurrentVolunteerCardSermanos({
+  const CurrentVolunteerCard({
     super.key,
     required this.category,
     required this.name,
