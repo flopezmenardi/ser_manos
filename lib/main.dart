@@ -4,6 +4,7 @@ import 'package:ser_manos/features/auth/screens/enter_screen.dart';
 import 'package:ser_manos/features/auth/screens/login_screen.dart';
 import 'package:ser_manos/features/auth/screens/register_screen.dart';
 import 'package:ser_manos/features/auth/screens/welcome_screen.dart';
+import 'package:ser_manos/features/news/screens/news_details_screen.dart';
 import 'package:ser_manos/features/news/screens/news_screen.dart';
 
 import 'features/home/screens/home_screen.dart';
@@ -32,6 +33,10 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/news',
       builder: (context, state) => const NewsScreen(),
+    ),
+    GoRoute(
+      path: '/news/1',
+      builder: (context, state) => const NewsDetailsScreen(),
     ),
     GoRoute(
       path: '/profile',

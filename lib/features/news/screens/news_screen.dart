@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/organisms/headers/header.dart';
 import 'package:ser_manos/design_system/tokens/colors.dart';
 
@@ -66,6 +67,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   description: item['description']!,
                   onConfirm: () {
                     // You can navigate to a detail page or show a dialog here
+                    context.go('/news/1');
                     print('Clicked on ${item['title']}');
                   },
                 );
