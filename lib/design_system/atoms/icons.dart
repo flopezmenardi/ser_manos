@@ -59,6 +59,10 @@ class AppIcons {
     return Icon(Icons.error_outline, color: color);
   }
 
+  static Icon getAccountIcon({required Color color, double? size}) {
+    return Icon(Icons.account_circle, color: color, size: size);
+  }
+
 
   // PRIVATE
 
