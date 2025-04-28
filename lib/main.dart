@@ -6,6 +6,7 @@ import 'package:ser_manos/features/auth/screens/register_screen.dart';
 import 'package:ser_manos/features/auth/screens/welcome_screen.dart';
 import 'package:ser_manos/features/news/screens/news_details_screen.dart';
 import 'package:ser_manos/features/news/screens/news_screen.dart';
+import 'package:ser_manos/features/profile/profile_modal_screen.dart';
 
 import 'features/home/screens/home_screen.dart';
 import 'features/profile/profile_screen.dart';
@@ -42,6 +43,10 @@ final GoRouter _router = GoRouter(
       path: '/profile',
       builder: (context, state) => const ProfileScreen(),
     ),
+    GoRoute(
+      path: '/profile/edit',
+      builder: (context, state) => const ProfileModalScreen(),
+    ),
   ],
 );
 
@@ -53,7 +58,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp.router(
       color: Colors.white,
       routerConfig: _router,
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false
     );
   }
 }

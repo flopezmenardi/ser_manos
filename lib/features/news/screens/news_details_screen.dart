@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/molecules/buttons/cta_button.dart';
 import 'package:ser_manos/design_system/tokens/colors.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
@@ -27,7 +28,7 @@ class NewsDetailsScreen extends StatelessWidget {
           children: [
             HeaderSection(
               title: 'Novedades', // Always "Novedades" in the header
-              onBack: () => Navigator.pop(context),
+              onBack: () => context.pop(),
             ),
             Expanded(
               child: SingleChildScrollView(

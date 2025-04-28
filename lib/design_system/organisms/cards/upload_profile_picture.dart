@@ -14,7 +14,6 @@ class UploadProfilePicture extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 328,
       height: 52,
       decoration: BoxDecoration(
         color: AppColors.secondary25,

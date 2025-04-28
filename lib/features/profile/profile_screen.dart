@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/molecules/buttons/cta_button.dart';
 import 'package:ser_manos/design_system/molecules/buttons/text_button.dart';
 import 'package:ser_manos/design_system/organisms/cards/information_card.dart';
@@ -74,7 +75,7 @@ class ProfileScreen extends StatelessWidget {
                     CTAButton(
                       text: 'Editar perfil',
                       onPressed: () {
-                        // Handle Edit Profile action
+                        context.push('/profile/edit');
                       },
                     ),
                     TextOnlyButton(

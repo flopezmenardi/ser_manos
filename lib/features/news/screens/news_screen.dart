@@ -67,7 +67,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   description: item['description']!,
                   onConfirm: () {
                     // You can navigate to a detail page or show a dialog here
-                    context.go('/news/1');
+                    context.push('/news/1');
                     print('Clicked on ${item['title']}');
                   },
                 );
