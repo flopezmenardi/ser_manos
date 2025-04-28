@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/molecules/buttons/cta_button.dart';
+import 'package:ser_manos/design_system/organisms/headers/header_section.dart';
 import 'package:ser_manos/design_system/tokens/colors.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
-import 'package:ser_manos/design_system/organisms/headers/header_section.dart'; // Your HeaderSectionSermanos
 
 class NewsDetailsScreen extends StatelessWidget {
   // Later these will come from API
   final String reportNumber = "2820";
   final String newsTitle = "Ser donante voluntario";
-  final String imageUrl = "assets/images/novedades.jpg"; // TEMPORARY, use NetworkImage later if needed
+  final String imageUrl = "assets/images/novedades.jpg";
   final String subtitle =
       "Desde el Hospital Centenario recalcan la importancia de la donación voluntaria de Sangre";
   final String body =
@@ -22,94 +22,107 @@ class NewsDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary10,
-      body: SafeArea(
-        child: Column(
-          children: [
-            HeaderSection(
-              title: 'Novedades', // Always "Novedades" in the header
-              onBack: () => context.pop(),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 24),
-                    // Reporte Text
-                    Text(
-                      "Reporte $reportNumber",
-                      style: AppTypography.overline.copyWith(
-                        color: AppColors.neutral75,
-                      ),
-                    ),
-                    // Title Text
-                    Text(
-                      newsTitle,
-                      style: AppTypography.headline2.copyWith(
-                        color: AppColors.neutral100,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    // News Image
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: Image.asset(
-                        imageUrl,
-                        width: 328,
-                        height: 160,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    // Subtitle Text
-                    SizedBox(
-                      width: 328,
-                      height: 72,
-                      child: Text(
-                        subtitle,
-                        style: AppTypography.subtitle1.copyWith(
-                          color: AppColors.neutral100,
-                        ),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    // Body Text
-                    Text(
-                      body,
-                      style: AppTypography.body1.copyWith(
-                        color: AppColors.neutral100,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    // "Comparte esta nota" Title
-                    Text(
-                      "Comparte esta nota",
-                      style: AppTypography.headline2.copyWith(
-                        color: AppColors.neutral100,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    // Share Button
-                    SizedBox(
-                      width: double.infinity,
-                      child: CTAButton(
-                        text: "Compartir",
-                        onPressed: () {
-                          // You can implement share functionality later
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                  ],
-                ),
+      backgroundColor: AppColors.neutral0,
+      body: Column(
+        children: [
+          Container(
+            color: AppColors.secondary90,
+            child: SafeArea(
+              bottom: false,
+              child: HeaderSection(
+                title: 'Novedades',
+                onBack: () => context.pop(),
+                
               ),
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Report number
+                  Text(
+                    "Reporte $reportNumber",
+                    style: AppTypography.overline.copyWith(
+                      color: AppColors.neutral75,
+                    ),
+                  ),
+
+                  // News title
+                  Text(
+                    newsTitle,
+                    style: AppTypography.headline2.copyWith(
+                      color: AppColors.neutral100,
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Image
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: Image.asset(
+                      imageUrl,
+                      width: 328,
+                      height: 160,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Subtitle (max 3 lines)
+                  SizedBox(
+                    width: 328,
+                    height: 72,
+                    child: Text(
+                      subtitle,
+                      style: AppTypography.subtitle1.copyWith(
+                        color: AppColors.neutral100,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Body text
+                  Text(
+                    body,
+                    style: AppTypography.body1.copyWith(
+                      color: AppColors.neutral100,
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Share section
+                  Text(
+                    "Comparte esta nota",
+                    style: AppTypography.headline2.copyWith(
+                      color: AppColors.neutral100,
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: CTAButton(
+                      text: "Compartir",
+                      onPressed: () {
+                        // TODO: implement share
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
