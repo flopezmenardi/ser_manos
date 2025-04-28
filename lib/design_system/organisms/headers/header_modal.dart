@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ser_manos/design_system/atoms/icons.dart';
 
-class HeaderModalSermanos extends StatelessWidget {
+class HeaderModal extends StatelessWidget {
   final VoidCallback onClose;
 
-  const HeaderModalSermanos({
+  const HeaderModal({
     super.key,
     required this.onClose,
   });

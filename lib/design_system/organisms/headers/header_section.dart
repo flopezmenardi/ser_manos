@@ -3,11 +3,11 @@ import 'package:ser_manos/design_system/atoms/icons.dart';
 import 'package:ser_manos/design_system/tokens/colors.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
 
-class HeaderSectionSermanos extends StatelessWidget {
+class HeaderSection extends StatelessWidget {
   final String title;
   final VoidCallback onBack;
 
-  const HeaderSectionSermanos({
+  const HeaderSection({
     super.key,
     required this.title,
     required this.onBack,

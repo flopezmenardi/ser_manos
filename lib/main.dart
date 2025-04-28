@@ -3,7 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:ser_manos/features/auth/screens/enter_screen.dart';
 import 'package:ser_manos/features/auth/screens/login_screen.dart';
 import 'package:ser_manos/features/auth/screens/register_screen.dart';
-import 'package:ser_manos/features/home/screens/volunteer_detail.dart';
+import 'package:ser_manos/features/auth/screens/welcome_screen.dart';
+import 'package:ser_manos/features/news/screens/news_details_screen.dart';
 import 'package:ser_manos/features/news/screens/news_screen.dart';
 
 import 'features/home/screens/home_screen.dart';
@@ -15,10 +16,7 @@ void main() {
 
 final GoRouter _router = GoRouter(
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const VolunteeringDetailScreen(),
-    ),
+    GoRoute(path: '/', builder: (context, state) => const WelcomeScreen()),
     GoRoute(
       path: '/initial',
       builder: (context, state) => const InitialScreen(),
@@ -32,7 +30,14 @@ final GoRouter _router = GoRouter(
       path: '/home',
       builder: (context, state) => const VolunteeringListPage(),
     ),
-    GoRoute(path: '/news', builder: (context, state) => const NewsScreen()),
+    GoRoute(
+      path: '/news',
+      builder: (context, state) => const NewsScreen(),
+    ),
+    GoRoute(
+      path: '/news/1',
+      builder: (context, state) => const NewsDetailsScreen(),
+    ),
     GoRoute(
       path: '/profile',
       builder: (context, state) => const ProfileScreen(),
