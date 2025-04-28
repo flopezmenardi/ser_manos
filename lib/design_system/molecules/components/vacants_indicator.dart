@@ -29,6 +29,7 @@ class VacantsIndicator extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             'Vacantes:',
