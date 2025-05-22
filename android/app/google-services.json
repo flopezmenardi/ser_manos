@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "382902751065",
+    "project_id": "ser-manos-d9350",
+    "storage_bucket": "ser-manos-d9350.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:382902751065:android:8827e259822dfdc902c648",
+        "android_client_info": {
+          "package_name": "com.example.ser_manos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIWNEZDLJe8AT-SicTpGHkuaPa-dX8H9Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

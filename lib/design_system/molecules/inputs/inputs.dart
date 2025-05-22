@@ -16,6 +16,9 @@ class AppInput extends StatelessWidget {
   final Widget? suffixIcon;
   final bool obscureText;
 
+  // 🔹 Add this new parameter
+  final String? Function(String?)? validator;
+
   const AppInput({
     super.key,
     required this.label,
@@ -28,6 +31,7 @@ class AppInput extends StatelessWidget {
     this.readOnly = false,
     this.suffixIcon,
     this.obscureText = false,
+    this.validator, // ← Include it in the constructor
   });
 
   get style => null;
@@ -35,19 +39,18 @@ class AppInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color fillColor = isEnabled ? Colors.white : AppColors.neutral10;
-    final Color baseBorderColor =
-        hasError
-            ? AppColors.error100
-            : isEnabled
+    final Color baseBorderColor = hasError
+        ? AppColors.error100
+        : isEnabled
             ? AppColors.neutral50
             : AppColors.neutral25;
 
-    // Automatically include error icon if hasError is true
     final Widget? effectiveSuffixIcon =
         hasError ? ErrorIcon.get(style: style, state: style) : suffixIcon;
 
     return TextFormField(
       controller: controller,
+      validator: validator, // 🔹 Plug validator here
       enabled: isEnabled,
       readOnly: readOnly,
       onTap: onTap,
@@ -63,10 +66,9 @@ class AppInput extends StatelessWidget {
         fillColor: fillColor,
         suffixIcon: effectiveSuffixIcon,
         labelStyle: AppTypography.body2.copyWith(
-          color:
-              hasError
-                  ? AppColors.error100
-                  : isEnabled
+          color: hasError
+              ? AppColors.error100
+              : isEnabled
                   ? AppColors.neutral75
                   : AppColors.neutral50,
         ),
