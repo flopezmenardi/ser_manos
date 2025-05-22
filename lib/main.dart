@@ -8,12 +8,46 @@ import 'package:ser_manos/features/home/screens/volunteer_detail.dart';
 import 'package:ser_manos/features/news/screens/news_details_screen.dart';
 import 'package:ser_manos/features/news/screens/news_screen.dart';
 import 'package:ser_manos/features/profile/profile_modal_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'features/home/screens/home_screen.dart';
 import 'features/profile/profile_screen.dart';
 
-void main() {
-  runApp(const MainApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const ProviderScope(child: FirebaseInitWrapper()));
+}
+
+class FirebaseInitWrapper extends StatelessWidget {
+  const FirebaseInitWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      ),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return const MainApp();
+        } else if (snapshot.hasError) {
+          return const MaterialApp(
+            home: Scaffold(
+              body: Center(child: Text('Firebase init failed')),
+            ),
+          );
+        } else {
+          return const MaterialApp(
+            home: Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            ),
+          );
+        }
+      },
+    );
+  }
 }
 
 final GoRouter _router = GoRouter(

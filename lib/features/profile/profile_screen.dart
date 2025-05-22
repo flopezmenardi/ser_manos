@@ -109,7 +109,7 @@ class ProfileScreen extends StatelessWidget {
           TextOnlyButton(
             text: 'Cerrar sesión',
             onPressed: () {
-              // TODO: logout
+              context.go('/login');
             },
           ),
           const SizedBox(height: 24),
