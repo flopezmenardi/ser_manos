@@ -42,7 +42,7 @@ class NewsCard extends StatelessWidget {
               SizedBox(
                 width: 118,
                 height: 156,
-                child: Image.asset(imagePath, fit: BoxFit.cover),
+                child: Image.network(imagePath, fit: BoxFit.cover),
               ),
               // Text section
               Expanded(
