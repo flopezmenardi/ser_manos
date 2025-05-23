@@ -86,8 +86,11 @@ final GoRouter _router = GoRouter(
       builder: (context, state) => const ProfileModalScreen(),
     ),
     GoRoute(
-      path: '/volunteering/1',
-      builder: (context, state) => const VolunteeringDetailScreen(),
+      path: '/volunteering/:id',
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return VolunteeringDetailScreen(id: id);
+      },
     ),
   ],
 );
