@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ser_manos/models/news_model.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -12,15 +13,29 @@ class FirestoreService {
     });
   }
 
-  Future<void> crearVoluntariado(Map<String, dynamic> data) async {
+  Future<void> createVolunteering(Map<String, dynamic> data) async {
     await _db.collection('voluntariados').add(data);
   }
 
-  Future<void> crearNoticia(Map<String, dynamic> data) async {
+  Future<void> createNews(Map<String, dynamic> data) async {
     await _db.collection('novedades').add(data);
   }
 
-  Stream<QuerySnapshot> obtenerVoluntariados() {
+  Stream<QuerySnapshot> getVolunteers() {
     return _db.collection('voluntariados').snapshots();
+  }
+
+  Stream<List<News>> getNews() {
+    return _db.collection('novedades').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => News.fromDocumentSnapshot(doc)).toList();
+    });
+  }
+
+  Future<News?> getNewsById(String id) async {
+    final doc = await _db.collection('novedades').doc(id).get();
+    if (doc.exists) {
+      return News.fromDocumentSnapshot(doc);
+    }
+    return null;
   }
 }
