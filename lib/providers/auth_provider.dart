@@ -29,6 +29,26 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     state = state.copyWith(isLoading: false, errorMessage: error);
   }
+
+  Future<void> login({
+  required String email,
+  required String password,
+  }) async {
+    print('🟡 Dentro de AuthNotifier.login()');
+    state = state.copyWith(isLoading: true, errorMessage: null);
+
+    try {
+      await _controller.loginUser(email: email, password: password);
+      print('✅ Usuario logueado correctamente');
+      state = state.copyWith(isLoading: false);
+    } catch (e) {
+      print('❌ Error al loguear usuario: $e');
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: e.toString(),
+      );
+    }
+  }
 }
 
 class AuthState {
