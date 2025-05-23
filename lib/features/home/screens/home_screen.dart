@@ -1,50 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/molecules/inputs/search_input.dart';
 import 'package:ser_manos/design_system/organisms/cards/volunteer_card.dart';
 import 'package:ser_manos/design_system/organisms/headers/header.dart';
 import 'package:ser_manos/design_system/tokens/colors.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
-import 'package:ser_manos/design_system/organisms/cards/current_volunteer_card.dart'; // assuming you have it here
-
-class VolunteeringListPage extends StatefulWidget {
+import 'package:ser_manos/design_system/organisms/cards/current_volunteer_card.dart';
+import 'package:ser_manos/features/home/controller/volunteering_controller.dart';
+class VolunteeringListPage extends ConsumerStatefulWidget {
   const VolunteeringListPage({super.key});
 
   @override
-  State<VolunteeringListPage> createState() => _VolunteeringListPageState();
+  ConsumerState<VolunteeringListPage> createState() => _VolunteeringListPageState();
 }
 
-class _VolunteeringListPageState extends State<VolunteeringListPage> {
+class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
   int selectedIndex = 0;
 
-  final List<Map<String, dynamic>> volunteeringList = [
-    {
-      'imagePath': 'assets/images/home1.jpg',
-      'category': 'Acción Social',
-      'title': 'Un Techo para mi País',
-      'vacancies': 10,
-    },
-    {
-      'imagePath': 'assets/images/home2.jpg',
-      'category': 'Acción Social',
-      'title': 'Manos caritativas',
-      'vacancies': 10,
-    },
-    {
-      'imagePath': 'assets/images/volunteering.jpg',
-      'category': 'Acción Social',
-      'title': 'Apoyo Escolar',
-      'vacancies': 10,
-    },
-    {
-      'imagePath': 'assets/images/volunteering.jpg',
-      'category': 'Acción Social',
-      'title': 'Recolección de ropa',
-      'vacancies': 10,
-    },
-  ];
-
-  // simulate current user volunteer activity
+  // Simulación de actividad actual
   final Map<String, String>? currentVolunteer = {
     'category': 'Acción Social',
     'name': 'Un Techo para mi País',
@@ -58,91 +32,87 @@ class _VolunteeringListPageState extends State<VolunteeringListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final volunteeringListAsync = ref.watch(volunteeringControllerProvider);
+
     return Scaffold(
       backgroundColor: AppColors.secondary10,
       body: Column(
         children: [
           AppHeader(selectedIndex: selectedIndex),
           Expanded(
-            child: ListView(
+            child: Padding(
               padding: const EdgeInsets.all(16),
-              children: [
-                // Search bar
-                SearchInput(
-                  mode: SearchInputMode.list,
-                  controller: TextEditingController(),
-                ),
-                const SizedBox(height: 24),
-
-                // "Tu actividad"
-                if (currentVolunteer != null) ...[
-                  Text(
-                    "Tu actividad",
-                    style: AppTypography.headline1.copyWith(
-                      color: AppColors.neutral100,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  CurrentVolunteerCard(
-                    category: currentVolunteer!['category']!,
-                    name: currentVolunteer!['name']!,
+              child: ListView(
+                children: [
+                  SearchInput(
+                    mode: SearchInputMode.list,
+                    controller: TextEditingController(),
                   ),
                   const SizedBox(height: 24),
-                ],
-
-                // "Voluntariados"
-                Text(
-                  "Voluntariados",
-                  style: AppTypography.headline1.copyWith(
-                    color: AppColors.neutral100,
+                  if (currentVolunteer != null) ...[
+                    Text(
+                      "Tu actividad",
+                      style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
+                    ),
+                    const SizedBox(height: 16),
+                    CurrentVolunteerCard(
+                      category: currentVolunteer!['category']!,
+                      name: currentVolunteer!['name']!,
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                  Text(
+                    "Voluntariados",
+                    style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
                   ),
-                ),
-                const SizedBox(height: 16),
-
-                // List of Volunteering Cards or Empty State
-                if (volunteeringList.isEmpty)
-                  Container(
-                    padding: const EdgeInsets.all(32),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: AppColors.neutral0,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      "Actualmente no hay voluntariados vigentes.\nPronto se irán incorporando nuevos.",
-                      textAlign: TextAlign.center,
-                      style: AppTypography.subtitle1.copyWith(
-                        color: AppColors.neutral100,
-                      ),
-                    ),
-                  )
-                else
-                  ...volunteeringList.map((item) {
-                    return Column(
-                      children: [
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent, // important: allows child buttons to still work
-                          onTap: () {
-                            context.go('/volunteering/1');
-                          },
-                          child: VolunteeringCard(
-                            imagePath: item['imagePath'],
-                            category: item['category'],
-                            title: item['title'],
-                            vacancies: item['vacancies'],
-                            onFavoritePressed: () {
-                              // handle heart icon pressed
-                            },
-                            onLocationPressed: () {
-                              // handle location icon pressed
-                            },
+                  const SizedBox(height: 16),
+                  volunteeringListAsync.when(
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (error, _) => Text('Error: $error'),
+                    data: (volunteerings) {
+                      if (volunteerings.isEmpty) {
+                        return Container(
+                          padding: const EdgeInsets.all(32),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: AppColors.neutral0,
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    );
-                  }).toList(),
-              ],
+                          child: Text(
+                            "Actualmente no hay voluntariados vigentes.\nPronto se irán incorporando nuevos.",
+                            textAlign: TextAlign.center,
+                            style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
+                          ),
+                        );
+                      }
+
+                      return Column(
+                        children: volunteerings.map((item) {
+                          return Column(
+                            children: [
+                              GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () {
+                                  context.go('/volunteering/${item.id}');
+                                },
+                                child: VolunteeringCard(
+                                  imagePath: item.imagenURL,
+                                  category: item.emisor,
+                                  title: item.titulo,
+                                  vacancies: item.vacantes,
+                                  onFavoritePressed: () {},
+                                  onLocationPressed: () {},
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ],

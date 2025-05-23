@@ -42,7 +42,7 @@ class VolunteeringCard extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 height: 138,
-                child: Image.asset(imagePath, fit: BoxFit.cover),
+                child: Image.network(imagePath, fit: BoxFit.cover),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
