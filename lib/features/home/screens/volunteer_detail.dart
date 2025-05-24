@@ -38,11 +38,11 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                 Stack(
                   children: [
                     SizedBox(
-                      width: AppGrid.screenWidth,
+                      width: AppGrid.screenWidth(context),
                       height: 200,
                       child: Image.network(
                         volunteering.imagenURL,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                       ),
                     ),
                     Positioned(

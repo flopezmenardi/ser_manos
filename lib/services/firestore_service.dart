@@ -14,7 +14,6 @@ class FirestoreService {
     });
   }
 
-
   Stream<List<News>> getNews() {
     return _db.collection('novedades').snapshots().map((snapshot) {
       return snapshot.docs.map((doc) => News.fromDocumentSnapshot(doc)).toList();
@@ -26,7 +25,7 @@ class FirestoreService {
     if (doc.exists) {
       return News.fromDocumentSnapshot(doc);
     }
-    return null;
+    return null; //Pedrolopez1
   }
 
   Future<List<Volunteering>> getAllVolunteerings() async {
