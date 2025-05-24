@@ -25,7 +25,7 @@ class AppTab extends StatelessWidget {
       color: AppColors.neutral0,
     );
 
-    final double availableWidth = AppGrid.screenWidth - 2 * AppGrid.horizontalMargin;
+    final double availableWidth = AppGrid.screenWidth(context) - 2 * AppGrid.horizontalMargin;
     final double tabWidth = availableWidth / 3;
     final double tabHeight = isActive ? 49 : 52;
 

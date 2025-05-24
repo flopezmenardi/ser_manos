@@ -25,7 +25,7 @@ class NewsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: AppGrid.screenWidth - 2 * AppGrid.horizontalMargin,
+      width: AppGrid.screenWidth(context) - 2 * AppGrid.horizontalMargin,
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.neutral0,

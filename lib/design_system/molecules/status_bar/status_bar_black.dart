@@ -24,7 +24,7 @@ class StatusBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: AppGrid.screenWidth,
+      width: AppGrid.screenWidth(context),
       height: 52,
       color: _backgroundColor,
     );

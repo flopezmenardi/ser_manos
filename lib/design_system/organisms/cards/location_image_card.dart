@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/design_system/tokens/grid.dart';
 import '../../tokens/colors.dart';
 import '../../tokens/typography.dart';
 
@@ -15,7 +16,7 @@ class LocationImageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 328,
+      width: AppGrid.screenWidth(context),
       height: 247, // Stay with 247px fixed height
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
