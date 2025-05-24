@@ -9,6 +9,8 @@ class User {
   final Timestamp fechaRegistro;
   final String genero;
   final String telefono;
+  final String? voluntariado;
+  final bool voluntariadoAceptado;
 
   User({
     required this.uuid,
@@ -19,6 +21,8 @@ class User {
     required this.fechaRegistro,
     required this.genero,
     required this.telefono,
+    this.voluntariado,
+    required this.voluntariadoAceptado,
   });
 
   factory User.fromDocumentSnapshot(DocumentSnapshot doc) {
@@ -32,6 +36,8 @@ class User {
       fechaRegistro: data['fechaRegistro'] ?? '',
       genero: data['genero'] ?? '',
       telefono: data['telefono'] ?? '',
+      voluntariado: data['voluntariado'] ?? '',
+      voluntariadoAceptado: data['voluntariadoAceptado'] ?? false,
     );
   }
 }
