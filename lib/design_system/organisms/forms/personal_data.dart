@@ -1,16 +1,21 @@
-import 'package:flutter/material.dart';
-import '../../tokens/typography.dart';
-import '../../tokens/colors.dart';
+import 'package:flutter/cupertino.dart';
+
 import '../../molecules/inputs/inputs.dart';
-import '../../organisms/cards/input_card.dart';
-import '../../organisms/cards/upload_profile_picture.dart';
+import '../../tokens/colors.dart';
+import '../../tokens/typography.dart';
+import '../cards/input_card.dart';
+import '../cards/upload_profile_picture.dart';
 
 class PersonalData extends StatelessWidget {
   final TextEditingController birthDateController;
+  final String? selectedGender;
+  final ValueChanged<String?> onGenderChanged;
 
   const PersonalData({
     super.key,
     required this.birthDateController,
+    required this.selectedGender,
+    required this.onGenderChanged,
   });
 
   @override
@@ -18,16 +23,12 @@ class PersonalData extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 1. Title
         Text(
           'Datos de perfil',
-          style: AppTypography.headline1.copyWith(
-            color: AppColors.neutral100,
-          ),
+          style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
         ),
         const SizedBox(height: 24),
 
-        // 2. Input: Fecha de nacimiento
         AppInput(
           label: 'Fecha de nacimiento',
           placeholder: 'DD/MM/YYYY',
@@ -35,12 +36,17 @@ class PersonalData extends StatelessWidget {
         ),
         const SizedBox(height: 24),
 
-        // 3. InputCard (already implemented)
-        InputCard(),
+        InputCard(
+          selectedGender: selectedGender,
+          onGenderChanged: onGenderChanged,
+        ),
         const SizedBox(height: 24),
 
-        // 4. Upload profile picture
-        UploadProfilePicture(onUploadPressed: () {print('Pressed upload profile picture');},),
+        UploadProfilePicture(
+          onUploadPressed: () {
+            print('Pressed upload profile picture');
+          },
+        ),
       ],
     );
   }

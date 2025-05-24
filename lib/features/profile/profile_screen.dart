@@ -1,68 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ser_manos/design_system/atoms/icons.dart';
-import 'package:ser_manos/design_system/molecules/buttons/cta_button.dart';
-import 'package:ser_manos/design_system/molecules/buttons/text_button.dart';
-import 'package:ser_manos/design_system/organisms/headers/header.dart';
-import 'package:ser_manos/design_system/organisms/cards/information_card.dart';
-import 'package:ser_manos/design_system/molecules/components/profile_picture.dart';
-import 'package:ser_manos/design_system/tokens/colors.dart';
-import 'package:ser_manos/design_system/tokens/grid.dart';
-import 'package:ser_manos/design_system/tokens/typography.dart';
+import 'package:ser_manos/models/user_model.dart';
 
-class ProfileScreen extends StatelessWidget {
-  final String name;
+import '../../design_system/atoms/icons.dart';
+import '../../design_system/molecules/buttons/cta_button.dart';
+import '../../design_system/molecules/buttons/text_button.dart';
+import '../../design_system/molecules/components/profile_picture.dart';
+import '../../design_system/organisms/cards/information_card.dart';
+import '../../design_system/organisms/headers/header.dart';
+import '../../design_system/tokens/colors.dart';
+import '../../design_system/tokens/grid.dart';
+import '../../design_system/tokens/typography.dart';
+import '../../providers/auth_provider.dart';
 
-  const ProfileScreen({
-    super.key,
-    this.name = 'Juan Perez',
-  });
-
-  Map<String, String> get _staticProfileData => const {
-        'name': 'Juan Test',
-        'email': 'juan@test.com',
-        'birthDate': '10/10/1990',
-        'phone': '+54911454454545',
-        'gender': 'Hombre'
-      };
-
-  // Map<String, String> get _staticProfileData => const {
-  //       'name': '',
-  //       'email': '',
-  //       'birthDate': '',
-  //       'phone': '',
-  //       'gender': ''
-  //     };
-
-  bool get _hasFullProfile {
-    final d = _staticProfileData;
-    return (d['name']?.isNotEmpty ?? false) &&
-        (d['email']?.isNotEmpty ?? false) &&
-        (d['birthDate']?.isNotEmpty ?? false) &&
-        (d['gender']?.isNotEmpty ?? false) &&
-        (d['phone']?.isNotEmpty ?? false);
-  }
+class ProfileScreen extends ConsumerWidget {
+  const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(currentUserProvider);
+
     return Scaffold(
       backgroundColor: AppColors.neutral0,
       body: Column(
         children: [
           AppHeader(selectedIndex: 1),
           Expanded(
-            child: _hasFullProfile
-                ? _buildFilledProfile(context)
-                : _buildEmptyProfile(context),
+            child:
+                user == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : _buildProfileContent(context, user),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildFilledProfile(BuildContext context) {
-    final d = _staticProfileData;
+  Widget _buildProfileContent(BuildContext context, User user) {
+    final hasFullProfile =
+        user.nombre.isNotEmpty &&
+        user.email.isNotEmpty &&
+        user.genero.isNotEmpty &&
+        user.telefono.isNotEmpty;
 
+    return hasFullProfile
+        ? _buildFilledProfile(context, user)
+        : _buildEmptyProfile(context, user.nombre);
+  }
+
+  Widget _buildFilledProfile(BuildContext context, User user) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: AppGrid.horizontalMargin),
       child: Column(
@@ -74,32 +61,35 @@ class ProfileScreen extends StatelessWidget {
             size: ProfilePictureSize.large,
           ),
           const SizedBox(height: 8),
-          Text('VOLUNTARIO',
-              style:
-                  AppTypography.overline.copyWith(color: AppColors.neutral75)),
+          Text(
+            'VOLUNTARIO',
+            style: AppTypography.overline.copyWith(color: AppColors.neutral75),
+          ),
           const SizedBox(height: 4),
-          Text(d['name']!,
-              style:
-                  AppTypography.overline.copyWith(color: AppColors.neutral100)),
+          Text(
+            user.nombre,
+            style: AppTypography.overline.copyWith(color: AppColors.neutral100),
+          ),
           const SizedBox(height: 2),
-          Text(d['email']!,
-              style:
-                  AppTypography.body1.copyWith(color: AppColors.secondary100)),
+          Text(
+            user.email,
+            style: AppTypography.body1.copyWith(color: AppColors.secondary100),
+          ),
           const SizedBox(height: 24),
           InformationCard(
             title: 'Información personal',
             firstLabel: 'FECHA DE NACIMIENTO',
-            firstContent: d['birthDate']!,
+            firstContent: user.fechaNacimiento,
             secondLabel: 'GÉNERO',
-            secondContent: d['gender']!,
+            secondContent: user.genero,
           ),
           const SizedBox(height: 16),
           InformationCard(
             title: 'Datos de contacto',
             firstLabel: 'TELÉFONO',
-            firstContent: d['phone']!,
+            firstContent: user.telefono,
             secondLabel: 'E-MAIL',
-            secondContent: d['email']!,
+            secondContent: user.email,
           ),
           const SizedBox(height: 24),
           CTAButton(
@@ -118,7 +108,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyProfile(BuildContext context) {
+  Widget _buildEmptyProfile(BuildContext context, String name) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppGrid.horizontalMargin),
       child: Column(
@@ -126,9 +116,10 @@ class ProfileScreen extends StatelessWidget {
         children: [
           AppIcons.getAccountIcon(color: AppColors.secondary90, size: 100),
           const SizedBox(height: 8),
-          Text('VOLUNTARIO',
-              style:
-                  AppTypography.overline.copyWith(color: AppColors.neutral75)),
+          Text(
+            'VOLUNTARIO',
+            style: AppTypography.overline.copyWith(color: AppColors.neutral75),
+          ),
           const SizedBox(height: 16),
           Text(name, style: AppTypography.subtitle1),
           const SizedBox(height: 16),
@@ -146,7 +137,7 @@ class ProfileScreen extends StatelessWidget {
           TextOnlyButton(
             text: 'Cerrar sesión',
             onPressed: () {
-              // TODO: logout
+              context.go('/login');
             },
           ),
         ],
