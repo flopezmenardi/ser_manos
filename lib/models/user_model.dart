@@ -1,0 +1,37 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class User {
+  final String uuid;
+  final String nombre;
+  final String apellido;
+  final String email;
+  final String fechaNacimiento;
+  final Timestamp fechaRegistro;
+  final String genero;
+  final String telefono;
+
+  User({
+    required this.uuid,
+    required this.nombre,
+    required this.apellido,
+    required this.email,
+    required this.fechaNacimiento,
+    required this.fechaRegistro,
+    required this.genero,
+    required this.telefono,
+  });
+
+  factory User.fromDocumentSnapshot(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return User(
+      uuid: doc.id,
+      nombre: data['nombre'] ?? '',
+      apellido: data['apellido'] ?? '',
+      email: data['email'] ?? '',
+      fechaNacimiento: data['fechaNacimiento'] ?? '',
+      fechaRegistro: data['fechaRegistro'] ?? '',
+      genero: data['genero'] ?? '',
+      telefono: data['telefono'] ?? '',
+    );
+  }
+}

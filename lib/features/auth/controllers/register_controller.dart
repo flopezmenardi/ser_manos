@@ -1,49 +1,72 @@
-// features/auth/controllers/register_controller.dart
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ser_manos/providers/user_provider.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import '../../../services/firestore_service.dart';
+import '../../../providers/firestore_provider.dart';
+
+final registerControllerProvider = Provider<RegisterController>((ref) {
+  return RegisterController(ref);
+});
 
 class RegisterController {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirestoreService _firestoreService = FirestoreService();
+  final Ref ref;
+  final fb_auth.FirebaseAuth _auth = fb_auth.FirebaseAuth.instance;
 
-  /// Registers a user with FirebaseAuth and stores extra data in Firestore.
-  /// Returns `null` if successful, or an error message string otherwise.
+  RegisterController(this.ref);
+
   Future<String?> registerUser({
     required String nombre,
     required String apellido,
     required String email,
     required String password,
   }) async {
-    print('🟡 Dentro de RegisterController.registerUser()');
     try {
-      // Step 1: Create Firebase Auth user
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      final userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      print('✅ Usuario creado con UID: ${userCredential.user?.uid}');
 
       final uid = userCredential.user!.uid;
 
-      // Step 2: Add extra info to Firestore under 'usuarios/{uid}'
-      await _firestoreService.createUser(uid, nombre, apellido, email);
-      print('✅ Usuario guardado en Firestore');
+      final firestore = ref.read(firestoreServiceProvider);
+      await firestore.createUser(uid, nombre, apellido, email);
 
-      return null; // success
-    } on FirebaseAuthException catch (e) {
-      print('❌ FirebaseAuthException: ${e.message}');
+      final user = await firestore.getUserById(uid);
+      if (user != null) {
+        ref.read(userProvider.notifier).setUser(user);
+      }
+
+      return null;
+    } on fb_auth.FirebaseAuthException catch (e) {
       return e.message;
     } catch (e) {
-      print('❌ Error desconocido: $e');
       return 'Error desconocido';
     }
   }
 
-  Future<void> loginUser({
+  Future<String?> loginUser({
     required String email,
     required String password,
   }) async {
-    await _auth.signInWithEmailAndPassword(email: email, password: password);
+    try {
+      final userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final uid = userCredential.user!.uid;
+      final firestore = ref.read(firestoreServiceProvider);
+      final user = await firestore.getUserById(uid);
+
+      if (user != null) {
+        ref.read(userProvider.notifier).setUser(user);
+      }
+
+      return null;
+    } on fb_auth.FirebaseAuthException catch (e) {
+      return e.message;
+    } catch (e) {
+      return 'Error desconocido';
+    }
   }
 }

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:ser_manos/design_system/tokens/typography.dart';
 
 import '../../tokens/colors.dart';
-import '../../tokens/grid.dart';
+import '../../tokens/typography.dart';
 
-class InputCard extends StatefulWidget {
-  const InputCard({super.key});
+class InputCard extends StatelessWidget {
+  final String? selectedGender;
+  final ValueChanged<String?> onGenderChanged;
 
-  @override
-  State<InputCard> createState() => _InputCardState();
-}
-
-class _InputCardState extends State<InputCard> {
-  String? selectedGender;
+  const InputCard({
+    super.key,
+    required this.selectedGender,
+    required this.onGenderChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +52,6 @@ class _InputCardState extends State<InputCard> {
     return RadioTheme(
       data: RadioThemeData(
         fillColor: WidgetStateProperty.resolveWith<Color>((states) {
-          if (states.contains(WidgetState.selected)) {
-            return AppColors.primary100;
-          }
           return AppColors.primary100;
         }),
       ),
@@ -65,11 +61,7 @@ class _InputCardState extends State<InputCard> {
             visualDensity: const VisualDensity(vertical: -2),
             value: value,
             groupValue: selectedGender,
-            onChanged: (String? newValue) {
-              setState(() {
-                selectedGender = newValue;
-              });
-            },
+            onChanged: onGenderChanged,
           ),
           Text(value, style: AppTypography.body1),
         ],
