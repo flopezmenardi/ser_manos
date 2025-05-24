@@ -18,6 +18,11 @@ class FirestoreService {
       'apellido': apellido,
       'email': email,
       'fechaRegistro': FieldValue.serverTimestamp(),
+      'telefono': '',
+      'genero': '',
+      'fechaNacimiento': '',
+      'voluntariado': null,
+      'voluntariadoAceptado': false,
     });
   }
 
@@ -58,5 +63,31 @@ class FirestoreService {
 
   Future<void> updateUser(String uid, Map<String, dynamic> data) async {
     await _db.collection('usuarios').doc(uid).update(data);
+  }
+
+  Future<void> applyToVolunteering(String uid, String volunteeringId) async {
+  await _db.collection('usuarios').doc(uid).update({
+    'voluntariado': volunteeringId,
+    'voluntariadoAceptado': false,
+  });
+  }
+
+  Future<void> withdrawApplication(String uid) async {
+    await _db.collection('usuarios').doc(uid).update({
+      'voluntariado': null,
+      'voluntariadoAceptado': false,
+    });
+  }
+
+  Future<void> abandonVolunteering(String uid, String volunteeringId) async {
+    await _db.collection('usuarios').doc(uid).update({
+      'voluntariado': null,
+      'voluntariadoAceptado': false,
+    });
+
+    // Aumentar vacantes en el voluntariado
+    await _db.collection('voluntariados').doc(volunteeringId).update({
+      'vacantes': FieldValue.increment(1),
+    });
   }
 }
