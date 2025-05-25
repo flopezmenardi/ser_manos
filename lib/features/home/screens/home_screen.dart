@@ -8,6 +8,7 @@ import 'package:ser_manos/design_system/tokens/colors.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
 import 'package:ser_manos/design_system/organisms/cards/current_volunteer_card.dart';
 import 'package:ser_manos/features/home/controller/volunteering_controller.dart';
+import 'package:ser_manos/providers/auth_provider.dart';
 class VolunteeringListPage extends ConsumerStatefulWidget {
   const VolunteeringListPage({super.key});
 
@@ -33,6 +34,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
   @override
   Widget build(BuildContext context) {
     final volunteeringListAsync = ref.watch(volunteeringControllerProvider);
+    final user = ref.watch(currentUserProvider);
 
     return Scaffold(
       backgroundColor: AppColors.secondary10,
@@ -49,18 +51,33 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                     controller: TextEditingController(),
                   ),
                   const SizedBox(height: 24),
-                  if (currentVolunteer != null) ...[
-                    Text(
-                      "Tu actividad",
-                      style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
-                    ),
-                    const SizedBox(height: 16),
-                    CurrentVolunteerCard(
-                      category: currentVolunteer!['category']!,
-                      name: currentVolunteer!['name']!,
-                    ),
-                    const SizedBox(height: 24),
-                  ],
+                    volunteeringListAsync.when(
+                    loading: () => const SizedBox.shrink(),
+                    error: (_, __) => const SizedBox.shrink(),
+                    data: (volunteerings) {
+                      if (user != null &&
+                          user.voluntariado != null && user.voluntariado != '' &&
+                          volunteerings.any((v) => v.id == user.voluntariado)) {
+                        final current = volunteerings.firstWhere((v) => v.id == user.voluntariado);
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Tu actividad",
+                              style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
+                            ),
+                            const SizedBox(height: 16),
+                            CurrentVolunteerCard(
+                              category: current.emisor,
+                              name: current.titulo,
+                            ),
+                            const SizedBox(height: 24),
+                          ],
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
                   Text(
                     "Voluntariados",
                     style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
