@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/features/home/controller/search_provider.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
+import 'package:ser_manos/providers/auth_provider.dart';
 import 'package:ser_manos/providers/firestore_provider.dart';
 
 import '../../../services/firestore_service.dart';
@@ -58,4 +59,28 @@ final volunteeringSearchProvider = FutureProvider<List<Volunteering>>((
         v.descripcion.toLowerCase().contains(lowered) ||
         v.resumen.toLowerCase().contains(lowered);
   }).toList();
+});
+
+
+final applyToVolunteeringProvider = Provider.family<void Function(), String>((ref, volunteeringId) {
+  final firestore = ref.read(firestoreServiceProvider);
+  final currentUser = ref.read(currentUserProvider)!;
+
+  return () async {
+    // Verificación de perfil completo
+    if (currentUser.telefono.isEmpty || currentUser.genero.isEmpty || currentUser.fechaNacimiento.isEmpty) {
+      throw Exception('Tu perfil no está completo');
+    }
+
+    if (currentUser.voluntariado != null || currentUser.voluntariado != '') {
+      throw Exception('Ya estás postulado a un voluntariado');
+    }
+
+    final volunteering = await firestore.getVolunteeringById(volunteeringId);
+    if (volunteering == null || volunteering.vacantes <= 0) {
+      throw Exception('No hay vacantes disponibles');
+    }
+
+    await firestore.applyToVolunteering(currentUser.uuid, volunteeringId);
+  };
 });
