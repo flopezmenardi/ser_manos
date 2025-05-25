@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../tokens/colors.dart';
 
-class TextOnlyButton extends StatelessWidget {
+class TextOnlyButton extends StatefulWidget {
   final String text;
-  final VoidCallback? onPressed;
+  final Future<void> Function()? onPressed;
   final bool isEnabled;
 
   const TextOnlyButton({
@@ -15,15 +15,38 @@ class TextOnlyButton extends StatelessWidget {
   });
 
   @override
+  State<TextOnlyButton> createState() => _TextOnlyButtonState();
+}
+
+class _TextOnlyButtonState extends State<TextOnlyButton> {
+  bool isLoading = false;
+
+  Future<void> _handlePress() async {
+    if (widget.onPressed == null) return;
+    setState(() => isLoading = true);
+    await widget.onPressed!();
+    setState(() => isLoading = false);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: isEnabled ? onPressed : null,
+      onPressed: (widget.isEnabled && !isLoading) ? _handlePress : null,
       style: TextButton.styleFrom(
-        foregroundColor: isEnabled ? AppColors.primary100 : AppColors.neutral50,
+        foregroundColor: widget.isEnabled ? AppColors.primary100 : AppColors.neutral50,
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         textStyle: const TextStyle(fontSize: 14),
       ),
-      child: Text(text),
+      child: isLoading
+          ? SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(widget.isEnabled ? AppColors.primary100 : AppColors.neutral50),
+                strokeWidth: 2,
+              ),
+            )
+          : Text(widget.text),
     );
   }
 }

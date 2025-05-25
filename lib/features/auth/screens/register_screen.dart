@@ -116,7 +116,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     const SizedBox(height: 16),
                     TextOnlyButton(
                       text: 'Ya tengo cuenta',
-                      onPressed: () {
+                      onPressed: () async {
                         context.go('/login');
                       },
                     ),

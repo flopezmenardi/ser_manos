@@ -42,7 +42,7 @@ class ChangeProfilePictureCellule extends StatelessWidget {
                 ShortButton(
                   text: 'Cambiar foto',
                   isLarge: false, // height 40
-                  onPressed: onChangePressed,
+                  onPressed: () async => onChangePressed(),
                 ),
               ],
             ),

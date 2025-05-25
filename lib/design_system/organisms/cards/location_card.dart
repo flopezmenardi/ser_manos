@@ -79,7 +79,7 @@ class LocationCard extends StatelessWidget {
                   // IconButton
                   FloatingButton(
                     icon: Icons.location_on,
-                    onPressed: () {print('Location icon pressed');},
+                    onPressed: () async {print('Location icon pressed');},
                     isEnabled: true,
                   ),
                 ],
