@@ -11,6 +11,7 @@ class User {
   final String telefono;
   final String? voluntariado;
   final bool voluntariadoAceptado;
+  final List<String> favoritos;
 
   User({
     required this.uuid,
@@ -23,6 +24,7 @@ class User {
     required this.telefono,
     this.voluntariado,
     required this.voluntariadoAceptado,
+    required this.favoritos,
   });
 
   factory User.fromDocumentSnapshot(DocumentSnapshot doc) {
@@ -38,6 +40,7 @@ class User {
       telefono: data['telefono'] ?? '',
       voluntariado: data['voluntariado'] ?? '',
       voluntariadoAceptado: data['voluntariadoAceptado'] ?? false,
+      favoritos: List<String>.from(data['favoritos'] ?? []),
     );
   }
 }
