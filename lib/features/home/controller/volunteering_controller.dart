@@ -61,14 +61,18 @@ final volunteeringSearchProvider = FutureProvider<List<Volunteering>>((
   }).toList();
 });
 
-
-final applyToVolunteeringProvider = Provider.family<void Function(), String>((ref, volunteeringId) {
+final applyToVolunteeringProvider = Provider.family<void Function(), String>((
+  ref,
+  volunteeringId,
+) {
   final firestore = ref.read(firestoreServiceProvider);
   final currentUser = ref.read(currentUserProvider)!;
 
   return () async {
     // Verificación de perfil completo
-    if (currentUser.telefono.isEmpty || currentUser.genero.isEmpty || currentUser.fechaNacimiento.isEmpty) {
+    if (currentUser.telefono.isEmpty ||
+        currentUser.genero.isEmpty ||
+        currentUser.fechaNacimiento.isEmpty) {
       throw Exception('Tu perfil no está completo');
     }
 
