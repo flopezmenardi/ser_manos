@@ -70,10 +70,10 @@ class FirestoreService {
   }
 
   Future<void> applyToVolunteering(String uid, String volunteeringId) async {
-  await _db.collection('usuarios').doc(uid).update({
-    'voluntariado': volunteeringId,
-    'voluntariadoAceptado': false,
-  });
+    await _db.collection('usuarios').doc(uid).update({
+      'voluntariado': volunteeringId,
+      'voluntariadoAceptado': false,
+    });
   }
 
   Future<void> withdrawApplication(String uid) async {

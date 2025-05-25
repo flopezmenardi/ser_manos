@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart'; // for GeoPoint
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../design_system/molecules/inputs/search_input.dart';
@@ -10,7 +8,6 @@ import '../../../design_system/organisms/cards/volunteer_card.dart';
 import '../../../design_system/organisms/headers/header.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/typography.dart';
-import '../../../services/firestore_service.dart';
 import '../controller/search_provider.dart';
 import '../controller/volunteering_controller.dart';
 
@@ -25,9 +22,6 @@ class VolunteeringListPage extends ConsumerStatefulWidget {
 class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
   int selectedIndex = 0;
 
-  VolunteeringSortMode sortMode = VolunteeringSortMode.newest;
-  GeoPoint? userLocation;
-
   final Map<String, String>? currentVolunteer = {
     'category': 'Acción Social',
     'name': 'Un Techo para mi País',
@@ -41,9 +35,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final volunteeringListAsync = ref.watch(
-      volunteeringSortedProvider((sortMode, userLocation)),
-    );
+    final volunteeringListAsync = ref.watch(volunteeringSearchProvider);
     final debouncedQueryNotifier = ref.read(
       debouncedSearchQueryProvider.notifier,
     );
@@ -67,7 +59,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                   ),
                   const SizedBox(height: 8),
 
-                  // Toggle sort mode button
+                  // 🟢 New proximity sorting button
                   Align(
                     alignment: Alignment.centerLeft,
                     child: ElevatedButton.icon(
@@ -76,56 +68,9 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                         foregroundColor: Colors.white,
                         elevation: 2,
                       ),
-                      icon: Icon(
-                        sortMode == VolunteeringSortMode.closest
-                            ? Icons.schedule
-                            : Icons.my_location,
-                      ),
-                      label: Text(
-                        sortMode == VolunteeringSortMode.closest
-                            ? "Ordenar por nuevos"
-                            : "Ordenar por cercanía",
-                      ),
-                      onPressed: () async {
-                        if (sortMode == VolunteeringSortMode.closest) {
-                          setState(() {
-                            sortMode = VolunteeringSortMode.newest;
-                            userLocation = null;
-                          });
-                        } else {
-                          try {
-                            final permission =
-                                await Geolocator.requestPermission();
-                            if (permission == LocationPermission.denied ||
-                                permission ==
-                                    LocationPermission.deniedForever) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Permiso de ubicación denegado',
-                                  ),
-                                ),
-                              );
-                              return;
-                            }
-
-                            final position =
-                                await Geolocator.getCurrentPosition(
-                                  desiredAccuracy: LocationAccuracy.high,
-                                );
-
-                            setState(() {
-                              sortMode = VolunteeringSortMode.closest;
-                              userLocation = GeoPoint(
-                                position.latitude,
-                                position.longitude,
-                              );
-                            });
-                          } catch (e) {
-                            debugPrint('Error getting location: $e');
-                          }
-                        }
-                      },
+                      icon: const Icon(Icons.my_location),
+                      label: const Text("Ordenar por cercanía"),
+                      onPressed: null,
                     ),
                   ),
 
