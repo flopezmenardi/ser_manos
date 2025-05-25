@@ -40,11 +40,6 @@ class VolunteeringDetailScreen extends ConsumerWidget {
             user.genero.isNotEmpty &&
             user.fechaNacimiento.isNotEmpty;
 
-        print('🧠 voluntariado actual del user: ${user?.voluntariado}');
-        print('📄 ID del voluntariado actual: ${volunteering.id}');
-        print('🔁 isSameVolunteering: $isSameVolunteering');
-        print('✅ isAccepted: $isAccepted');
-        print('🎒 hasAnyVolunteering: $hasAnyVolunteering');
         Widget volunteeringAction;
 
         if (isSameVolunteering && isAccepted) {
@@ -58,7 +53,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                 text: 'Abandonar voluntariado',
                 onPressed: () async {
                   await ref.read(firestoreServiceProvider).abandonVolunteering(user!.uuid, volunteering.id);
-                  ref.invalidate(currentUserProvider);
+                  await ref.read(refreshUserProvider)();
                   ref.invalidate(volunteeringByIdProvider(id));
                 },
               ),
@@ -75,7 +70,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                 text: 'Retirar postulación',
                 onPressed: () async {
                   await ref.read(firestoreServiceProvider).withdrawApplication(user!.uuid);
-                  ref.invalidate(currentUserProvider);
+                  await ref.read(refreshUserProvider)();
                   ref.invalidate(volunteeringByIdProvider(id));
                 },
               ),
@@ -90,7 +85,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                 text: 'Abandonar voluntariado actual',
                 onPressed: () async {
                   await ref.read(firestoreServiceProvider).withdrawApplication(user!.uuid);
-                  ref.invalidate(currentUserProvider);
+                  await ref.read(refreshUserProvider)();
                   ref.invalidate(volunteeringByIdProvider(id));
                 },
               ),
@@ -119,7 +114,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                 return;
               }
               await ref.read(firestoreServiceProvider).applyToVolunteering(user!.uuid, volunteering.id);
-              ref.invalidate(currentUserProvider);
+              await ref.read(refreshUserProvider)();
               ref.invalidate(volunteeringByIdProvider(id));
             },
           );
@@ -210,7 +205,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        volunteering.requisitos.map((r) => '- $r').join('\n'),
+                        volunteering.requisitos,
                         style: AppTypography.body1.copyWith(color: AppColors.neutral100),
                       ),
                       const SizedBox(height: 16),
