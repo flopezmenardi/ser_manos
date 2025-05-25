@@ -24,24 +24,28 @@ class NewsScreen extends ConsumerWidget {
             child: newsAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Center(child: Text('Error: $e')),
-              data:
-                  (novedades) => ListView.separated(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: novedades.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 16),
-                    itemBuilder: (context, index) {
-                      final novedad = novedades[index];
-                      return NewsCard(
-                        imagePath: novedad.imagenURL,
-                        report: novedad.emisor,
-                        title: novedad.titulo,
-                        description: novedad.resumen,
-                        onConfirm: () {
-                          context.push('/news/${novedad.id}');
-                        },
-                      );
-                    },
-                  ),
+              data: (novedades) => RefreshIndicator(
+                onRefresh: () async {
+                  await ref.refresh(newsProvider.future);
+                },
+                child: ListView.separated(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: novedades.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 16),
+                  itemBuilder: (context, index) {
+                    final novedad = novedades[index];
+                    return NewsCard(
+                      imagePath: novedad.imagenURL,
+                      report: novedad.emisor,
+                      title: novedad.titulo,
+                      description: novedad.resumen,
+                      onConfirm: () {
+                        context.push('/news/${novedad.id}');
+                      },
+                    );
+                  },
+                ),
+              ),
             ),
           ),
         ],
