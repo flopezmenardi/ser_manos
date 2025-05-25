@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../design_system/organisms/cards/news_card.dart';
 import '../../../design_system/organisms/headers/header.dart';
 import '../../../design_system/tokens/colors.dart';
-import '../controller/NewsController.dart';
+import '../controller/news_controller.dart';
 
 class NewsScreen extends ConsumerWidget {
   const NewsScreen({super.key});
