@@ -7,7 +7,7 @@ class Volunteering {
   final String resumen;
   final String emisor;
   final int vacantes;
-  final List<String> requisitos;
+  final String requisitos;
   final String direccion;
   final GeoPoint ubicacion;
   final String imagenURL;
@@ -36,7 +36,7 @@ class Volunteering {
       resumen: data['resumen'] ?? '',
       emisor: data['emisor'] ?? '',
       vacantes: data['vacantes'] ?? 0,
-      requisitos: List<String>.from(data['requisitos'] ?? []),
+      requisitos: data['requisitos'] ?? '',
       direccion: data['direccion'] ?? '',
       ubicacion: data['ubicacion'] ?? '',
       imagenURL: data['imagenURL'] ?? '',
