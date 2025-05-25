@@ -37,6 +37,18 @@ class FirestoreService {
     });
   }
 
+  Stream<List<News>> getNewsOrderedByDate() {
+    return _db
+        .collection('novedades')
+        .orderBy('fechaCreacion', descending: true)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs
+              .map((doc) => News.fromDocumentSnapshot(doc))
+              .toList();
+        });
+  }
+
   Future<News?> getNewsById(String id) async {
     final doc = await _db.collection('novedades').doc(id).get();
     if (doc.exists) {
