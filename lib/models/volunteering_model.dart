@@ -9,7 +9,9 @@ class Volunteering {
   final int vacantes;
   final List<String> requisitos;
   final String direccion;
+  final GeoPoint ubicacion;
   final String imagenURL;
+  final Timestamp fechaCreacion;
 
   Volunteering({
     required this.id,
@@ -20,7 +22,9 @@ class Volunteering {
     required this.vacantes,
     required this.requisitos,
     required this.direccion,
+    required this.ubicacion,
     required this.imagenURL,
+    required this.fechaCreacion,
   });
 
   factory Volunteering.fromDocumentSnapshot(DocumentSnapshot doc) {
@@ -34,7 +38,9 @@ class Volunteering {
       vacantes: data['vacantes'] ?? 0,
       requisitos: List<String>.from(data['requisitos'] ?? []),
       direccion: data['direccion'] ?? '',
+      ubicacion: data['ubicacion'] ?? '',
       imagenURL: data['imagenURL'] ?? '',
+      fechaCreacion: data['fechaCreacion'] ?? '',
     );
   }
 }
