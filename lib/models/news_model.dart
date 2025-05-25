@@ -7,6 +7,7 @@ class News {
   final String emisor;
   final String resumen;
   final String imagenURL;
+  final Timestamp fechaCreacion;
 
   News({
     required this.id,
@@ -15,6 +16,7 @@ class News {
     required this.emisor,
     required this.resumen,
     required this.imagenURL,
+    required this.fechaCreacion,
   });
 
   factory News.fromDocumentSnapshot(DocumentSnapshot doc) {
@@ -26,6 +28,7 @@ class News {
       emisor: data['emisor'] ?? '',
       resumen: data['resumen'] ?? '',
       imagenURL: data['imagenURL'] ?? '',
+      fechaCreacion: data['fechaCreacion'] ?? '',
     );
   }
 }
