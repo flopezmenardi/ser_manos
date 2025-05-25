@@ -30,24 +30,18 @@ class FirestoreService {
     });
   }
 
-  Stream<List<News>> getNews() {
-    return _db.collection('novedades').snapshots().map((snapshot) {
-      return snapshot.docs
-          .map((doc) => News.fromDocumentSnapshot(doc))
-          .toList();
-    });
+  Future<List<News>> getNews() async {
+    final snapshot = await _db.collection('novedades').get();
+    return snapshot.docs.map((doc) => News.fromDocumentSnapshot(doc)).toList();
   }
 
-  Stream<List<News>> getNewsOrderedByDate() {
-    return _db
-        .collection('novedades')
-        .orderBy('fechaCreacion', descending: true)
-        .snapshots()
-        .map((snapshot) {
-          return snapshot.docs
-              .map((doc) => News.fromDocumentSnapshot(doc))
-              .toList();
-        });
+  Future<List<News>> getNewsOrderedByDate() async {
+    final snapshot =
+        await _db
+            .collection('novedades')
+            .orderBy('fechaCreacion', descending: true)
+            .get();
+    return snapshot.docs.map((doc) => News.fromDocumentSnapshot(doc)).toList();
   }
 
   Future<News?> getNewsById(String id) async {
@@ -145,9 +139,10 @@ class FirestoreService {
   }) async {
     final userRef = _db.collection('usuarios').doc(uid);
     await userRef.update({
-      'favoritos': isFavorite
-        ? FieldValue.arrayRemove([volunteeringId])
-        : FieldValue.arrayUnion([volunteeringId]),
+      'favoritos':
+          isFavorite
+              ? FieldValue.arrayRemove([volunteeringId])
+              : FieldValue.arrayUnion([volunteeringId]),
     });
   }
 

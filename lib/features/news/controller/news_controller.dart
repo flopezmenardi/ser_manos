@@ -3,7 +3,7 @@ import 'package:ser_manos/models/news_model.dart';
 
 import '../../../providers/firestore_provider.dart';
 
-final newsProvider = StreamProvider<List<News>>((ref) {
+final newsProvider = FutureProvider<List<News>>((ref) async {
   final firestore = ref.watch(firestoreServiceProvider);
-  return firestore.getNewsOrderedByDate();
+  return await firestore.getNewsOrderedByDate();
 });
