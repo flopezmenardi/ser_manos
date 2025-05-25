@@ -103,6 +103,21 @@ class VolunteeringQueryState {
   }
 }
 
+final toggleFavoriteProvider = Provider.family<
+  Future<void> Function(String volunteeringId, bool isFavorite),
+  String
+>((ref, uid) {
+  final firestore = ref.watch(firestoreServiceProvider);
+  return (String volunteeringId, bool isFavorite) async {
+    await firestore.toggleFavorite(
+      uid: uid,
+      volunteeringId: volunteeringId,
+      isFavorite: isFavorite,
+    );
+    ref.invalidate(currentUserProvider); // Actualizar el usuario
+  };
+});
+
 // Manages the state which has both the sorting criteria and the text input
 // Also manages the debouncing for the text input
 class VolunteeringQueryNotifier extends StateNotifier<VolunteeringQueryState> {

@@ -26,6 +26,7 @@ class FirestoreService {
       'fechaNacimiento': '',
       'voluntariado': null,
       'voluntariadoAceptado': false,
+      'favoritos': <String>[],
     });
   }
 
@@ -135,6 +136,19 @@ class FirestoreService {
     }
 
     return volunteerings;
+  }
+
+  Future<void> toggleFavorite({
+    required String uid,
+    required String volunteeringId,
+    required bool isFavorite,
+  }) async {
+    final userRef = _db.collection('usuarios').doc(uid);
+    await userRef.update({
+      'favoritos': isFavorite
+        ? FieldValue.arrayRemove([volunteeringId])
+        : FieldValue.arrayUnion([volunteeringId]),
+    });
   }
 
   double _distanceBetween(GeoPoint a, GeoPoint b) {
