@@ -81,7 +81,9 @@ class NewsCard extends StatelessWidget {
                         alignment: Alignment.centerRight,
                         child: TextOnlyButton(
                           text: 'Leer más',
-                          onPressed: onConfirm,
+                          onPressed: () async {
+                            onConfirm();
+                          },
                         ),
                       ),
                     ],

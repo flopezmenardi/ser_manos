@@ -68,7 +68,7 @@ class NewsDetailsScreen extends StatelessWidget {
                       const SizedBox(height: 24),
                       Text("Comparte esta nota", style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
                       const SizedBox(height: 16),
-                      CTAButton(text: "Compartir", onPressed: () {
+                      CTAButton(text: "Compartir", onPressed: () async {
                         // TODO: implement share
                       }),
                     ],

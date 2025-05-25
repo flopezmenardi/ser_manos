@@ -39,7 +39,7 @@ class WelcomeScreen extends StatelessWidget {
                 children: [
                   CTAButton(
                     text: 'Comenzar',
-                    onPressed: () {
+                    onPressed: () async {
                       //navigate to login screen
                       context.go('/initial');
                     },

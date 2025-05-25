@@ -32,7 +32,7 @@ class UploadProfilePicture extends StatelessWidget {
           ShortButton(
             text: 'Subir foto',
             isLarge: false, // height 40px
-            onPressed: onUploadPressed,
+            onPressed: () async => onUploadPressed(),
           ),
         ],
       ),

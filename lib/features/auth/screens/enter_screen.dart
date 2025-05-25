@@ -35,15 +35,16 @@ class InitialScreen extends StatelessWidget {
                 children: [
                   CTAButton(
                     text: 'Iniciar Sesión',
-                    onPressed: () {
+                    onPressed: () async {
                       //navigate to login screen
                       context.go('/login');
+                      return;
                     },
                   ),
                   const SizedBox(height: 16),
                   TextOnlyButton(
                     text: 'Registrarse',
-                    onPressed: () {
+                    onPressed: () async {
                       //navigate to register screen
                       context.go('/register');
                     },

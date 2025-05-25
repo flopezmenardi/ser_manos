@@ -86,7 +86,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 16),
                   TextOnlyButton(
                     text: 'No tengo cuenta',
-                    onPressed: () {
+                    onPressed: () async {
                       context.go('/register');
                     },
                   ),

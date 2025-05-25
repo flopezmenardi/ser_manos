@@ -98,7 +98,7 @@ class ProfileScreen extends ConsumerWidget {
           ),
           TextOnlyButton(
             text: 'Cerrar sesión',
-            onPressed: () {
+            onPressed: () async {
               context.go('/login');
             },
           ),
@@ -136,7 +136,7 @@ class ProfileScreen extends ConsumerWidget {
           const SizedBox(height: 16),
           TextOnlyButton(
             text: 'Cerrar sesión',
-            onPressed: () {
+            onPressed: () async {
               context.go('/login');
             },
           ),

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import '../../tokens/typography.dart';
 import '../../tokens/colors.dart';
 
-class CTAButton extends StatelessWidget {
+class CTAButton extends StatefulWidget {
   final String text;
-  final VoidCallback? onPressed;
+  final Future<void> Function()? onPressed;
   final bool isEnabled;
 
   const CTAButton({
@@ -15,25 +15,48 @@ class CTAButton extends StatelessWidget {
   });
 
   @override
+  State<CTAButton> createState() => _CTAButtonState();
+}
+
+class _CTAButtonState extends State<CTAButton> {
+  bool isLoading = false;
+
+  Future<void> _handlePress() async {
+    if (widget.onPressed == null) return;
+    setState(() => isLoading = true);
+    await widget.onPressed!();
+    setState(() => isLoading = false);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 328,
       height: 44,
       child: ElevatedButton(
-        onPressed: isEnabled ? onPressed : null,
+        onPressed: (widget.isEnabled && !isLoading) ? _handlePress : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: isEnabled ? AppColors.primary100 : AppColors.neutral25,
-          foregroundColor: isEnabled ? AppColors.neutral0 : AppColors.neutral50,
+          backgroundColor: widget.isEnabled ? AppColors.primary100 : AppColors.neutral25,
+          foregroundColor: widget.isEnabled ? AppColors.neutral0 : AppColors.neutral50,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
           ),
         ),
-        child: Text(
-          text,
-          style: AppTypography.button.copyWith(
-            color: isEnabled ? AppColors.neutral0 : AppColors.neutral50,
-          ),
-        ),
+        child: isLoading
+            ? SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.neutral0),
+                  strokeWidth: 2,
+                ),
+              )
+            : Text(
+                widget.text,
+                style: AppTypography.button.copyWith(
+                  color: widget.isEnabled ? AppColors.neutral0 : AppColors.neutral50,
+                ),
+              ),
       ),
     );
   }

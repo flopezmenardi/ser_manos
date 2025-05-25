@@ -90,7 +90,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                 },
               ),
               const SizedBox(height: 8),
-              CTAButton(text: 'Postularme', isEnabled: false, onPressed: () {}),
+              CTAButton(text: 'Postularme', isEnabled: false, onPressed: () async {}),
             ],
           );
         } else if (!hasVacants) {
@@ -99,7 +99,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
             children: [
               Text('No hay vacantes disponibles para postularse.', style: AppTypography.body1),
               const SizedBox(height: 8),
-              CTAButton(text: 'Postularme', isEnabled: false, onPressed: () {}),
+              CTAButton(text: 'Postularme', isEnabled: false, onPressed: () async{}),
             ],
           );
         } else {
