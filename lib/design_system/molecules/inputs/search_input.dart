@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
-import '../../tokens/colors.dart';
-import '../../tokens/typography.dart';
-import '../../tokens/shadow.dart';
-import '../../atoms/icons.dart'; // <- now correctly used
 
-enum SearchInputMode {
-  map,
-  list,
-}
+import '../../atoms/icons.dart';
+import '../../tokens/colors.dart';
+import '../../tokens/shadow.dart';
+import '../../tokens/typography.dart';
+
+enum SearchInputMode { map, list }
 
 class SearchInput extends StatefulWidget {
+  final void Function(String) onChanged;
+  final void Function(String) onSubmitted;
   final SearchInputMode mode;
-  final TextEditingController controller;
-  final VoidCallback? onTap;
+  final VoidCallback? onSortByProximityRequested;
+  final TextEditingController? controller;
 
   const SearchInput({
     super.key,
+    required this.onChanged,
+    required this.onSubmitted,
     required this.mode,
-    required this.controller,
-    this.onTap,
+    this.onSortByProximityRequested,
+    this.controller,
   });
 
   @override
@@ -26,24 +28,34 @@ class SearchInput extends StatefulWidget {
 }
 
 class _SearchInputState extends State<SearchInput> {
+  late final TextEditingController _controller;
   bool _isFocused = false;
-
-  void _clearInput() {
-    widget.controller.clear();
-    setState(() {});
-  }
 
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(() {
-      setState(() {}); // Listen to text changes
+    _controller = widget.controller ?? TextEditingController();
+    _controller.addListener(() {
+      setState(() {}); // Update UI on text changes
     });
   }
 
   @override
+  void dispose() {
+    if (widget.controller == null) {
+      _controller.dispose(); // Dispose if we created it internally
+    }
+    super.dispose();
+  }
+
+  void _clearInput() {
+    _controller.clear();
+    widget.onChanged('');
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final bool hasText = widget.controller.text.isNotEmpty;
+    final bool hasText = _controller.text.isNotEmpty;
 
     return Focus(
       onFocusChange: (focused) {
@@ -60,12 +72,13 @@ class _SearchInputState extends State<SearchInput> {
           boxShadow: AppShadows.shadow1,
         ),
         child: TextField(
-          controller: widget.controller,
-          onTap: widget.onTap,
-          onChanged: (value) => setState(() {}),
-          style: AppTypography.body1.copyWith(
-            color: AppColors.neutral100,
-          ),
+          controller: _controller,
+          onChanged: (value) {
+            widget.onChanged(value);
+            setState(() {});
+          },
+          onSubmitted: widget.onSubmitted,
+          style: AppTypography.body1.copyWith(color: AppColors.neutral100),
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(vertical: 12),
             border: InputBorder.none,
@@ -91,21 +104,25 @@ class _SearchInputState extends State<SearchInput> {
 
   Widget? _buildSuffixIcon(bool hasText) {
     if (hasText) {
-      // User typed -> show X (close)
+      // User typed -> show clear button
       return IconButton(
         icon: AppIcons.getCloseIcon(state: IconState.defaultState),
         onPressed: _clearInput,
       );
     } else if (!_isFocused) {
-      // Not focused -> show map or list icon
-      return Padding(
-        padding: const EdgeInsets.only(right: 16),
-        child: widget.mode == SearchInputMode.map
-            ? AppIcons.getMapIcon(state: IconState.enabled) // <- GREEN!!
-            : AppIcons.getListIcon(state: IconState.enabled),
+      // Not focused -> show map/list icon that can be pressed to trigger proximity sort
+      return GestureDetector(
+        onTap: widget.onSortByProximityRequested,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child:
+              widget.mode == SearchInputMode.map
+                  ? AppIcons.getMapIcon(state: IconState.enabled)
+                  : AppIcons.getListIcon(state: IconState.enabled),
+        ),
       );
     } else {
-      // Focused but empty -> no icon
+      // Focused but empty -> no icon, keep space
       return const SizedBox(width: 24);
     }
   }
