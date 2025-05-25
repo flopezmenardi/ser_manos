@@ -4,9 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ser_manos/models/news_model.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
 
+import '../features/home/controller/volunteering_controller.dart';
 import '../models/user_model.dart';
-
-enum VolunteeringSortMode { newest, closest }
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -106,12 +105,12 @@ class FirestoreService {
             .toList();
 
     switch (sortMode) {
-      case VolunteeringSortMode.newest:
+      case VolunteeringSortMode.date:
         volunteerings.sort(
           (a, b) => b.fechaCreacion.compareTo(a.fechaCreacion),
         );
         break;
-      case VolunteeringSortMode.closest:
+      case VolunteeringSortMode.proximity:
         if (userLocation == null) {
           throw Exception('User location is required for proximity sorting.');
         }
