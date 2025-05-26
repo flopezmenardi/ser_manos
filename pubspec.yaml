@@ -20,6 +20,7 @@ dependencies:
   geolocator: ^11.0.0
   share_plus: ^10.0.0
   http: ^1.1.0
+  flutter_markdown: ^0.6.0
 
 dev_dependencies:
   flutter_test:

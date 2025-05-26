@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/design_system/atoms/icons.dart';
 import 'package:ser_manos/design_system/molecules/buttons/text_button.dart';
@@ -209,10 +210,9 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                           style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          volunteering.requisitos,
-                          style: AppTypography.body1.copyWith(color: AppColors.neutral100),
-                        ),
+                        MarkdownBody(
+                          data: volunteering.requisitos,
+                          styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))                        ),
                         const SizedBox(height: 16),
                         VacantsIndicator(vacants: volunteering.vacantes),
                         const SizedBox(height: 24),
