@@ -16,7 +16,7 @@ class ContactDataFormSermanos extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 280,
-      width: 328,
+      width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

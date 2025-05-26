@@ -65,7 +65,7 @@ class _SearchInputState extends State<SearchInput> {
       },
       child: Container(
         height: 48,
-        width: 328,
+        width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(4),
