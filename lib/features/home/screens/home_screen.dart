@@ -65,7 +65,56 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                       mode: SearchInputMode.map,
                     ),
                     const SizedBox(height: 8),
-                    // ... tu botón de ubicación ...
+                    // PROXIMITY BUTTON FOR NOW
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary100,
+                          foregroundColor: Colors.white,
+                          elevation: 2,
+                        ),
+                        icon: const Icon(Icons.my_location),
+                        label: Text(
+                          queryState.sortMode == VolunteeringSortMode.proximity
+                              ? "Ordenar por fecha"
+                              : "Ordenar por cercanía",
+                        ),
+                        onPressed: () async {
+                          if (queryState.sortMode ==
+                              VolunteeringSortMode.proximity) {
+                            queryNotifier.updateSortMode(
+                              VolunteeringSortMode.date,
+                            );
+                          } else {
+                            LocationPermission permission =
+                                await Geolocator.checkPermission();
+                            if (permission == LocationPermission.denied) {
+                              permission = await Geolocator.requestPermission();
+                              if (permission == LocationPermission.denied) {
+                                // Show message: permission denied
+                                return;
+                              }
+                            }
+
+                            if (permission ==
+                                LocationPermission.deniedForever) {
+                              // Show message: permission permanently denied
+                              return;
+                            }
+
+                            final position =
+                                await Geolocator.getCurrentPosition();
+                            queryNotifier.setLocation(
+                              GeoPoint(position.latitude, position.longitude),
+                            );
+                            queryNotifier.updateSortMode(
+                              VolunteeringSortMode.proximity,
+                            );
+                          }
+                        },
+                      ),
+                    ),
                     const SizedBox(height: 24),
                     volunteeringListAsync.when(
                       loading: () => const SizedBox.shrink(),
@@ -74,7 +123,9 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                         if (user != null &&
                             user.voluntariado != null &&
                             user.voluntariado != '' &&
-                            volunteerings.any((v) => v.id == user.voluntariado)) {
+                            volunteerings.any(
+                              (v) => v.id == user.voluntariado,
+                            )) {
                           final current = volunteerings.firstWhere(
                             (v) => v.id == user.voluntariado,
                           );
@@ -107,8 +158,9 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                     ),
                     const SizedBox(height: 16),
                     volunteeringListAsync.when(
-                      loading: () =>
-                          const Center(child: CircularProgressIndicator()),
+                      loading:
+                          () =>
+                              const Center(child: CircularProgressIndicator()),
                       error: (error, _) => Text('Error: $error'),
                       data: (volunteerings) {
                         if (volunteerings.isEmpty) {
@@ -116,53 +168,60 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                         }
 
                         return Column(
-                          children: volunteerings.map((item) {
-                            final isFavorite = localFavorites.contains(item.id);
+                          children:
+                              volunteerings.map((item) {
+                                final isFavorite = localFavorites.contains(
+                                  item.id,
+                                );
 
-                            return Column(
-                              children: [
-                                GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: () {
-                                    context.go('/volunteering/${item.id}');
-                                  },
-                                  child: VolunteeringCard(
-                                    imagePath: item.imagenURL,
-                                    category: item.emisor,
-                                    title: item.titulo,
-                                    vacancies: item.vacantes,
-                                    isFavorite: isFavorite,
-                                    onFavoritePressed: () async {
-                                      if (user == null) return;
-
-                                      final firestore = ref.read(firestoreServiceProvider);
-                                      final refreshUser = ref.read(refreshUserProvider);
-
-                                      await firestore.toggleFavorite(
-                                        uid: user.uuid,
-                                        volunteeringId: item.id,
+                                return Column(
+                                  children: [
+                                    GestureDetector(
+                                      behavior: HitTestBehavior.translucent,
+                                      onTap: () {
+                                        context.go('/volunteering/${item.id}');
+                                      },
+                                      child: VolunteeringCard(
+                                        imagePath: item.imagenURL,
+                                        category: item.emisor,
+                                        title: item.titulo,
+                                        vacancies: item.vacantes,
                                         isFavorite: isFavorite,
-                                      );
+                                        onFavoritePressed: () async {
+                                          if (user == null) return;
 
-                                      // Local update for UI response
-                                      setState(() {
-                                        if (isFavorite) {
-                                          localFavorites.remove(item.id);
-                                        } else {
-                                          localFavorites.add(item.id);
-                                        }
-                                      });
+                                          final firestore = ref.read(
+                                            firestoreServiceProvider,
+                                          );
+                                          final refreshUser = ref.read(
+                                            refreshUserProvider,
+                                          );
 
-                                      // Refresh for full user update
-                                      await refreshUser();
-                                    },
-                                    onLocationPressed: () {},
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                              ],
-                            );
-                          }).toList(),
+                                          await firestore.toggleFavorite(
+                                            uid: user.uuid,
+                                            volunteeringId: item.id,
+                                            isFavorite: isFavorite,
+                                          );
+
+                                          // Local update for UI response
+                                          setState(() {
+                                            if (isFavorite) {
+                                              localFavorites.remove(item.id);
+                                            } else {
+                                              localFavorites.add(item.id);
+                                            }
+                                          });
+
+                                          // Refresh for full user update
+                                          await refreshUser();
+                                        },
+                                        onLocationPressed: () {},
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                  ],
+                                );
+                              }).toList(),
                         );
                       },
                     ),
@@ -187,9 +246,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
       child: Text(
         "Actualmente no hay voluntariados vigentes.\nPronto se irán incorporando nuevos.",
         textAlign: TextAlign.center,
-        style: AppTypography.subtitle1.copyWith(
-          color: AppColors.neutral100,
-        ),
+        style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
       ),
     );
   }
