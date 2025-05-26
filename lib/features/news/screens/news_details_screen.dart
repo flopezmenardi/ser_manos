@@ -6,6 +6,10 @@ import 'package:ser_manos/design_system/tokens/colors.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
 import 'package:ser_manos/models/news_model.dart';
 import 'package:ser_manos/services/firestore_service.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class NewsDetailsScreen extends StatefulWidget {
   final String newsId;
@@ -38,12 +42,16 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
       future: _newsFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
 
         final novedad = snapshot.data;
         if (novedad == null) {
-          return const Scaffold(body: Center(child: Text('Novedad no encontrada.')));
+          return const Scaffold(
+            body: Center(child: Text('Novedad no encontrada.')),
+          );
         }
 
         return Scaffold(
@@ -65,12 +73,25 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                   onRefresh: _refresh,
                   child: SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 24,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Reporte "+novedad.emisor, style: AppTypography.overline.copyWith(color: AppColors.neutral75)),
-                        Text(novedad.titulo, style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
+                        Text(
+                          "Reporte " + novedad.emisor,
+                          style: AppTypography.overline.copyWith(
+                            color: AppColors.neutral75,
+                          ),
+                        ),
+                        Text(
+                          novedad.titulo,
+                          style: AppTypography.headline2.copyWith(
+                            color: AppColors.neutral100,
+                          ),
+                        ),
                         const SizedBox(height: 16),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(6),
@@ -84,16 +105,61 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                         const SizedBox(height: 16),
                         SizedBox(
                           width: double.infinity,
-                          child: Text(novedad.resumen, style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100), maxLines: 3, overflow: TextOverflow.ellipsis),
+                          child: Text(
+                            novedad.resumen,
+                            style: AppTypography.subtitle1.copyWith(
+                              color: AppColors.neutral100,
+                            ),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                         const SizedBox(height: 16),
-                        Text(novedad.descripcion, style: AppTypography.body1.copyWith(color: AppColors.neutral100)),
+                        Text(
+                          novedad.descripcion,
+                          style: AppTypography.body1.copyWith(
+                            color: AppColors.neutral100,
+                          ),
+                        ),
                         const SizedBox(height: 24),
-                        Text("Comparte esta nota", style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
+                        Text(
+                          "Comparte esta nota",
+                          style: AppTypography.headline2.copyWith(
+                            color: AppColors.neutral100,
+                          ),
+                        ),
                         const SizedBox(height: 16),
-                        CTAButton(text: "Compartir", onPressed: () async {
-                          // TODO: implement share
-                        }),
+                        CTAButton(
+                          text: "Compartir",
+                          onPressed: () async {
+                            try {
+                              final response = await http.get(
+                                Uri.parse(novedad.imagenURL),
+                              );
+                              final bytes = response.bodyBytes;
+
+                              final tempDir = await getTemporaryDirectory();
+                              final file = File(
+                                '${tempDir.path}/shared_news.jpg',
+                              );
+                              await file.writeAsBytes(bytes);
+
+                              await Share.shareXFiles(
+                                [XFile(file.path)],
+                                text: novedad.resumen,
+                                subject: novedad.titulo,
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Error al compartir la novedad.',
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
                       ],
                     ),
                   ),
