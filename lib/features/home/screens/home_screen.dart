@@ -52,116 +52,122 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: ListView(
-                children: [
-                  SearchInput(
-                    onChanged: (text) => queryNotifier.updateQuery(text),
-                    onSubmitted: (text) => queryNotifier.submitNow(text),
-                    mode: SearchInputMode.map,
-                  ),
-                  const SizedBox(height: 8),
-                  // ... tu botón de ubicación ...
-                  const SizedBox(height: 24),
-                  volunteeringListAsync.when(
-                    loading: () => const SizedBox.shrink(),
-                    error: (_, __) => const SizedBox.shrink(),
-                    data: (volunteerings) {
-                      if (user != null &&
-                          user.voluntariado != null &&
-                          user.voluntariado != '' &&
-                          volunteerings.any((v) => v.id == user.voluntariado)) {
-                        final current = volunteerings.firstWhere(
-                          (v) => v.id == user.voluntariado,
-                        );
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Tu actividad",
-                              style: AppTypography.headline1.copyWith(
-                                color: AppColors.neutral100,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            CurrentVolunteerCard(
-                              category: current.emisor,
-                              name: current.titulo,
-                            ),
-                            const SizedBox(height: 24),
-                          ],
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                  Text(
-                    "Voluntariados",
-                    style: AppTypography.headline1.copyWith(
-                      color: AppColors.neutral100,
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await ref.refresh(volunteeringSearchProvider.future);
+                },
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  children: [
+                    SearchInput(
+                      onChanged: (text) => queryNotifier.updateQuery(text),
+                      onSubmitted: (text) => queryNotifier.submitNow(text),
+                      mode: SearchInputMode.map,
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  volunteeringListAsync.when(
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                    error: (error, _) => Text('Error: $error'),
-                    data: (volunteerings) {
-                      if (volunteerings.isEmpty) {
-                        return _emptyVolunteeringsMessage();
-                      }
-
-                      return Column(
-                        children: volunteerings.map((item) {
-                          final isFavorite = localFavorites.contains(item.id);
-
+                    const SizedBox(height: 8),
+                    // ... tu botón de ubicación ...
+                    const SizedBox(height: 24),
+                    volunteeringListAsync.when(
+                      loading: () => const SizedBox.shrink(),
+                      error: (_, __) => const SizedBox.shrink(),
+                      data: (volunteerings) {
+                        if (user != null &&
+                            user.voluntariado != null &&
+                            user.voluntariado != '' &&
+                            volunteerings.any((v) => v.id == user.voluntariado)) {
+                          final current = volunteerings.firstWhere(
+                            (v) => v.id == user.voluntariado,
+                          );
                           return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              GestureDetector(
-                                behavior: HitTestBehavior.translucent,
-                                onTap: () {
-                                  context.go('/volunteering/${item.id}');
-                                },
-                                child: VolunteeringCard(
-                                  imagePath: item.imagenURL,
-                                  category: item.emisor,
-                                  title: item.titulo,
-                                  vacancies: item.vacantes,
-                                  isFavorite: isFavorite,
-                                  onFavoritePressed: () async {
-                                    if (user == null) return;
-
-                                    final firestore = ref.read(firestoreServiceProvider);
-                                    final refreshUser = ref.read(refreshUserProvider);
-
-                                    await firestore.toggleFavorite(
-                                      uid: user.uuid,
-                                      volunteeringId: item.id,
-                                      isFavorite: isFavorite,
-                                    );
-
-                                    // Local update for UI response
-                                    setState(() {
-                                      if (isFavorite) {
-                                        localFavorites.remove(item.id);
-                                      } else {
-                                        localFavorites.add(item.id);
-                                      }
-                                    });
-
-                                    // Refresh for full user update
-                                    await refreshUser();
-                                  },
-                                  onLocationPressed: () {},
+                              Text(
+                                "Tu actividad",
+                                style: AppTypography.headline1.copyWith(
+                                  color: AppColors.neutral100,
                                 ),
                               ),
                               const SizedBox(height: 16),
+                              CurrentVolunteerCard(
+                                category: current.emisor,
+                                name: current.titulo,
+                              ),
+                              const SizedBox(height: 24),
                             ],
                           );
-                        }).toList(),
-                      );
-                    },
-                  ),
-                ],
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                    Text(
+                      "Voluntariados",
+                      style: AppTypography.headline1.copyWith(
+                        color: AppColors.neutral100,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    volunteeringListAsync.when(
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (error, _) => Text('Error: $error'),
+                      data: (volunteerings) {
+                        if (volunteerings.isEmpty) {
+                          return _emptyVolunteeringsMessage();
+                        }
+
+                        return Column(
+                          children: volunteerings.map((item) {
+                            final isFavorite = localFavorites.contains(item.id);
+
+                            return Column(
+                              children: [
+                                GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    context.go('/volunteering/${item.id}');
+                                  },
+                                  child: VolunteeringCard(
+                                    imagePath: item.imagenURL,
+                                    category: item.emisor,
+                                    title: item.titulo,
+                                    vacancies: item.vacantes,
+                                    isFavorite: isFavorite,
+                                    onFavoritePressed: () async {
+                                      if (user == null) return;
+
+                                      final firestore = ref.read(firestoreServiceProvider);
+                                      final refreshUser = ref.read(refreshUserProvider);
+
+                                      await firestore.toggleFavorite(
+                                        uid: user.uuid,
+                                        volunteeringId: item.id,
+                                        isFavorite: isFavorite,
+                                      );
+
+                                      // Local update for UI response
+                                      setState(() {
+                                        if (isFavorite) {
+                                          localFavorites.remove(item.id);
+                                        } else {
+                                          localFavorites.add(item.id);
+                                        }
+                                      });
+
+                                      // Refresh for full user update
+                                      await refreshUser();
+                                    },
+                                    onLocationPressed: () {},
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                              ],
+                            );
+                          }).toList(),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
