@@ -6,15 +6,7 @@ import 'package:ser_manos/models/volunteering_model.dart';
 import 'package:ser_manos/providers/auth_provider.dart';
 import 'package:ser_manos/providers/firestore_provider.dart';
 
-// Proveedor principal para acceder a la lista completa de voluntariados.
-final volunteeringControllerProvider = FutureProvider<List<Volunteering>>((
-  ref,
-) async {
-  final firestore = ref.watch(firestoreServiceProvider);
-  return await firestore.getAllVolunteerings();
-});
-
-// Proveedor parametrizado para acceder al detalle de un voluntariado por ID.
+// Returns a specific volunteering, requires the uuid
 final volunteeringByIdProvider = FutureProvider.family<Volunteering, String>((
   ref,
   id,
@@ -27,19 +19,7 @@ final volunteeringByIdProvider = FutureProvider.family<Volunteering, String>((
   return volunteering;
 });
 
-final volunteeringSortedProvider = FutureProvider.family<
-  List<Volunteering>,
-  (VolunteeringSortMode, GeoPoint?)
->((ref, tuple) async {
-  print("ordering");
-  final (sortMode, location) = tuple;
-  final firestore = ref.watch(firestoreServiceProvider);
-  return firestore.getAllVolunteeringsSorted(
-    sortMode: sortMode,
-    userLocation: location,
-  );
-});
-
+// Subscribes a user to a specific volunterring
 final applyToVolunteeringProvider = Provider.family<void Function(), String>((
   ref,
   volunteeringId,
@@ -68,14 +48,23 @@ final applyToVolunteeringProvider = Provider.family<void Function(), String>((
   };
 });
 
-// Holds search query, sort mode (date/proximity), and optionally the user’s location
-final volunteeringQueryProvider =
-    StateNotifierProvider<VolunteeringQueryNotifier, VolunteeringQueryState>((
-      ref,
-    ) {
-      return VolunteeringQueryNotifier();
-    });
+// Mark as favorite
+final toggleFavoriteProvider = Provider.family<
+  Future<void> Function(String volunteeringId, bool isFavorite),
+  String
+>((ref, uid) {
+  final firestore = ref.watch(firestoreServiceProvider);
+  return (String volunteeringId, bool isFavorite) async {
+    await firestore.toggleFavorite(
+      uid: uid,
+      volunteeringId: volunteeringId,
+      isFavorite: isFavorite,
+    );
+    ref.invalidate(currentUserProvider); // Actualizar el usuario
+  };
+});
 
+/////// SEARCH & FEED
 // Order Criteria and Search Input data structures
 enum VolunteeringSortMode { date, proximity }
 
@@ -102,21 +91,6 @@ class VolunteeringQueryState {
     );
   }
 }
-
-final toggleFavoriteProvider = Provider.family<
-  Future<void> Function(String volunteeringId, bool isFavorite),
-  String
->((ref, uid) {
-  final firestore = ref.watch(firestoreServiceProvider);
-  return (String volunteeringId, bool isFavorite) async {
-    await firestore.toggleFavorite(
-      uid: uid,
-      volunteeringId: volunteeringId,
-      isFavorite: isFavorite,
-    );
-    ref.invalidate(currentUserProvider); // Actualizar el usuario
-  };
-});
 
 // Manages the state which has both the sorting criteria and the text input
 // Also manages the debouncing for the text input
@@ -158,6 +132,15 @@ class VolunteeringQueryNotifier extends StateNotifier<VolunteeringQueryState> {
     super.dispose();
   }
 }
+
+// Holds search query, sort mode (date/proximity), and optionally the user’s location
+// The state is mutated by the VolunteeringQueryNotifier
+final volunteeringQueryProvider =
+    StateNotifierProvider<VolunteeringQueryNotifier, VolunteeringQueryState>((
+      ref,
+    ) {
+      return VolunteeringQueryNotifier();
+    });
 
 // Manages both the sorting criteria and the results of the search query
 final volunteeringSearchProvider = FutureProvider<List<Volunteering>>((
