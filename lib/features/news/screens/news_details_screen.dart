@@ -76,14 +76,14 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                           borderRadius: BorderRadius.circular(6),
                           child: Image.network(
                             novedad.imagenURL,
-                            width: 328,
+                            width: double.infinity,
                             height: 160,
                             fit: BoxFit.cover,
                           ),
                         ),
                         const SizedBox(height: 16),
                         SizedBox(
-                          width: 328,
+                          width: double.infinity,
                           child: Text(novedad.resumen, style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100), maxLines: 3, overflow: TextOverflow.ellipsis),
                         ),
                         const SizedBox(height: 16),

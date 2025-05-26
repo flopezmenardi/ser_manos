@@ -31,7 +31,7 @@ class _CTAButtonState extends State<CTAButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 328,
+      width: double.infinity,
       height: 44,
       child: ElevatedButton(
         onPressed: (widget.isEnabled && !isLoading) ? _handlePress : null,

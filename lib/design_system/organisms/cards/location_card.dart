@@ -16,7 +16,7 @@ class LocationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 328,
+      width: double.infinity,
       height: 92,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),

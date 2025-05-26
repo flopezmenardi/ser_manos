@@ -22,7 +22,7 @@ class InformationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 328,
+      width: double.infinity,
       height: 136,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),

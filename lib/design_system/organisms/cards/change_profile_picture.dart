@@ -17,7 +17,7 @@ class ChangeProfilePictureCellule extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 328,
+      width: double.infinity,
       height: 100,
       decoration: BoxDecoration(
         color: AppColors.secondary25,
