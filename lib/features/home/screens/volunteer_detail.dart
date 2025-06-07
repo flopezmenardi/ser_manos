@@ -25,6 +25,14 @@ class VolunteeringDetailScreen extends ConsumerWidget {
     final volunteeringAsync = ref.watch(volunteeringByIdProvider(id));
     final user = ref.watch(currentUserProvider);
 
+    if (user == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return volunteeringAsync.when(
       loading: () => const Scaffold(
         body: Center(child: CircularProgressIndicator()),
@@ -53,6 +61,16 @@ class VolunteeringDetailScreen extends ConsumerWidget {
               TextOnlyButton(
                 text: 'Abandonar voluntariado',
                 onPressed: () async {
+                  final confirmed = await showConfirmationDialog(
+                    context: context,
+                    title: 'Confirmar abandono de postulación',
+                    content: '¿Estás seguro de que querés abandonar tu postulación?',
+                    confirmText: 'Sí, abandonar',
+                    cancelText: 'Cancelar',
+                  );
+
+                  if (!confirmed) return;
+
                   await ref.read(firestoreServiceProvider).abandonVolunteering(user!.uuid, volunteering.id);
                   await ref.read(refreshUserProvider)();
                   ref.invalidate(volunteeringByIdProvider(id));
@@ -70,6 +88,16 @@ class VolunteeringDetailScreen extends ConsumerWidget {
               TextOnlyButton(
                 text: 'Retirar postulación',
                 onPressed: () async {
+                  final confirmed = await showConfirmationDialog(
+                    context: context,
+                    title: 'Confirmar retiro de postulación',
+                    content: '¿Estás seguro de que querés retirar tu postulación?',
+                    confirmText: 'Sí, retirar',
+                    cancelText: 'Cancelar',
+                  );
+
+                  if (!confirmed) return;
+
                   await ref.read(firestoreServiceProvider).withdrawApplication(user!.uuid);
                   await ref.read(refreshUserProvider)();
                   ref.invalidate(volunteeringByIdProvider(id));
@@ -85,6 +113,16 @@ class VolunteeringDetailScreen extends ConsumerWidget {
               TextOnlyButton(
                 text: 'Abandonar voluntariado actual',
                 onPressed: () async {
+                  final confirmed = await showConfirmationDialog(
+                    context: context,
+                    title: 'Confirmar abandono de voluntariado',
+                    content: '¿Estás seguro de que querés abandonar tu voluntariado actual?',
+                    confirmText: 'Sí, abandonar',
+                    cancelText: 'Cancelar',
+                  );
+
+                  if (!confirmed) return;
+
                   await ref.read(firestoreServiceProvider).withdrawApplication(user!.uuid);
                   await ref.read(refreshUserProvider)();
                   ref.invalidate(volunteeringByIdProvider(id));
@@ -109,11 +147,30 @@ class VolunteeringDetailScreen extends ConsumerWidget {
             text: 'Postularme',
             onPressed: () async {
               if (!isProfileComplete) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Completa tu perfil antes de postularte.')),
+                final goToProfile = await showConfirmationDialog(
+                  context: context,
+                  title: 'Perfil incompleto',
+                  content: 'Necesitás completar tu perfil para postularte.\n¿Deseás completarlo ahora?',
+                  confirmText: 'Completar perfil',
+                  cancelText: 'Cancelar',
                 );
+
+                if (goToProfile) {
+                  context.go('/profile');
+                }
                 return;
               }
+
+              final confirmed = await showConfirmationDialog(
+                context: context,
+                title: 'Confirmar postulación',
+                content: '¿Estás seguro de que querés postularte a este voluntariado?',
+                confirmText: 'Sí, postularme',
+                cancelText: 'Cancelar',
+              );
+
+              if (!confirmed) return;
+
               await ref.read(firestoreServiceProvider).applyToVolunteering(user!.uuid, volunteering.id);
               await ref.read(refreshUserProvider)();
               ref.invalidate(volunteeringByIdProvider(id));
@@ -229,4 +286,31 @@ class VolunteeringDetailScreen extends ConsumerWidget {
       },
     );
   }
+}
+
+Future<bool> showConfirmationDialog({
+  required BuildContext context,
+  required String title,
+  required String content,
+  required String confirmText,
+  required String cancelText,
+}) async {
+  final result = await showDialog<bool>(
+    context: context,
+    builder: (_) => AlertDialog(
+      title: Text(title),
+      content: Text(content),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text(cancelText),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: Text(confirmText),
+        ),
+      ],
+    ),
+  );
+  return result ?? false;
 }
