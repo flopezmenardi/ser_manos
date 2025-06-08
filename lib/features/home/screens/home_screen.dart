@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/providers/firestore_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../design_system/molecules/inputs/search_input.dart';
 import '../../../design_system/organisms/cards/current_volunteer_card.dart';
@@ -59,7 +60,6 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
   Widget build(BuildContext context) {
     final volunteeringListAsync = ref.watch(volunteeringSearchProvider);
     final queryNotifier = ref.read(volunteeringQueryProvider.notifier);
-    final queryState = ref.watch(volunteeringQueryProvider);
     final user = ref.watch(currentUserProvider);
 
     // Sync favoritos en cada build si cambia user
@@ -87,8 +87,6 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                       onSubmitted: (text) => queryNotifier.submitNow(text),
                       mode: SearchInputMode.map,
                     ),
-                    const SizedBox(height: 8),
-                    // Removed manual sort button; sorting is automatic based on permission
                     const SizedBox(height: 24),
                     volunteeringListAsync.when(
                       loading: () => const SizedBox.shrink(),
@@ -116,6 +114,14 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                               CurrentVolunteerCard(
                                 category: current.emisor,
                                 name: current.titulo,
+                                onLocationPressed: () {
+                                  final lat = current.ubicacion.latitude;
+                                  final lng = current.ubicacion.longitude;
+                                  final uri = Uri.parse(
+                                    "https://www.google.com/maps/search/?api=1&query=$lat,$lng",
+                                  );
+                                  launchUrl(uri);
+                                },
                               ),
                               const SizedBox(height: 24),
                             ],
@@ -153,7 +159,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                     GestureDetector(
                                       behavior: HitTestBehavior.translucent,
                                       onTap: () {
-                                        context.go('/volunteering/\${item.id}');
+                                        context.go('/volunteering/${item.id}');
                                       },
                                       child: VolunteeringCard(
                                         imagePath: item.imagenURL,
@@ -189,7 +195,14 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                           // Refresh for full user update
                                           await refreshUser();
                                         },
-                                        onLocationPressed: () {},
+                                        onLocationPressed: () {
+                                          final lat = item.ubicacion.latitude;
+                                          final lng = item.ubicacion.longitude;
+                                          final uri = Uri.parse(
+                                            "https://www.google.com/maps/search/?api=1&query=$lat,$lng",
+                                          );
+                                          launchUrl(uri);
+                                        },
                                       ),
                                     ),
                                     const SizedBox(height: 16),

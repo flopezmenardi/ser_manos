@@ -1,17 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:ser_manos/design_system/tokens/colors.dart';
-import 'package:ser_manos/design_system/atoms/icons.dart';
-import 'package:ser_manos/design_system/tokens/shadow.dart';
-import 'package:ser_manos/design_system/tokens/typography.dart'; // Assuming `getMapIcon` lives here
+import 'package:flutter/cupertino.dart';
+
+import '../../atoms/icons.dart';
+import '../../tokens/colors.dart';
+import '../../tokens/shadow.dart';
+import '../../tokens/typography.dart';
 
 class CurrentVolunteerCard extends StatelessWidget {
   final String category;
   final String name;
+  final VoidCallback? onLocationPressed;
 
   const CurrentVolunteerCard({
     super.key,
     required this.category,
     required this.name,
+    this.onLocationPressed,
   });
 
   @override
@@ -32,18 +35,15 @@ class CurrentVolunteerCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  category.toUpperCase(),
-                  style: AppTypography.overline
-                ),
-                Text(
-                  name,
-                  style: AppTypography.subtitle1
-                ),
+                Text(category.toUpperCase(), style: AppTypography.overline),
+                Text(name, style: AppTypography.subtitle1),
               ],
             ),
           ),
-          AppIcons.getLocationIcon(state: IconState.enabled), // Your custom map icon
+          GestureDetector(
+            onTap: onLocationPressed, // <-- NUEVO
+            child: AppIcons.getLocationIcon(state: IconState.enabled),
+          ),
         ],
       ),
     );
