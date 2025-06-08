@@ -23,13 +23,36 @@ class VolunteeringListPage extends ConsumerStatefulWidget {
 }
 
 class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
-  int selectedIndex = 0;
   late Set<String> localFavorites;
 
   @override
   void initState() {
     super.initState();
     localFavorites = {};
+    // Determine sorting mode automatically based on location permission
+    _determineSortMode();
+  }
+
+  Future<void> _determineSortMode() async {
+    final notifier = ref.read(volunteeringQueryProvider.notifier);
+    // Check and request permission
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    // If granted, sort by proximity, otherwise default to date
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      try {
+        final position = await Geolocator.getCurrentPosition();
+        notifier.setLocation(GeoPoint(position.latitude, position.longitude));
+        notifier.updateSortMode(VolunteeringSortMode.proximity);
+      } catch (_) {
+        notifier.updateSortMode(VolunteeringSortMode.date);
+      }
+    } else {
+      notifier.updateSortMode(VolunteeringSortMode.date);
+    }
   }
 
   @override
@@ -48,7 +71,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
       backgroundColor: AppColors.secondary10,
       body: Column(
         children: [
-          AppHeader(selectedIndex: selectedIndex),
+          AppHeader(selectedIndex: 0),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -65,56 +88,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                       mode: SearchInputMode.map,
                     ),
                     const SizedBox(height: 8),
-                    // PROXIMITY BUTTON FOR NOW
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary100,
-                          foregroundColor: Colors.white,
-                          elevation: 2,
-                        ),
-                        icon: const Icon(Icons.my_location),
-                        label: Text(
-                          queryState.sortMode == VolunteeringSortMode.proximity
-                              ? "Ordenar por fecha"
-                              : "Ordenar por cercanía",
-                        ),
-                        onPressed: () async {
-                          if (queryState.sortMode ==
-                              VolunteeringSortMode.proximity) {
-                            queryNotifier.updateSortMode(
-                              VolunteeringSortMode.date,
-                            );
-                          } else {
-                            LocationPermission permission =
-                                await Geolocator.checkPermission();
-                            if (permission == LocationPermission.denied) {
-                              permission = await Geolocator.requestPermission();
-                              if (permission == LocationPermission.denied) {
-                                // Show message: permission denied
-                                return;
-                              }
-                            }
-
-                            if (permission ==
-                                LocationPermission.deniedForever) {
-                              // Show message: permission permanently denied
-                              return;
-                            }
-
-                            final position =
-                                await Geolocator.getCurrentPosition();
-                            queryNotifier.setLocation(
-                              GeoPoint(position.latitude, position.longitude),
-                            );
-                            queryNotifier.updateSortMode(
-                              VolunteeringSortMode.proximity,
-                            );
-                          }
-                        },
-                      ),
-                    ),
+                    // Removed manual sort button; sorting is automatic based on permission
                     const SizedBox(height: 24),
                     volunteeringListAsync.when(
                       loading: () => const SizedBox.shrink(),
@@ -161,7 +135,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                       loading:
                           () =>
                               const Center(child: CircularProgressIndicator()),
-                      error: (error, _) => Text('Error: $error'),
+                      error: (error, _) => Text('Error: \$error'),
                       data: (volunteerings) {
                         if (volunteerings.isEmpty) {
                           return _emptyVolunteeringsMessage();
@@ -179,7 +153,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                     GestureDetector(
                                       behavior: HitTestBehavior.translucent,
                                       onTap: () {
-                                        context.go('/volunteering/${item.id}');
+                                        context.go('/volunteering/\${item.id}');
                                       },
                                       child: VolunteeringCard(
                                         imagePath: item.imagenURL,
