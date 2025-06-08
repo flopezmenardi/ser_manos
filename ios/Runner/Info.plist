@@ -49,5 +49,9 @@
     <!-- Location permission explanation -->
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>Necesitamos tu ubicación para mostrarte voluntariados cercanos.</string>
+
+	<!-- Camera permission explanation -->
+	<key>NSCameraUsageDescription</key>
+	<string>Necesitamos acceder a la cámara para actualizar tu foto de perfil.</string>
 </dict>
 </plist>

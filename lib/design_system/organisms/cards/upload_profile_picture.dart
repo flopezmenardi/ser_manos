@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/design_system/organisms/cards/profile_picture_button.dart';
 import '../../tokens/colors.dart';
 import '../../tokens/typography.dart';
 import '../../molecules/buttons/short_button.dart'; 
@@ -29,11 +30,7 @@ class UploadProfilePicture extends StatelessWidget {
               color: AppColors.neutral100,
             ),
           ),
-          ShortButton(
-            text: 'Subir foto',
-            isLarge: false, // height 40px
-            onPressed: () async => onUploadPressed(),
-          ),
+          const ProfilePictureButton(text: 'Subir foto'),
         ],
       ),
     );

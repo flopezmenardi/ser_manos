@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/design_system/organisms/modal.dart';
 import 'package:ser_manos/models/user_model.dart';
 
 import '../../design_system/atoms/icons.dart';
@@ -99,7 +100,22 @@ class ProfileScreen extends ConsumerWidget {
           TextOnlyButton(
             text: 'Cerrar sesión',
             onPressed: () async {
-              context.go('/login');
+              showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  content: ModalSermanos(
+                    title: 'Cerrar sesión',
+                    subtitle: '¿Estás seguro que querés cerrar sesión?',
+                    confimationText: 'Cerrar sesión',
+                    cancelText: 'Cancelar',
+                    onCancel: () => Navigator.of(context).pop(),
+                    onConfirm: () {
+                      Navigator.of(context).pop(); // Cierra el modal
+                      context.go('/login'); // Navega a login
+                    },
+                  ),
+                ),
+              );
             },
           ),
           const SizedBox(height: 24),
