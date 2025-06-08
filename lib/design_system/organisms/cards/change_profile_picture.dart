@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/design_system/organisms/cards/profile_picture_button.dart';
 import '../../tokens/colors.dart';
 import '../../tokens/typography.dart';
-import '../../molecules/buttons/short_button.dart'; 
 import '../../molecules/components/profile_picture.dart'; 
 
 class ChangeProfilePictureCellule extends StatelessWidget {
@@ -39,11 +39,7 @@ class ChangeProfilePictureCellule extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                ShortButton(
-                  text: 'Cambiar foto',
-                  isLarge: false, // height 40
-                  onPressed: () async => onChangePressed(),
-                ),
+                const ProfilePictureButton(text: 'Cambiar foto'),
               ],
             ),
           ),
