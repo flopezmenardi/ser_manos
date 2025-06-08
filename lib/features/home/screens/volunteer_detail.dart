@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/atoms/icons.dart';
-import 'package:ser_manos/design_system/molecules/buttons/text_button.dart';
-import 'package:ser_manos/design_system/tokens/colors.dart';
-import 'package:ser_manos/design_system/tokens/grid.dart';
-import 'package:ser_manos/design_system/tokens/typography.dart';
 import 'package:ser_manos/design_system/molecules/buttons/cta_button.dart';
+import 'package:ser_manos/design_system/molecules/buttons/text_button.dart';
 import 'package:ser_manos/design_system/molecules/components/vacants_indicator.dart';
 import 'package:ser_manos/design_system/molecules/status_bar/status_bar_black.dart';
 import 'package:ser_manos/design_system/organisms/cards/location_image_card.dart';
+import 'package:ser_manos/design_system/tokens/colors.dart';
+import 'package:ser_manos/design_system/tokens/grid.dart';
+import 'package:ser_manos/design_system/tokens/typography.dart';
 import 'package:ser_manos/features/home/controller/volunteering_controller.dart';
 import 'package:ser_manos/providers/auth_provider.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ser_manos/providers/firestore_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class VolunteeringDetailScreen extends ConsumerWidget {
   final String id;
@@ -22,30 +23,27 @@ class VolunteeringDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print(id);
     final volunteeringAsync = ref.watch(volunteeringByIdProvider(id));
     final user = ref.watch(currentUserProvider);
 
     if (user == null) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return volunteeringAsync.when(
-      loading: () => const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      ),
-      error: (error, _) => Scaffold(
-        body: Center(child: Text('Error: $error')),
-      ),
+      loading:
+          () =>
+              const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (error, _) => Scaffold(body: Center(child: Text('Error: $error'))),
       data: (volunteering) {
         bool hasVacants = volunteering.vacantes > 0;
         bool isSameVolunteering = user?.voluntariado == volunteering.id;
-        bool hasAnyVolunteering = user?.voluntariado != null && user?.voluntariado != '';
+        bool hasAnyVolunteering =
+            user?.voluntariado != null && user?.voluntariado != '';
         bool isAccepted = user!.voluntariadoAceptado;
-        bool isProfileComplete = user.telefono.isNotEmpty &&
+        bool isProfileComplete =
+            user.telefono.isNotEmpty &&
             user.genero.isNotEmpty &&
             user.fechaNacimiento.isNotEmpty;
 
@@ -54,9 +52,17 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         if (isSameVolunteering && isAccepted) {
           volunteeringAction = Column(
             children: [
-              Text('Estás participando', style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
+              Text(
+                'Estás participando',
+                style: AppTypography.headline2.copyWith(
+                  color: AppColors.neutral100,
+                ),
+              ),
               const SizedBox(height: 8),
-              Text('La organización confirmó que ya estás participando de este voluntariado', style: AppTypography.body1),
+              Text(
+                'La organización confirmó que ya estás participando de este voluntariado',
+                style: AppTypography.body1,
+              ),
               const SizedBox(height: 8),
               TextOnlyButton(
                 text: 'Abandonar voluntariado',
@@ -64,14 +70,17 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                   final confirmed = await showConfirmationDialog(
                     context: context,
                     title: 'Confirmar abandono de postulación',
-                    content: '¿Estás seguro de que querés abandonar tu postulación?',
+                    content:
+                        '¿Estás seguro de que querés abandonar tu postulación?',
                     confirmText: 'Sí, abandonar',
                     cancelText: 'Cancelar',
                   );
 
                   if (!confirmed) return;
 
-                  await ref.read(firestoreServiceProvider).abandonVolunteering(user!.uuid, volunteering.id);
+                  await ref
+                      .read(firestoreServiceProvider)
+                      .abandonVolunteering(user!.uuid, volunteering.id);
                   await ref.read(refreshUserProvider)();
                   ref.invalidate(volunteeringByIdProvider(id));
                 },
@@ -81,9 +90,17 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         } else if (isSameVolunteering && !isAccepted) {
           volunteeringAction = Column(
             children: [
-              Text('Te has postulado', style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
+              Text(
+                'Te has postulado',
+                style: AppTypography.headline2.copyWith(
+                  color: AppColors.neutral100,
+                ),
+              ),
               const SizedBox(height: 8),
-              Text('Pronto la organización se pondrá en contacto contigo.', style: AppTypography.body1),
+              Text(
+                'Pronto la organización se pondrá en contacto contigo.',
+                style: AppTypography.body1,
+              ),
               const SizedBox(height: 8),
               TextOnlyButton(
                 text: 'Retirar postulación',
@@ -91,14 +108,17 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                   final confirmed = await showConfirmationDialog(
                     context: context,
                     title: 'Confirmar retiro de postulación',
-                    content: '¿Estás seguro de que querés retirar tu postulación?',
+                    content:
+                        '¿Estás seguro de que querés retirar tu postulación?',
                     confirmText: 'Sí, retirar',
                     cancelText: 'Cancelar',
                   );
 
                   if (!confirmed) return;
 
-                  await ref.read(firestoreServiceProvider).withdrawApplication(user!.uuid);
+                  await ref
+                      .read(firestoreServiceProvider)
+                      .withdrawApplication(user!.uuid);
                   await ref.read(refreshUserProvider)();
                   ref.invalidate(volunteeringByIdProvider(id));
                 },
@@ -108,7 +128,10 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         } else if (hasAnyVolunteering && !isSameVolunteering) {
           volunteeringAction = Column(
             children: [
-              Text('Ya estás participando en otro voluntariado.', style: AppTypography.body1),
+              Text(
+                'Ya estás participando en otro voluntariado.',
+                style: AppTypography.body1,
+              ),
               const SizedBox(height: 8),
               TextOnlyButton(
                 text: 'Abandonar voluntariado actual',
@@ -116,29 +139,43 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                   final confirmed = await showConfirmationDialog(
                     context: context,
                     title: 'Confirmar abandono de voluntariado',
-                    content: '¿Estás seguro de que querés abandonar tu voluntariado actual?',
+                    content:
+                        '¿Estás seguro de que querés abandonar tu voluntariado actual?',
                     confirmText: 'Sí, abandonar',
                     cancelText: 'Cancelar',
                   );
 
                   if (!confirmed) return;
 
-                  await ref.read(firestoreServiceProvider).withdrawApplication(user!.uuid);
+                  await ref
+                      .read(firestoreServiceProvider)
+                      .withdrawApplication(user!.uuid);
                   await ref.read(refreshUserProvider)();
                   ref.invalidate(volunteeringByIdProvider(id));
                 },
               ),
               const SizedBox(height: 8),
-              CTAButton(text: 'Postularme', isEnabled: false, onPressed: () async {}),
+              CTAButton(
+                text: 'Postularme',
+                isEnabled: false,
+                onPressed: () async {},
+              ),
             ],
           );
         } else if (!hasVacants) {
           // Case 4
           volunteeringAction = Column(
             children: [
-              Text('No hay vacantes disponibles para postularse.', style: AppTypography.body1),
+              Text(
+                'No hay vacantes disponibles para postularse.',
+                style: AppTypography.body1,
+              ),
               const SizedBox(height: 8),
-              CTAButton(text: 'Postularme', isEnabled: false, onPressed: () async{}),
+              CTAButton(
+                text: 'Postularme',
+                isEnabled: false,
+                onPressed: () async {},
+              ),
             ],
           );
         } else {
@@ -150,7 +187,8 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                 final goToProfile = await showConfirmationDialog(
                   context: context,
                   title: 'Perfil incompleto',
-                  content: 'Necesitás completar tu perfil para postularte.\n¿Deseás completarlo ahora?',
+                  content:
+                      'Necesitás completar tu perfil para postularte.\n¿Deseás completarlo ahora?',
                   confirmText: 'Completar perfil',
                   cancelText: 'Cancelar',
                 );
@@ -164,14 +202,17 @@ class VolunteeringDetailScreen extends ConsumerWidget {
               final confirmed = await showConfirmationDialog(
                 context: context,
                 title: 'Confirmar postulación',
-                content: '¿Estás seguro de que querés postularte a este voluntariado?',
+                content:
+                    '¿Estás seguro de que querés postularte a este voluntariado?',
                 confirmText: 'Sí, postularme',
                 cancelText: 'Cancelar',
               );
 
               if (!confirmed) return;
 
-              await ref.read(firestoreServiceProvider).applyToVolunteering(user!.uuid, volunteering.id);
+              await ref
+                  .read(firestoreServiceProvider)
+                  .applyToVolunteering(user!.uuid, volunteering.id);
               await ref.read(refreshUserProvider)();
               ref.invalidate(volunteeringByIdProvider(id));
             },
@@ -208,7 +249,10 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                           height: 80,
                           decoration: const BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [AppColors.neutral100, Colors.transparent],
+                              colors: [
+                                AppColors.neutral100,
+                                Colors.transparent,
+                              ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                             ),
@@ -219,7 +263,9 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         top: 8,
                         left: 8,
                         child: IconButton(
-                          icon: AppIcons.getBackIcon(state: IconState.defaultState),
+                          icon: AppIcons.getBackIcon(
+                            state: IconState.defaultState,
+                          ),
                           // onPressed: () => context.pop(),
                           onPressed: () => context.go('/home'),
                         ),
@@ -234,42 +280,75 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                       children: [
                         Text(
                           volunteering.emisor.toUpperCase(),
-                          style: AppTypography.overline.copyWith(color: AppColors.neutral75),
+                          style: AppTypography.overline.copyWith(
+                            color: AppColors.neutral75,
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           volunteering.titulo,
-                          style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
+                          style: AppTypography.headline1.copyWith(
+                            color: AppColors.neutral100,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           volunteering.resumen,
-                          style: AppTypography.body1.copyWith(color: AppColors.secondary200),
+                          style: AppTypography.body1.copyWith(
+                            color: AppColors.secondary200,
+                          ),
                         ),
                         const SizedBox(height: 24),
                         Text(
                           'Sobre la actividad',
-                          style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
+                          style: AppTypography.headline2.copyWith(
+                            color: AppColors.neutral100,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           volunteering.descripcion,
-                          style: AppTypography.body1.copyWith(color: AppColors.neutral100),
+                          style: AppTypography.body1.copyWith(
+                            color: AppColors.neutral100,
+                          ),
                         ),
                         const SizedBox(height: 24),
-                        LocationImageCard(
-                          address: volunteering.direccion,
-                          imagePath: 'assets/images/location.png',
+                        InkWell(
+                          onTap: () async {
+                            final query = Uri.encodeComponent(
+                              volunteering.direccion,
+                            );
+                            final googleMapsUrl =
+                                'https://www.google.com/maps/search/?api=1&query=$query';
+                            if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
+                              await launchUrl(Uri.parse(googleMapsUrl));
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('No se pudo abrir Google Maps'),
+                                ),
+                              );
+                            }
+                          },
+                          child: LocationImageCard(
+                            address: volunteering.direccion,
+                            imagePath: 'assets/images/location.png',
+                          ),
                         ),
                         const SizedBox(height: 24),
                         Text(
                           'Requisitos',
-                          style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
+                          style: AppTypography.headline2.copyWith(
+                            color: AppColors.neutral100,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         MarkdownBody(
                           data: volunteering.requisitos,
-                          styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))                        ),
+                          styleSheet: MarkdownStyleSheet.fromTheme(
+                            Theme.of(context),
+                          ),
+                        ),
                         const SizedBox(height: 16),
                         VacantsIndicator(vacants: volunteering.vacantes),
                         const SizedBox(height: 24),
@@ -297,20 +376,21 @@ Future<bool> showConfirmationDialog({
 }) async {
   final result = await showDialog<bool>(
     context: context,
-    builder: (_) => AlertDialog(
-      title: Text(title),
-      content: Text(content),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(cancelText),
+    builder:
+        (_) => AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(cancelText),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(confirmText),
+            ),
+          ],
         ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          child: Text(confirmText),
-        ),
-      ],
-    ),
   );
   return result ?? false;
 }
