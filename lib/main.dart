@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/features/auth/screens/enter_screen.dart';
@@ -17,7 +20,19 @@ import 'features/profile/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProviderScope(child: FirebaseInitWrapper()));
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  runZonedGuarded(() {
+    runApp(
+      const ProviderScope(child: FirebaseInitWrapper()),
+    );
+  }, (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+  });
+
 }
 
 class FirebaseInitWrapper extends StatelessWidget {
