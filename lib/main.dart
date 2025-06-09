@@ -12,6 +12,7 @@ import 'package:ser_manos/features/news/screens/news_details_screen.dart';
 import 'package:ser_manos/features/news/screens/news_screen.dart';
 import 'package:ser_manos/features/profile/profile_modal_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:ser_manos/splash_screen.dart';
 import 'firebase_options.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -67,7 +68,11 @@ class FirebaseInitWrapper extends StatelessWidget {
 
 final GoRouter _router = GoRouter(
   routes: [
-    GoRoute(path: '/', builder: (context, state) => const WelcomeScreen()),
+    GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
+    GoRoute(
+      path: '/welcome',
+      builder: (context, state) => const WelcomeScreen(),
+    ),
     GoRoute(
       path: '/initial',
       builder: (context, state) => const InitialScreen(),

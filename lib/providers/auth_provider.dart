@@ -19,9 +19,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final Ref ref;
 
   AuthNotifier(this.ref) : super(AuthState.initial()) {
-      _init(); // <-- este se llama al instanciar el notifier
+      _init(); 
   }
-  void _init() async {
+
+  Future<void> initialize() => _init();
+
+  Future<void> _init() async {
     final firebaseUser = fb.FirebaseAuth.instance.currentUser;
     if (firebaseUser != null) {
       final doc = await FirebaseFirestore.instance
@@ -90,6 +93,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
       print('❌ Error al loguear usuario: $error');
       state = state.copyWith(isLoading: false, errorMessage: error);
     }
+  }
+
+  Future<void> logout() async {
+    await fb.FirebaseAuth.instance.signOut();
+    state = AuthState.initial();
   }
 
   Future<void> refreshUser() async {
