@@ -18,7 +18,21 @@ final refreshUserProvider = Provider<Future<void> Function()>((ref) {
 class AuthNotifier extends StateNotifier<AuthState> {
   final Ref ref;
 
-  AuthNotifier(this.ref) : super(AuthState.initial());
+  AuthNotifier(this.ref) : super(AuthState.initial()) {
+      _init(); // <-- este se llama al instanciar el notifier
+  }
+  void _init() async {
+    final firebaseUser = fb.FirebaseAuth.instance.currentUser;
+    if (firebaseUser != null) {
+      final doc = await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(firebaseUser.uid)
+          .get();
+
+      final appUser = User.fromDocumentSnapshot(doc);
+      state = state.copyWith(currentUser: appUser);
+    }
+  }
 
   RegisterController get _controller => ref.read(registerControllerProvider);
 
