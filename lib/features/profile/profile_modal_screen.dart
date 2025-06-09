@@ -49,6 +49,54 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
     super.dispose();
   }
 
+  bool _isValidBirthDate(String input) {
+    final regex = RegExp(r'^(\d{2})/(\d{2})/(\d{4})$');
+    final match = regex.firstMatch(input);
+    if (match == null) return false;
+
+    final day = int.tryParse(match.group(1)!);
+    final month = int.tryParse(match.group(2)!);
+    final year = int.tryParse(match.group(3)!);
+
+    try {
+      final date = DateTime(year!, month!, day!);
+      return date.day == day && date.month == month && date.year == year;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool _isValidGender(String? gender) {
+    const validGenders = ['Hombre', 'Mujer', 'No binario'];
+    return validGenders.contains(gender);
+  }
+
+  bool _isValidEmail(String input) {
+    final regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return regex.hasMatch(input);
+  }
+
+  bool _isValidPhone(String input) {
+    final regex = RegExp(r'^\d{7,15}$');
+    return regex.hasMatch(input);
+  }
+
+  void _showValidationError(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(currentUserProvider);
@@ -92,13 +140,31 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                     CTAButton(
                       text: 'Guardar datos',
                       onPressed: () async {
+                        final birthDate = birthDateController.text;
+                        if (!_isValidBirthDate(birthDate)) {
+                          _showValidationError(context, 'Ingresá una fecha válida en formato DD/MM/YYYY.');
+                          return;
+                        }
+                        if (!_isValidGender(selectedGender)) {
+                          _showValidationError(context, 'Seleccioná un género válido.');
+                          return;
+                        }
+                        if(!_isValidEmail(emailController.text)) {
+                          _showValidationError(context, 'Ingresá un email válido.');
+                          return;
+                        }
+                        if(!_isValidPhone(telephoneController.text)) {
+                          _showValidationError(context, 'Ingresá un teléfono válido (7 a 15 dígitos).');
+                          return;
+                        }
+
                         await updateUser(user.uuid, {
-                          'fechaNacimiento': birthDateController.text,
+                          'fechaNacimiento': birthDate,
                           'email': emailController.text,
                           'telefono': telephoneController.text,
                           'genero': selectedGender,
                         });
-                        await refreshUser(); // 🆕 Refresh after update
+                        await refreshUser(); 
                         context.pop();
                       },
                     ),
