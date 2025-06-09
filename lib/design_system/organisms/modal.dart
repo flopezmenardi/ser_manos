@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ser_manos/design_system/molecules/buttons/text_button.dart';
+import 'package:ser_manos/design_system/tokens/colors.dart';
+import 'package:ser_manos/design_system/tokens/shadow.dart';
+import 'package:ser_manos/design_system/tokens/typography.dart';
 
 class ModalSermanos extends StatelessWidget {
   final String title;
@@ -21,18 +24,28 @@ class ModalSermanos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
+      width: 280,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.neutral0,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: AppShadows.shadow3,
+      ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.min, // ← Esto permite altura dinámica
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: Theme.of(context).textTheme.bodyLarge),
+          Text(
+            title,
+            style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
+          ),
           const SizedBox(height: 4),
           Text(
             subtitle,
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: AppTypography.headline2.copyWith(
+              color: AppColors.neutral100,
+            ),
           ),
           const SizedBox(height: 24),
           Row(
@@ -42,12 +55,13 @@ class ModalSermanos extends StatelessWidget {
                 text: cancelText,
                 onPressed: () async => onCancel(),
               ),
+              const SizedBox(width: 8),
               TextOnlyButton(
                 text: confimationText,
                 onPressed: () async => onConfirm(),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

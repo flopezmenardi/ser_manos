@@ -31,14 +31,14 @@ class ProfileScreen extends ConsumerWidget {
             child:
                 user == null
                     ? const Center(child: CircularProgressIndicator())
-                    : _buildProfileContent(context, user),
+                    : _buildProfileContent(context, ref, user),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildProfileContent(BuildContext context, User user) {
+  Widget _buildProfileContent(BuildContext context, WidgetRef ref, User user) {
     final hasFullProfile =
         user.nombre.isNotEmpty &&
         user.email.isNotEmpty &&
@@ -46,11 +46,11 @@ class ProfileScreen extends ConsumerWidget {
         user.telefono.isNotEmpty;
 
     return hasFullProfile
-        ? _buildFilledProfile(context, user)
-        : _buildEmptyProfile(context, user.nombre);
+        ? _buildFilledProfile(context, ref, user)
+        : _buildEmptyProfile(context, ref, user.nombre);
   }
 
-  Widget _buildFilledProfile(BuildContext context, User user) {
+  Widget _buildFilledProfile(BuildContext context, WidgetRef ref, User user) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: AppGrid.horizontalMargin),
       child: Column(
@@ -102,16 +102,17 @@ class ProfileScreen extends ConsumerWidget {
             onPressed: () async {
               showDialog(
                 context: context,
-                builder: (_) => AlertDialog(
-                  content: ModalSermanos(
+                builder: (_) => Center(
+                  child: ModalSermanos(
                     title: 'Cerrar sesión',
                     subtitle: '¿Estás seguro que querés cerrar sesión?',
                     confimationText: 'Cerrar sesión',
                     cancelText: 'Cancelar',
                     onCancel: () => Navigator.of(context).pop(),
-                    onConfirm: () {
-                      Navigator.of(context).pop(); // Cierra el modal
-                      context.go('/login'); // Navega a login
+                    onConfirm: () async {
+                      await ref.read(authStateProvider.notifier).logout();
+                      Navigator.of(context).pop();
+                      context.go('/login');
                     },
                   ),
                 ),
@@ -124,7 +125,7 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildEmptyProfile(BuildContext context, String name) {
+  Widget _buildEmptyProfile(BuildContext context, WidgetRef ref, String name) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppGrid.horizontalMargin),
       child: Column(
@@ -153,7 +154,23 @@ class ProfileScreen extends ConsumerWidget {
           TextOnlyButton(
             text: 'Cerrar sesión',
             onPressed: () async {
-              context.go('/login');
+              showDialog(
+                context: context,
+                builder: (_) => Center(
+                  child: ModalSermanos(
+                    title: 'Cerrar sesión',
+                    subtitle: '¿Estás seguro que querés cerrar sesión?',
+                    confimationText: 'Cerrar sesión',
+                    cancelText: 'Cancelar',
+                    onCancel: () => Navigator.of(context).pop(),
+                    onConfirm: () async {
+                      await ref.read(authStateProvider.notifier).logout();
+                      Navigator.of(context).pop();
+                      context.go('/login');
+                    },
+                  ),
+                ),
+              );
             },
           ),
         ],
