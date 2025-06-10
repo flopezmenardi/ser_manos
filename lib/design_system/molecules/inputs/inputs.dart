@@ -10,14 +10,14 @@ class AppInput extends StatelessWidget {
   final bool isEnabled;
   final bool hasError;
   final String? supportingText;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final VoidCallback? onTap;
   final bool readOnly;
   final Widget? suffixIcon;
   final bool obscureText;
-
-  // 🔹 Add this new parameter
   final String? Function(String?)? validator;
+  final TextInputType keyboardType;
+  final ValueChanged<String>? onChanged;
 
   const AppInput({
     super.key,
@@ -26,42 +26,45 @@ class AppInput extends StatelessWidget {
     this.isEnabled = true,
     this.hasError = false,
     this.supportingText,
-    required this.controller,
+    this.controller,
     this.onTap,
     this.readOnly = false,
     this.suffixIcon,
     this.obscureText = false,
-    this.validator, // ← Include it in the constructor
+    this.validator,
+    this.keyboardType = TextInputType.text, 
+    this.onChanged,                         
   });
-
-  get style => null;
 
   @override
   Widget build(BuildContext context) {
-    final Color fillColor = isEnabled ? Colors.white : AppColors.neutral10;
-    final Color baseBorderColor = hasError
+    final fillColor = isEnabled ? Colors.white : AppColors.neutral10;
+    final baseBorderColor = hasError
         ? AppColors.error100
         : isEnabled
             ? AppColors.neutral50
             : AppColors.neutral25;
 
-    final Widget? effectiveSuffixIcon =
-        hasError ? ErrorIcon.get(style: style, state: style) : suffixIcon;
+    final effectiveSuffixIcon =
+        hasError ? ErrorIcon.get(style: ErrorIconStyle.outlined, state: ErrorIconState.defaultState) : suffixIcon;
 
     return TextFormField(
       controller: controller,
-      validator: validator, // 🔹 Plug validator here
+      validator: validator,
       enabled: isEnabled,
       readOnly: readOnly,
       onTap: onTap,
       obscureText: obscureText,
+      onChanged: onChanged, 
+      keyboardType: keyboardType, 
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       style: AppTypography.body1.copyWith(
         color: isEnabled ? AppColors.neutral100 : AppColors.neutral50,
       ),
       decoration: InputDecoration(
         labelText: label,
         hintText: placeholder,
-        helperText: hasError ? supportingText : null,
+        errorText: hasError ? supportingText : null,
         filled: true,
         fillColor: fillColor,
         suffixIcon: effectiveSuffixIcon,
