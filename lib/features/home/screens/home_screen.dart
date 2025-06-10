@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
@@ -13,6 +14,7 @@ import '../../../design_system/organisms/headers/header.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/typography.dart';
 import '../../../providers/auth_provider.dart';
+import '../../../providers/remote_config_provider.dart';
 import '../controller/volunteering_controller.dart';
 
 class VolunteeringListPage extends ConsumerStatefulWidget {
@@ -30,8 +32,11 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
   void initState() {
     super.initState();
     localFavorites = {};
-    // Determine sorting mode automatically based on location permission
-    _determineSortMode();
+
+    final remoteConfig = FirebaseRemoteConfig.instance;
+    if (!remoteConfig.getBool('show_proximity_button')) {
+      _determineSortMode();
+    }
   }
 
   Future<void> _determineSortMode() async {
@@ -61,6 +66,9 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
     final volunteeringListAsync = ref.watch(volunteeringSearchProvider);
     final queryNotifier = ref.read(volunteeringQueryProvider.notifier);
     final user = ref.watch(currentUserProvider);
+    final queryState = ref.watch(volunteeringQueryProvider);
+    final remoteConfig = ref.watch(remoteConfigProvider);
+    final showProximityButton = remoteConfig.getBool('show_proximity_button');
 
     // Sync favoritos en cada build si cambia user
     if (user != null) {
@@ -88,6 +96,58 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                       mode: SearchInputMode.map,
                     ),
                     const SizedBox(height: 24),
+
+                    // UNWATCHABLE PROXIMITY BUTTON
+                    if (showProximityButton)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary100,
+                            foregroundColor: Colors.white,
+                            elevation: 2,
+                          ),
+                          icon: const Icon(Icons.my_location),
+                          label: Text(
+                            queryState.sortMode ==
+                                    VolunteeringSortMode.proximity
+                                ? "Ordenar por fecha"
+                                : "Ordenar por cercanía",
+                          ),
+                          onPressed: () async {
+                            if (queryState.sortMode ==
+                                VolunteeringSortMode.proximity) {
+                              queryNotifier.updateSortMode(
+                                VolunteeringSortMode.date,
+                              );
+                            } else {
+                              LocationPermission permission =
+                                  await Geolocator.checkPermission();
+                              if (permission == LocationPermission.denied) {
+                                permission =
+                                    await Geolocator.requestPermission();
+                                if (permission == LocationPermission.denied) {
+                                  return;
+                                }
+                              }
+                              if (permission ==
+                                  LocationPermission.deniedForever) {
+                                return;
+                              }
+
+                              final position =
+                                  await Geolocator.getCurrentPosition();
+                              queryNotifier.setLocation(
+                                GeoPoint(position.latitude, position.longitude),
+                              );
+                              queryNotifier.updateSortMode(
+                                VolunteeringSortMode.proximity,
+                              );
+                            }
+                          },
+                        ),
+                      ),
+
                     volunteeringListAsync.when(
                       loading: () => const SizedBox.shrink(),
                       error: (_, __) => const SizedBox.shrink(),
