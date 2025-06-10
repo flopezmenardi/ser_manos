@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/features/auth/screens/enter_screen.dart';
 import 'package:ser_manos/features/auth/screens/login_screen.dart';
@@ -11,29 +14,27 @@ import 'package:ser_manos/features/home/screens/volunteer_detail.dart';
 import 'package:ser_manos/features/news/screens/news_details_screen.dart';
 import 'package:ser_manos/features/news/screens/news_screen.dart';
 import 'package:ser_manos/features/profile/profile_modal_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:ser_manos/splash_screen.dart';
-import 'firebase_options.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'features/home/screens/home_screen.dart';
 import 'features/profile/profile_screen.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-  runZonedGuarded(() {
-    runApp(
-      const ProviderScope(child: FirebaseInitWrapper()),
-    );
-  }, (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-  });
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  await initializeRemoteConfig();
+
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  runZonedGuarded(
+    () {
+      runApp(const ProviderScope(child: MainApp()));
+    },
+    (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    },
+  );
 }
 
 class FirebaseInitWrapper extends StatelessWidget {
@@ -50,15 +51,11 @@ class FirebaseInitWrapper extends StatelessWidget {
           return const MainApp();
         } else if (snapshot.hasError) {
           return const MaterialApp(
-            home: Scaffold(
-              body: Center(child: Text('Firebase init failed')),
-            ),
+            home: Scaffold(body: Center(child: Text('Firebase init failed'))),
           );
         } else {
           return const MaterialApp(
-            home: Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            ),
+            home: Scaffold(body: Center(child: CircularProgressIndicator())),
           );
         }
       },
@@ -86,10 +83,7 @@ final GoRouter _router = GoRouter(
       path: '/home',
       builder: (context, state) => const VolunteeringListPage(),
     ),
-    GoRoute(
-      path: '/news',
-      builder: (context, state) => const NewsScreen(),
-    ),
+    GoRoute(path: '/news', builder: (context, state) => const NewsScreen()),
     GoRoute(
       path: '/news/:id',
       builder: (context, state) {
@@ -123,7 +117,36 @@ class MainApp extends StatelessWidget {
     return MaterialApp.router(
       color: Colors.white,
       routerConfig: _router,
-      debugShowCheckedModeBanner: false
+      debugShowCheckedModeBanner: false,
     );
   }
+}
+
+Future<void> initializeRemoteConfig() async {
+  final remoteConfig = FirebaseRemoteConfig.instance;
+
+  await remoteConfig.setDefaults({
+    'show_proximity_button': false,
+    'show_like_counter': false,
+    'enable_dark_mode': false,
+  });
+
+  await remoteConfig.setConfigSettings(
+    RemoteConfigSettings(
+      fetchTimeout: const Duration(seconds: 10),
+      minimumFetchInterval: const Duration(minutes: 1),
+    ),
+  );
+
+  await remoteConfig.fetchAndActivate();
+
+  print(
+    '[RemoteConfig Init] enable_dark_mode: ${remoteConfig.getBool('enable_dark_mode')}',
+  );
+  print(
+    '[RemoteConfig Init] show_proximity_button: ${remoteConfig.getBool('show_proximity_button')}',
+  );
+  print(
+    '[RemoteConfig Init] show_like_counter: ${remoteConfig.getBool('show_like_counter')}',
+  );
 }

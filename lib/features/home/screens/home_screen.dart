@@ -61,6 +61,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
     final volunteeringListAsync = ref.watch(volunteeringSearchProvider);
     final queryNotifier = ref.read(volunteeringQueryProvider.notifier);
     final user = ref.watch(currentUserProvider);
+    final queryState = ref.watch(volunteeringQueryProvider);
 
     // Sync favoritos en cada build si cambia user
     if (user != null) {
@@ -88,6 +89,62 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                       mode: SearchInputMode.map,
                     ),
                     const SizedBox(height: 24),
+
+                    // PROXIMITY BUTTON FOR NOW
+                    Align(
+                      alignment: Alignment.centerLeft,
+
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary100,
+
+                          foregroundColor: Colors.white,
+
+                          elevation: 2,
+                        ),
+
+                        icon: const Icon(Icons.my_location),
+
+                        label: Text(
+                          queryState.sortMode == VolunteeringSortMode.proximity
+                              ? "Ordenar por fecha"
+                              : "Ordenar por cercanía",
+                        ),
+
+                        onPressed: () async {
+                          if (queryState.sortMode ==
+                              VolunteeringSortMode.proximity) {
+                            queryNotifier.updateSortMode(
+                              VolunteeringSortMode.date,
+                            );
+                          } else {
+                            LocationPermission permission =
+                                await Geolocator.checkPermission();
+                            if (permission == LocationPermission.denied) {
+                              permission = await Geolocator.requestPermission();
+                              if (permission == LocationPermission.denied) {
+                                return;
+                              }
+                            }
+                            if (permission ==
+                                LocationPermission.deniedForever) {
+                              return;
+                            }
+
+                            final position =
+                                await Geolocator.getCurrentPosition();
+
+                            queryNotifier.setLocation(
+                              GeoPoint(position.latitude, position.longitude),
+                            );
+
+                            queryNotifier.updateSortMode(
+                              VolunteeringSortMode.proximity,
+                            );
+                          }
+                        },
+                      ),
+                    ),
                     volunteeringListAsync.when(
                       loading: () => const SizedBox.shrink(),
                       error: (_, __) => const SizedBox.shrink(),
