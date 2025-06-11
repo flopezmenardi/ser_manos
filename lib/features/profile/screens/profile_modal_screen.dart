@@ -12,7 +12,7 @@ import '../../../design_system/organisms/headers/header_modal.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/grid.dart';
 import '../../../infrastructure/user_service.dart';
-import '../controller/profile_controller.dart';
+import '../controller/profile_controller_impl.dart';
 
 class ProfileModalScreen extends ConsumerStatefulWidget {
   const ProfileModalScreen({super.key});

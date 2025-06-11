@@ -1,17 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:ser_manos/design_system/molecules/buttons/cta_button.dart';
 import 'package:ser_manos/design_system/organisms/headers/header_section.dart';
 import 'package:ser_manos/design_system/tokens/colors.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
 import 'package:ser_manos/models/news_model.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 
-import '../controller/news_controller.dart';
+import '../controller/news_controller_impl.dart';
 
 class NewsDetailsScreen extends ConsumerStatefulWidget {
   final String newsId;

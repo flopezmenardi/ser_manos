@@ -19,7 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../infrastructure/analytics_service.dart';
 import '../../../infrastructure/user_service.dart';
 import '../../../infrastructure/volunteering_view_tracker.dart';
-import '../controller/volunteerings_controller.dart';
+import '../controller/volunteerings_controller_impl.dart';
 
 class VolunteeringDetailScreen extends ConsumerWidget {
   final String id;
