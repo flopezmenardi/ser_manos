@@ -2,15 +2,16 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ser_manos/features/volunteerings/service/volunteerings_service.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
 
 import '../controller/volunteerings_controller_impl.dart';
 
-final volunteeringsServiceProvider = Provider<VolunteeringsServiceImpl>((ref) {
+final volunteeringsServiceProvider = Provider<VolunteeringsService>((ref) {
   return VolunteeringsServiceImpl();
 });
 
-class VolunteeringsServiceImpl {
+class VolunteeringsServiceImpl implements VolunteeringsService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Future<List<Volunteering>> getAllVolunteeringsSorted({
@@ -18,16 +19,11 @@ class VolunteeringsServiceImpl {
     GeoPoint? userLocation,
   }) async {
     final snapshot = await _db.collection('voluntariados').get();
-    final volunteerings =
-        snapshot.docs
-            .map((doc) => Volunteering.fromDocumentSnapshot(doc))
-            .toList();
+    final volunteerings = snapshot.docs.map((doc) => Volunteering.fromDocumentSnapshot(doc)).toList();
 
     switch (sortMode) {
       case VolunteeringSortMode.date:
-        volunteerings.sort(
-          (a, b) => b.fechaCreacion.compareTo(a.fechaCreacion),
-        );
+        volunteerings.sort((a, b) => b.fechaCreacion.compareTo(a.fechaCreacion));
         break;
       case VolunteeringSortMode.proximity:
         if (userLocation == null) {
@@ -51,41 +47,23 @@ class VolunteeringsServiceImpl {
   }
 
   Future<void> applyToVolunteering(String uid, String volunteeringId) async {
-    await _db.collection('usuarios').doc(uid).update({
-      'voluntariado': volunteeringId,
-      'voluntariadoAceptado': false,
-    });
+    await _db.collection('usuarios').doc(uid).update({'voluntariado': volunteeringId, 'voluntariadoAceptado': false});
   }
 
   Future<void> withdrawApplication(String uid) async {
-    await _db.collection('usuarios').doc(uid).update({
-      'voluntariado': null,
-      'voluntariadoAceptado': false,
-    });
+    await _db.collection('usuarios').doc(uid).update({'voluntariado': null, 'voluntariadoAceptado': false});
   }
 
   Future<void> abandonVolunteering(String uid, String volunteeringId) async {
-    await _db.collection('usuarios').doc(uid).update({
-      'voluntariado': null,
-      'voluntariadoAceptado': false,
-    });
+    await _db.collection('usuarios').doc(uid).update({'voluntariado': null, 'voluntariadoAceptado': false});
 
-    await _db.collection('voluntariados').doc(volunteeringId).update({
-      'vacantes': FieldValue.increment(1),
-    });
+    await _db.collection('voluntariados').doc(volunteeringId).update({'vacantes': FieldValue.increment(1)});
   }
 
-  Future<void> toggleFavorite({
-    required String uid,
-    required String volunteeringId,
-    required bool isFavorite,
-  }) async {
+  Future<void> toggleFavorite({required String uid, required String volunteeringId, required bool isFavorite}) async {
     final userRef = _db.collection('usuarios').doc(uid);
     await userRef.update({
-      'favoritos':
-          isFavorite
-              ? FieldValue.arrayRemove([volunteeringId])
-              : FieldValue.arrayUnion([volunteeringId]),
+      'favoritos': isFavorite ? FieldValue.arrayRemove([volunteeringId]) : FieldValue.arrayUnion([volunteeringId]),
     });
   }
 
@@ -96,9 +74,7 @@ class VolunteeringsServiceImpl {
     final deltaLat = (b.latitude - a.latitude) * (pi / 180);
     final deltaLng = (b.longitude - a.longitude) * (pi / 180);
 
-    final aVal =
-        sin(deltaLat / 2) * sin(deltaLat / 2) +
-        cos(lat1) * cos(lat2) * sin(deltaLng / 2) * sin(deltaLng / 2);
+    final aVal = sin(deltaLat / 2) * sin(deltaLat / 2) + cos(lat1) * cos(lat2) * sin(deltaLng / 2) * sin(deltaLng / 2);
     final c = 2 * atan2(sqrt(aVal), sqrt(1 - aVal));
 
     return R * c;

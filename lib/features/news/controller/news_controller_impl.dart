@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/features/news/controller/news_controller.dart';
 import 'package:ser_manos/models/news_model.dart';
 
+import '../service/news_service.dart';
 import '../service/news_service_impl.dart';
 
 final newsControllerProvider = Provider<NewsController>((ref) {
@@ -10,7 +11,7 @@ final newsControllerProvider = Provider<NewsController>((ref) {
 });
 
 class NewsControllerImpl implements NewsController {
-  final NewsServiceImpl _newsService;
+  final NewsService _newsService;
 
   NewsControllerImpl(this._newsService);
 

@@ -11,7 +11,7 @@ import '../../../design_system/organisms/cards/input_card.dart';
 import '../../../design_system/organisms/headers/header_modal.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/grid.dart';
-import '../../../infrastructure/user_service.dart';
+import '../../../infrastructure/user_service_impl.dart';
 import '../controller/profile_controller_impl.dart';
 
 class ProfileModalScreen extends ConsumerStatefulWidget {
@@ -41,9 +41,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
 
   String? _indexToGender(int? index) {
     const options = ['Hombre', 'Mujer', 'No binario'];
-    return (index != null && index >= 0 && index < options.length)
-        ? options[index]
-        : null;
+    return (index != null && index >= 0 && index < options.length) ? options[index] : null;
   }
 
   @override
@@ -64,25 +62,14 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
             Expanded(
               child: FormBuilder(
                 key: _formKey,
-                initialValue: {
-                  'birthDate': user.fechaNacimiento,
-                  'email': user.email,
-                  'phone': user.telefono,
-                },
+                initialValue: {'birthDate': user.fechaNacimiento, 'email': user.email, 'phone': user.telefono},
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppGrid.horizontalMargin,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: AppGrid.horizontalMargin),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 24),
-                      Text(
-                        'Datos de perfil',
-                        style: AppTypography.headline1.copyWith(
-                          color: AppColors.neutral100,
-                        ),
-                      ),
+                      Text('Datos de perfil', style: AppTypography.headline1.copyWith(color: AppColors.neutral100)),
                       const SizedBox(height: 24),
 
                       // Fecha de nacimiento
@@ -111,12 +98,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                       ),
                       const SizedBox(height: 32),
 
-                      Text(
-                        'Datos de contacto',
-                        style: AppTypography.headline1.copyWith(
-                          color: AppColors.neutral100,
-                        ),
-                      ),
+                      Text('Datos de contacto', style: AppTypography.headline1.copyWith(color: AppColors.neutral100)),
                       const SizedBox(height: 24),
 
                       // Teléfono
@@ -127,10 +109,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                         keyboardType: TextInputType.phone,
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
-                          FormBuilderValidators.match(
-                            RegExp(r'^\d{7,15}$'),
-                            errorText: 'Teléfono inválido',
-                          ),
+                          FormBuilderValidators.match(RegExp(r'^\d{7,15}$'), errorText: 'Teléfono inválido'),
                         ]),
                       ),
                       const SizedBox(height: 24),
@@ -143,9 +122,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                         keyboardType: TextInputType.emailAddress,
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
-                          FormBuilderValidators.email(
-                            errorText: 'Email inválido',
-                          ),
+                          FormBuilderValidators.email(errorText: 'Email inválido'),
                         ]),
                       ),
                       const SizedBox(height: 32),
@@ -154,15 +131,12 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                       CTAButton(
                         text: 'Guardar datos',
                         onPressed: () async {
-                          final isValid =
-                              _formKey.currentState?.saveAndValidate() ?? false;
+                          final isValid = _formKey.currentState?.saveAndValidate() ?? false;
                           if (!isValid || _sexoIndex == null) {
                             if (_sexoIndex == null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Seleccioná un género'),
-                                ),
-                              );
+                              ScaffoldMessenger.of(
+                                context,
+                              ).showSnackBar(const SnackBar(content: Text('Seleccioná un género')));
                             }
                             return;
                           }
@@ -176,9 +150,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                             'genero': _indexToGender(_sexoIndex),
                           });
 
-                          await ref
-                              .read(authNotifierProvider.notifier)
-                              .refreshUser();
+                          await ref.read(authNotifierProvider.notifier).refreshUser();
 
                           context.pop();
                         },
