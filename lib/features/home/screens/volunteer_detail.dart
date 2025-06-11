@@ -8,12 +8,15 @@ import 'package:ser_manos/design_system/molecules/buttons/text_button.dart';
 import 'package:ser_manos/design_system/molecules/components/vacants_indicator.dart';
 import 'package:ser_manos/design_system/molecules/status_bar/status_bar_black.dart';
 import 'package:ser_manos/design_system/organisms/cards/location_image_card.dart';
+import 'package:ser_manos/design_system/organisms/modal.dart';
 import 'package:ser_manos/design_system/tokens/colors.dart';
 import 'package:ser_manos/design_system/tokens/grid.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
 import 'package:ser_manos/features/home/controller/volunteering_controller.dart';
 import 'package:ser_manos/providers/auth_provider.dart';
 import 'package:ser_manos/providers/firestore_provider.dart';
+import 'package:ser_manos/services/analytics_service.dart';
+import 'package:ser_manos/services/volunteering_view_tracker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class VolunteeringDetailScreen extends ConsumerWidget {
@@ -66,14 +69,27 @@ class VolunteeringDetailScreen extends ConsumerWidget {
               const SizedBox(height: 8),
               TextOnlyButton(
                 text: 'Abandonar voluntariado',
+                //fffff
                 onPressed: () async {
-                  final confirmed = await showConfirmationDialog(
+                  bool confirmed = false;
+                  await showDialog(
                     context: context,
-                    title: 'Confirmar abandono de postulación',
-                    content:
-                        '¿Estás seguro de que querés abandonar tu postulación?',
-                    confirmText: 'Sí, abandonar',
-                    cancelText: 'Cancelar',
+                    builder: (_) => Center(
+                      child: ModalSermanos(
+                        title: 'Confirmar abandono de postulación',
+                        subtitle: '¿Estás seguro de que querés abandonar tu postulación?',
+                        confimationText: 'Sí, abandonar',
+                        cancelText: 'Cancelar',
+                        onCancel: () {
+                          confirmed = false;
+                          Navigator.of(context).pop();
+                        },
+                        onConfirm: () {
+                          confirmed = true;
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
                   );
 
                   if (!confirmed) return;
@@ -105,13 +121,25 @@ class VolunteeringDetailScreen extends ConsumerWidget {
               TextOnlyButton(
                 text: 'Retirar postulación',
                 onPressed: () async {
-                  final confirmed = await showConfirmationDialog(
+                  bool confirmed = false;
+                  await showDialog(
                     context: context,
-                    title: 'Confirmar retiro de postulación',
-                    content:
-                        '¿Estás seguro de que querés retirar tu postulación?',
-                    confirmText: 'Sí, retirar',
-                    cancelText: 'Cancelar',
+                    builder: (_) => Center(
+                      child: ModalSermanos(
+                        title: 'Confirmar retiro de postulación',
+                        subtitle: '¿Estás seguro de que querés retirar tu postulación?',
+                        confimationText: 'Sí, retirar',
+                        cancelText: 'Cancelar',
+                        onCancel: () {
+                          confirmed = false;
+                          Navigator.of(context).pop();
+                        },
+                        onConfirm: () {
+                          confirmed = true;
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
                   );
 
                   if (!confirmed) return;
@@ -136,13 +164,25 @@ class VolunteeringDetailScreen extends ConsumerWidget {
               TextOnlyButton(
                 text: 'Abandonar voluntariado actual',
                 onPressed: () async {
-                  final confirmed = await showConfirmationDialog(
+                  bool confirmed = false;
+                  await showDialog(
                     context: context,
-                    title: 'Confirmar abandono de voluntariado',
-                    content:
-                        '¿Estás seguro de que querés abandonar tu voluntariado actual?',
-                    confirmText: 'Sí, abandonar',
-                    cancelText: 'Cancelar',
+                    builder: (_) => Center(
+                      child: ModalSermanos(
+                        title: 'Confirmar abandono de voluntariado',
+                        subtitle: '¿Estás seguro de que querés abandonar tu voluntariado actual?',
+                        confimationText: 'Sí, abandonar',
+                        cancelText: 'Cancelar',
+                        onCancel: () {
+                          confirmed = false;
+                          Navigator.of(context).pop();
+                        },
+                        onConfirm: () {
+                          confirmed = true;
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
                   );
 
                   if (!confirmed) return;
@@ -184,13 +224,25 @@ class VolunteeringDetailScreen extends ConsumerWidget {
             text: 'Postularme',
             onPressed: () async {
               if (!isProfileComplete) {
-                final goToProfile = await showConfirmationDialog(
+                bool goToProfile = false;
+                await showDialog(
                   context: context,
-                  title: 'Perfil incompleto',
-                  content:
-                      'Necesitás completar tu perfil para postularte.\n¿Deseás completarlo ahora?',
-                  confirmText: 'Completar perfil',
-                  cancelText: 'Cancelar',
+                  builder: (_) => Center(
+                    child: ModalSermanos(
+                      title: 'Perfil incompleto',
+                      subtitle: 'Necesitás completar tu perfil para postularte.\n¿Deseás completarlo ahora?',
+                      confimationText: 'Completar perfil',
+                      cancelText: 'Cancelar',
+                      onCancel: () {
+                        goToProfile = false;
+                        Navigator.of(context).pop();
+                      },
+                      onConfirm: () {
+                        goToProfile = true;
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
                 );
 
                 if (goToProfile) {
@@ -198,17 +250,39 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                 }
                 return;
               }
-
-              final confirmed = await showConfirmationDialog(
+              
+              bool confirmed = false;
+              await showDialog(
                 context: context,
-                title: 'Confirmar postulación',
-                content:
-                    '¿Estás seguro de que querés postularte a este voluntariado?',
-                confirmText: 'Sí, postularme',
-                cancelText: 'Cancelar',
+                builder: (_) => Center(
+                  child: ModalSermanos(
+                    title: 'Confirmar postulación',
+                    subtitle: '¿Estás seguro de que querés postularte a este voluntariado?',
+                    confimationText: 'Sí, postularme',
+                    cancelText: 'Cancelar',
+                    onCancel: () {
+                      confirmed = false;
+                      Navigator.of(context).pop();
+                    },
+                    onConfirm: () {
+                      confirmed = true;
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
               );
 
               if (!confirmed) return;
+
+              print("por loggear postulacion: ${id}");
+              //Loggear el evento
+              AnalyticsService.logVolunteeringApplication(
+                volunteeringId: id,
+                viewsBeforeApplying: VolunteeringViewTracker.viewsCount,
+              );
+
+              //Resetear contador
+              VolunteeringViewTracker.reset();
 
               await ref
                   .read(firestoreServiceProvider)
@@ -365,32 +439,4 @@ class VolunteeringDetailScreen extends ConsumerWidget {
       },
     );
   }
-}
-
-Future<bool> showConfirmationDialog({
-  required BuildContext context,
-  required String title,
-  required String content,
-  required String confirmText,
-  required String cancelText,
-}) async {
-  final result = await showDialog<bool>(
-    context: context,
-    builder:
-        (_) => AlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(cancelText),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(confirmText),
-            ),
-          ],
-        ),
-  );
-  return result ?? false;
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/design_system/organisms/modal.dart';
 import '../../../design_system/atoms/logos/logo_square.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
@@ -87,6 +88,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       final error = ref.read(authStateProvider).errorMessage;
                       if (error == null) {
                         context.go('/home');
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (_) => Center(
+                            child: ModalSermanos(
+                              title: 'Error al iniciar sesión',
+                              subtitle: 'El email o la contraseña son incorrectos.',
+                              confimationText: 'Reintentar',
+                              cancelText: 'Cancelar',
+                              onCancel: () => Navigator.of(context).pop(),
+                              onConfirm: () => Navigator.of(context).pop(),
+                            ),
+                          ),
+                        );
                       }
                     },
                   ),

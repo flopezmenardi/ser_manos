@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/providers/firestore_provider.dart';
+import 'package:ser_manos/services/analytics_service.dart';
+import 'package:ser_manos/services/volunteering_view_tracker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../design_system/molecules/inputs/search_input.dart';
@@ -219,6 +221,11 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                     GestureDetector(
                                       behavior: HitTestBehavior.translucent,
                                       onTap: () {
+                                        print("vistas ya registradas: ${VolunteeringViewTracker.viewsCount}");
+                                        print("por registrar vista: ${item.id}");
+                                        // Register view and log analytics
+                                        VolunteeringViewTracker.registerView(item.id);
+                                        AnalyticsService.logViewedVolunteering(item.id);
                                         context.go('/volunteering/${item.id}');
                                       },
                                       child: VolunteeringCard(
