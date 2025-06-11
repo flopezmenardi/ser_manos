@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/organisms/forms/register.dart';
+
 import '../../../design_system/atoms/logos/logo_square.dart';
-import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
 import '../../../design_system/molecules/buttons/text_button.dart';
+import '../../../design_system/tokens/colors.dart';
 import '../../../providers/auth_provider.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -46,7 +47,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   void _onFormChanged() {
-  setState(() {}); // Fuerza redibujo para actualizar _isFormFilled
+    setState(() {}); // Fuerza redibujo para actualizar _isFormFilled
   }
 
   Future<void> _handleRegister() async {
@@ -56,7 +57,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     }
 
     print('🟡 Llamando a authStateProvider.register()');
-    await ref.read(authStateProvider.notifier).register(
+    await ref
+        .read(authStateProvider.notifier)
+        .register(
           nombre: _nameController.text.trim(),
           apellido: _lastNameController.text.trim(),
           email: _emailController.text.trim(),
@@ -66,10 +69,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final error = ref.read(authStateProvider).errorMessage;
     if (error == null) {
       print('✅ Registro exitoso');
-      context.go('/home');
+      context.go('/volunteerings');
     } else {
       print('❌ Error en el registro: $error');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error)));
     }
   }
 

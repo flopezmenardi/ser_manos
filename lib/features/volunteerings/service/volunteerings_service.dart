@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
 
-import '../controller/volunteering_controller.dart';
+import '../controller/volunteerings_controller.dart';
 
 final volunteeringsServiceProvider = Provider<VolunteeringsService>((ref) {
   return VolunteeringsService();

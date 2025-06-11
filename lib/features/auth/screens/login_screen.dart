@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/organisms/modal.dart';
+
 import '../../../design_system/atoms/logos/logo_square.dart';
-import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
 import '../../../design_system/molecules/buttons/text_button.dart';
-import '../../../design_system/organisms/forms/login.dart'; 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../design_system/organisms/forms/login.dart';
+import '../../../design_system/tokens/colors.dart';
 import '../../../providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -33,7 +34,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _updateState() {
-    setState(() {}); 
+    setState(() {});
   }
 
   @override
@@ -77,7 +78,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     text: 'Iniciar Sesión',
                     isEnabled: _isFormFilled && !authState.isLoading,
                     onPressed: () async {
-                      final isValid = _formKey.currentState?.validate() ?? false;
+                      final isValid =
+                          _formKey.currentState?.validate() ?? false;
                       if (!isValid) return;
 
                       await authNotifier.login(
@@ -87,20 +89,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                       final error = ref.read(authStateProvider).errorMessage;
                       if (error == null) {
-                        context.go('/home');
+                        context.go('/volunteerings');
                       } else {
                         showDialog(
                           context: context,
-                          builder: (_) => Center(
-                            child: ModalSermanos(
-                              title: 'Error al iniciar sesión',
-                              subtitle: 'El email o la contraseña son incorrectos.',
-                              confimationText: 'Reintentar',
-                              cancelText: 'Cancelar',
-                              onCancel: () => Navigator.of(context).pop(),
-                              onConfirm: () => Navigator.of(context).pop(),
-                            ),
-                          ),
+                          builder:
+                              (_) => Center(
+                                child: ModalSermanos(
+                                  title: 'Error al iniciar sesión',
+                                  subtitle:
+                                      'El email o la contraseña son incorrectos.',
+                                  confimationText: 'Reintentar',
+                                  cancelText: 'Cancelar',
+                                  onCancel: () => Navigator.of(context).pop(),
+                                  onConfirm: () => Navigator.of(context).pop(),
+                                ),
+                              ),
                         );
                       }
                     },

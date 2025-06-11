@@ -16,7 +16,7 @@ import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/typography.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/remote_config_provider.dart';
-import '../controller/volunteering_controller.dart';
+import '../controller/volunteerings_controller.dart';
 
 class VolunteeringListPage extends ConsumerStatefulWidget {
   const VolunteeringListPage({super.key});
