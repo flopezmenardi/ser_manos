@@ -59,6 +59,11 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
     );
   }
 
+  @override
+  Future<int> getFavoritesCount(String volunteeringId) {
+    return volunteeringsService.getFavoritesCount(volunteeringId);
+  }
+
   Future<List<Volunteering>> searchVolunteerings(VolunteeringQueryState queryState) async {
     List<Volunteering> all;
 

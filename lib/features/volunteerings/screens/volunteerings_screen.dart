@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ser_manos/models/volunteering_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../design_system/molecules/inputs/search_input.dart';
@@ -23,7 +22,6 @@ class VolunteeringListPage extends ConsumerStatefulWidget {
   const VolunteeringListPage({super.key});
 
   @override
-  ConsumerState<VolunteeringListPage> createState() => _VolunteeringListPageState();
   ConsumerState<VolunteeringListPage> createState() => _VolunteeringListPageState();
 }
 
@@ -109,34 +107,26 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                           icon: const Icon(Icons.my_location),
                           label: Text(
                             queryState.sortMode == VolunteeringSortMode.proximity
-                            queryState.sortMode == VolunteeringSortMode.proximity
                                 ? "Ordenar por fecha"
                                 : "Ordenar por cercanía",
                           ),
                           onPressed: () async {
                             if (queryState.sortMode == VolunteeringSortMode.proximity) {
                               queryNotifier.updateSortMode(VolunteeringSortMode.date);
-                            if (queryState.sortMode == VolunteeringSortMode.proximity) {
-                              queryNotifier.updateSortMode(VolunteeringSortMode.date);
                             } else {
                               LocationPermission permission = await Geolocator.checkPermission();
-                              LocationPermission permission = await Geolocator.checkPermission();
                               if (permission == LocationPermission.denied) {
-                                permission = await Geolocator.requestPermission();
                                 permission = await Geolocator.requestPermission();
                                 if (permission == LocationPermission.denied) {
                                   return;
                                 }
                               }
                               if (permission == LocationPermission.deniedForever) {
-                              if (permission == LocationPermission.deniedForever) {
                                 return;
                               }
 
                               final position = await Geolocator.getCurrentPosition();
-                              queryNotifier.setLocation(
-                                GeoPoint(position.latitude, position.longitude),
-                              );
+                              queryNotifier.setLocation(GeoPoint(position.latitude, position.longitude));
                               queryNotifier.updateSortMode(VolunteeringSortMode.proximity);
                             }
                           },
