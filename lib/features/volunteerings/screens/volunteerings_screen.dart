@@ -15,14 +15,15 @@ import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/typography.dart';
 import '../../../infrastructure/analytics_service.dart';
 import '../../../infrastructure/remote_config_provider.dart';
+import '../../../infrastructure/user_service_impl.dart';
 import '../../../infrastructure/volunteering_view_tracker.dart';
-import '../../../providers/auth_provider.dart';
-import '../controller/volunteerings_controller.dart';
+import '../controller/volunteerings_controller_impl.dart';
 
 class VolunteeringListPage extends ConsumerStatefulWidget {
   const VolunteeringListPage({super.key});
 
   @override
+  ConsumerState<VolunteeringListPage> createState() => _VolunteeringListPageState();
   ConsumerState<VolunteeringListPage> createState() => _VolunteeringListPageState();
 }
 
@@ -46,8 +47,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
-    if (permission == LocationPermission.whileInUse ||
-        permission == LocationPermission.always) {
+    if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
       try {
         final position = await Geolocator.getCurrentPosition();
         notifier.setLocation(GeoPoint(position.latitude, position.longitude));
@@ -65,7 +65,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
     final controller = ref.read(volunteeringsControllerProvider);
     final volunteeringListAsync = ref.watch(volunteeringSearchProvider);
     final queryNotifier = ref.read(volunteeringQueryProvider.notifier);
-    final user = ref.watch(currentUserProvider);
+    final user = ref.watch(authNotifierProvider).currentUser;
     final queryState = ref.watch(volunteeringQueryProvider);
     final remoteConfig = ref.watch(remoteConfigProvider);
     final showProximityButton = remoteConfig.getBool('show_proximity_button');
@@ -109,20 +109,26 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                           icon: const Icon(Icons.my_location),
                           label: Text(
                             queryState.sortMode == VolunteeringSortMode.proximity
+                            queryState.sortMode == VolunteeringSortMode.proximity
                                 ? "Ordenar por fecha"
                                 : "Ordenar por cercanía",
                           ),
                           onPressed: () async {
                             if (queryState.sortMode == VolunteeringSortMode.proximity) {
                               queryNotifier.updateSortMode(VolunteeringSortMode.date);
+                            if (queryState.sortMode == VolunteeringSortMode.proximity) {
+                              queryNotifier.updateSortMode(VolunteeringSortMode.date);
                             } else {
                               LocationPermission permission = await Geolocator.checkPermission();
+                              LocationPermission permission = await Geolocator.checkPermission();
                               if (permission == LocationPermission.denied) {
+                                permission = await Geolocator.requestPermission();
                                 permission = await Geolocator.requestPermission();
                                 if (permission == LocationPermission.denied) {
                                   return;
                                 }
                               }
+                              if (permission == LocationPermission.deniedForever) {
                               if (permission == LocationPermission.deniedForever) {
                                 return;
                               }
@@ -179,17 +185,10 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                         return const SizedBox.shrink();
                       },
                     ),
-                    Text(
-                      "Voluntariados",
-                      style: AppTypography.headline1.copyWith(
-                        color: AppColors.neutral100,
-                      ),
-                    ),
+                    Text("Voluntariados", style: AppTypography.headline1.copyWith(color: AppColors.neutral100)),
                     const SizedBox(height: 16),
                     volunteeringListAsync.when(
-                      loading:
-                          () =>
-                              const Center(child: CircularProgressIndicator()),
+                      loading: () => const Center(child: CircularProgressIndicator()),
                       error: (error, _) => Text('Error: \$error'),
                       data: (volunteerings) {
                         if (volunteerings.isEmpty) {
@@ -199,9 +198,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                         return Column(
                           children:
                               volunteerings.map((item) {
-                                final isFavorite = localFavorites.contains(
-                                  item.id,
-                                );
+                                final isFavorite = localFavorites.contains(item.id);
 
                             return Column(
                               children: [
@@ -276,10 +273,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
     return Container(
       padding: const EdgeInsets.all(32),
       alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: AppColors.neutral0,
-        borderRadius: BorderRadius.circular(8),
-      ),
+      decoration: BoxDecoration(color: AppColors.neutral0, borderRadius: BorderRadius.circular(8)),
       child: Text(
         "Actualmente no hay voluntariados vigentes.\nPronto se irán incorporando nuevos.",
         textAlign: TextAlign.center,

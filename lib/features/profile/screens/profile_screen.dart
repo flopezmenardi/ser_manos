@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/organisms/modal.dart';
+import 'package:ser_manos/infrastructure/user_service_impl.dart';
 import 'package:ser_manos/models/user_model.dart';
 
 import '../../../design_system/atoms/icons.dart';
@@ -13,14 +14,13 @@ import '../../../design_system/organisms/headers/header.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/grid.dart';
 import '../../../design_system/tokens/typography.dart';
-import '../../../providers/auth_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(currentUserProvider);
+    final user = ref.watch(authNotifierProvider).currentUser;
 
     return Scaffold(
       backgroundColor: AppColors.neutral0,
@@ -40,14 +40,9 @@ class ProfileScreen extends ConsumerWidget {
 
   Widget _buildProfileContent(BuildContext context, WidgetRef ref, User user) {
     final hasFullProfile =
-        user.nombre.isNotEmpty &&
-        user.email.isNotEmpty &&
-        user.genero.isNotEmpty &&
-        user.telefono.isNotEmpty;
+        user.nombre.isNotEmpty && user.email.isNotEmpty && user.genero.isNotEmpty && user.telefono.isNotEmpty;
 
-    return hasFullProfile
-        ? _buildFilledProfile(context, ref, user)
-        : _buildEmptyProfile(context, ref, user.nombre);
+    return hasFullProfile ? _buildFilledProfile(context, ref, user) : _buildEmptyProfile(context, ref, user.nombre);
   }
 
   Widget _buildFilledProfile(BuildContext context, WidgetRef ref, User user) {
@@ -57,25 +52,13 @@ class ProfileScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 24),
-          const ProfilePicture(
-            imagePath: 'assets/images/profile_picture.jpg',
-            size: ProfilePictureSize.large,
-          ),
+          const ProfilePicture(imagePath: 'assets/images/profile_picture.jpg', size: ProfilePictureSize.large),
           const SizedBox(height: 8),
-          Text(
-            'VOLUNTARIO',
-            style: AppTypography.overline.copyWith(color: AppColors.neutral75),
-          ),
+          Text('VOLUNTARIO', style: AppTypography.overline.copyWith(color: AppColors.neutral75)),
           const SizedBox(height: 4),
-          Text(
-            user.nombre,
-            style: AppTypography.overline.copyWith(color: AppColors.neutral100),
-          ),
+          Text(user.nombre, style: AppTypography.overline.copyWith(color: AppColors.neutral100)),
           const SizedBox(height: 2),
-          Text(
-            user.email,
-            style: AppTypography.body1.copyWith(color: AppColors.secondary100),
-          ),
+          Text(user.email, style: AppTypography.body1.copyWith(color: AppColors.secondary100)),
           const SizedBox(height: 24),
           InformationCard(
             title: 'Información personal',
@@ -93,10 +76,7 @@ class ProfileScreen extends ConsumerWidget {
             secondContent: user.email,
           ),
           const SizedBox(height: 24),
-          CTAButton(
-            text: 'Editar perfil',
-            onPressed: () => context.push('/profile/edit'),
-          ),
+          CTAButton(text: 'Editar perfil', onPressed: () => context.push('/profile/edit')),
           TextOnlyButton(
             text: 'Cerrar sesión',
             onPressed: () async {
@@ -111,7 +91,7 @@ class ProfileScreen extends ConsumerWidget {
                         cancelText: 'Cancelar',
                         onCancel: () => Navigator.of(context).pop(),
                         onConfirm: () async {
-                          await ref.read(authStateProvider.notifier).logout();
+                          await ref.read(authNotifierProvider.notifier).logout();
                           Navigator.of(context).pop();
                           context.go('/login');
                         },
@@ -134,10 +114,7 @@ class ProfileScreen extends ConsumerWidget {
         children: [
           AppIcons.getAccountIcon(color: AppColors.secondary90, size: 100),
           const SizedBox(height: 8),
-          Text(
-            'VOLUNTARIO',
-            style: AppTypography.overline.copyWith(color: AppColors.neutral75),
-          ),
+          Text('VOLUNTARIO', style: AppTypography.overline.copyWith(color: AppColors.neutral75)),
           const SizedBox(height: 16),
           Text(name, style: AppTypography.subtitle1),
           const SizedBox(height: 16),
@@ -147,10 +124,7 @@ class ProfileScreen extends ConsumerWidget {
             style: AppTypography.body1.copyWith(color: AppColors.neutral75),
           ),
           const SizedBox(height: 24),
-          CTAButton(
-            text: '+ Completar',
-            onPressed: () => context.push('/profile/edit'),
-          ),
+          CTAButton(text: '+ Completar', onPressed: () => context.push('/profile/edit')),
           const SizedBox(height: 16),
           TextOnlyButton(
             text: 'Cerrar sesión',
@@ -166,7 +140,7 @@ class ProfileScreen extends ConsumerWidget {
                         cancelText: 'Cancelar',
                         onCancel: () => Navigator.of(context).pop(),
                         onConfirm: () async {
-                          await ref.read(authStateProvider.notifier).logout();
+                          await ref.read(authNotifierProvider.notifier).logout();
                           Navigator.of(context).pop();
                           context.go('/login');
                         },

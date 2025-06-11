@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/organisms/forms/register.dart';
+import 'package:ser_manos/infrastructure/user_service_impl.dart';
 
 import '../../../design_system/atoms/logos/logo_square.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
 import '../../../design_system/molecules/buttons/text_button.dart';
 import '../../../design_system/tokens/colors.dart';
-import '../../../providers/auth_provider.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -58,7 +58,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     print('🟡 Llamando a authStateProvider.register()');
     await ref
-        .read(authStateProvider.notifier)
+        .read(authNotifierProvider.notifier)
         .register(
           nombre: _nameController.text.trim(),
           apellido: _lastNameController.text.trim(),
@@ -66,15 +66,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           password: _passwordController.text.trim(),
         );
 
-    final error = ref.read(authStateProvider).errorMessage;
+    final error = ref.read(authNotifierProvider).errorMessage;
     if (error == null) {
       print('✅ Registro exitoso');
       context.go('/volunteerings');
     } else {
       print('❌ Error en el registro: $error');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(error)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
     }
   }
 
@@ -86,7 +84,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(authStateProvider);
+    final state = ref.watch(authNotifierProvider);
 
     return Scaffold(
       backgroundColor: AppColors.neutral0,
