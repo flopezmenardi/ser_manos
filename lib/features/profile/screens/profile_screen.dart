@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/organisms/modal.dart';
+import 'package:ser_manos/infrastructure/user_service.dart';
 import 'package:ser_manos/models/user_model.dart';
 
 import '../../../design_system/atoms/icons.dart';
@@ -13,14 +14,13 @@ import '../../../design_system/organisms/headers/header.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/grid.dart';
 import '../../../design_system/tokens/typography.dart';
-import '../../../providers/auth_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(currentUserProvider);
+    final user = ref.watch(authNotifierProvider).currentUser;
 
     return Scaffold(
       backgroundColor: AppColors.neutral0,
@@ -111,7 +111,9 @@ class ProfileScreen extends ConsumerWidget {
                         cancelText: 'Cancelar',
                         onCancel: () => Navigator.of(context).pop(),
                         onConfirm: () async {
-                          await ref.read(authStateProvider.notifier).logout();
+                          await ref
+                              .read(authNotifierProvider.notifier)
+                              .logout();
                           Navigator.of(context).pop();
                           context.go('/login');
                         },
@@ -166,7 +168,9 @@ class ProfileScreen extends ConsumerWidget {
                         cancelText: 'Cancelar',
                         onCancel: () => Navigator.of(context).pop(),
                         onConfirm: () async {
-                          await ref.read(authStateProvider.notifier).logout();
+                          await ref
+                              .read(authNotifierProvider.notifier)
+                              .logout();
                           Navigator.of(context).pop();
                           context.go('/login');
                         },

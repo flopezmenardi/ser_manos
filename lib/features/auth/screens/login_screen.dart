@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/organisms/modal.dart';
+import 'package:ser_manos/infrastructure/user_service.dart';
 
 import '../../../design_system/atoms/logos/logo_square.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
 import '../../../design_system/molecules/buttons/text_button.dart';
 import '../../../design_system/organisms/forms/login.dart';
 import '../../../design_system/tokens/colors.dart';
-import '../../../providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -46,8 +46,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authStateProvider);
-    final authNotifier = ref.read(authStateProvider.notifier);
+    final authState = ref.watch(authNotifierProvider);
+    final authNotifier = ref.read(authNotifierProvider.notifier);
 
     return Scaffold(
       backgroundColor: AppColors.neutral0,
@@ -87,7 +87,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         password: passwordController.text,
                       );
 
-                      final error = ref.read(authStateProvider).errorMessage;
+                      final error = ref.read(authNotifierProvider).errorMessage;
                       if (error == null) {
                         context.go('/volunteerings');
                       } else {

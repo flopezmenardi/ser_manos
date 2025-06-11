@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
-import 'package:ser_manos/providers/auth_provider.dart';
 
+import '../../../infrastructure/user_service.dart';
 import '../../../models/user_model.dart';
 import '../service/volunteerings_service.dart';
 
@@ -17,7 +17,7 @@ final volunteeringsControllerProvider = Provider<VolunteeringsController>((
   ref,
 ) {
   final volunteeringsService = ref.read(volunteeringsServiceProvider);
-  final currentUser = ref.watch(currentUserProvider)!;
+  final currentUser = ref.read(authNotifierProvider).currentUser!;
   return VolunteeringsController(
     volunteeringsService: volunteeringsService,
     currentUser: currentUser,

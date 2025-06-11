@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ser_manos/providers/auth_provider.dart';
+
+import 'infrastructure/user_service.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -18,12 +19,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<void> _navigate() async {
-    final authNotifier = ref.read(authStateProvider.notifier);
-    await authNotifier.initialize();
+    await Future.delayed(const Duration(seconds: 2));
 
-    await Future.delayed(const Duration(seconds: 2)); // para mostrar el logo
-
-    final user = ref.read(currentUserProvider);
+    final user = ref.read(authNotifierProvider).currentUser;
     if (user != null) {
       context.go('/volunteerings');
     } else {
