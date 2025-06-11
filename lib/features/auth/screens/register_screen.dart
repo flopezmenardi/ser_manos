@@ -47,7 +47,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   void _onFormChanged() {
-    setState(() {}); // Fuerza redibujo para actualizar _isFormFilled
+    setState(() {});
   }
 
   Future<void> _handleRegister() async {

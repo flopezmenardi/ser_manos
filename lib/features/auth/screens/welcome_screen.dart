@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../design_system/atoms/logos/logo_square.dart'; 
-import '../../../design_system/tokens/typography.dart';
+
+import '../../../design_system/atoms/logos/logo_square.dart';
+import '../../../design_system/molecules/buttons/cta_button.dart';
 import '../../../design_system/tokens/colors.dart';
-import '../../../design_system/molecules/buttons/cta_button.dart'; 
+import '../../../design_system/tokens/typography.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -14,13 +15,13 @@ class WelcomeScreen extends StatelessWidget {
       backgroundColor: AppColors.neutral0,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24), // horizontal padding
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween, 
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 children: [
-                  const SizedBox(height: 144), 
+                  const SizedBox(height: 144),
                   LogoSquare(size: 150),
                   const SizedBox(height: 32),
                   Text(
@@ -40,7 +41,6 @@ class WelcomeScreen extends StatelessWidget {
                   CTAButton(
                     text: 'Comenzar',
                     onPressed: () async {
-                      //navigate to login screen
                       context.go('/initial');
                     },
                   ),

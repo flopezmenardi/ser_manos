@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../design_system/atoms/logos/logo_square.dart'; // <- assuming you have your LogoSquare atom
-import '../../../design_system/tokens/typography.dart';
-import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart'; // <- your green call-to-action button
 import '../../../design_system/molecules/buttons/text_button.dart'; // <- your text button if customized
+import '../../../design_system/tokens/colors.dart';
+import '../../../design_system/tokens/typography.dart';
 
 class InitialScreen extends StatelessWidget {
   const InitialScreen({super.key});
@@ -15,13 +16,13 @@ class InitialScreen extends StatelessWidget {
       backgroundColor: AppColors.neutral0,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24), // horizontal padding
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween, // <- NEW: Space between top and bottom
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 children: [
-                  const SizedBox(height: 144), // extra top space if needed
+                  const SizedBox(height: 144),
                   LogoSquare(size: 150),
                   const SizedBox(height: 32),
                   Text(
@@ -36,7 +37,6 @@ class InitialScreen extends StatelessWidget {
                   CTAButton(
                     text: 'Iniciar Sesión',
                     onPressed: () async {
-                      //navigate to login screen
                       context.go('/login');
                       return;
                     },
@@ -45,11 +45,10 @@ class InitialScreen extends StatelessWidget {
                   TextOnlyButton(
                     text: 'Registrarse',
                     onPressed: () async {
-                      //navigate to register screen
                       context.go('/register');
                     },
                   ),
-                  const SizedBox(height: 24), // <- distance from bottom
+                  const SizedBox(height: 24),
                 ],
               ),
             ],
