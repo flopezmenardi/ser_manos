@@ -81,12 +81,31 @@ class VolunteeringsService {
     required bool isFavorite,
   }) async {
     final userRef = _db.collection('usuarios').doc(uid);
-    await userRef.update({
-      'favoritos':
-          isFavorite
-              ? FieldValue.arrayRemove([volunteeringId])
-              : FieldValue.arrayUnion([volunteeringId]),
+    final volunteeringRef = _db.collection('voluntariados').doc(volunteeringId);
+
+    // Run everything in a batch or transaction to keep it atomic
+    await _db.runTransaction((transaction) async {
+      // Update user's favorites list
+      transaction.update(userRef, {
+        'favoritos': isFavorite
+            ? FieldValue.arrayRemove([volunteeringId])
+            : FieldValue.arrayUnion([volunteeringId]),
+      });
+
+      // Get current likes
+      final snapshot = await transaction.get(volunteeringRef);
+      final currentLikes = snapshot.get('likes') as int? ?? 0;
+
+      // Update like count
+      final newLikes = isFavorite ? currentLikes - 1 : currentLikes + 1;
+      transaction.update(volunteeringRef, {'likes': newLikes.clamp(0, double.infinity)});
     });
+  }
+
+  Future<int> getFavoritesCount(String volunteeringId) async {
+    final doc = await _db.collection('voluntariados').doc(volunteeringId).get();
+    final likes = doc.data()?['likes'];
+    return likes is int ? likes : 0;
   }
 
   double _distanceBetween(GeoPoint a, GeoPoint b) {

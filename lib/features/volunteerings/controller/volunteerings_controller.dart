@@ -80,6 +80,11 @@ class VolunteeringsController {
     );
   }
 
+  // Get favorites count
+  Future<int> getFavoritesCount(String volunteeringId) async {
+    return await volunteeringsService.getFavoritesCount(volunteeringId);
+  }
+
   // Search (formerly volunteeringSearchProvider)
   Future<List<Volunteering>> searchVolunteerings(
     VolunteeringQueryState queryState,
