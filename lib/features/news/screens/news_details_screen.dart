@@ -1,37 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/molecules/buttons/cta_button.dart';
 import 'package:ser_manos/design_system/organisms/headers/header_section.dart';
 import 'package:ser_manos/design_system/tokens/colors.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
 import 'package:ser_manos/models/news_model.dart';
-import 'package:ser_manos/services/firestore_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
-class NewsDetailsScreen extends StatefulWidget {
+import '../controller/news_controller.dart';
+
+class NewsDetailsScreen extends ConsumerStatefulWidget {
   final String newsId;
 
   const NewsDetailsScreen({required this.newsId, super.key});
 
   @override
-  State<NewsDetailsScreen> createState() => _NewsDetailsScreenState();
+  ConsumerState<NewsDetailsScreen> createState() => _NewsDetailsScreenState();
 }
 
-class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
+class _NewsDetailsScreenState extends ConsumerState<NewsDetailsScreen> {
   late Future<News?> _newsFuture;
 
   @override
   void initState() {
     super.initState();
-    _newsFuture = FirestoreService().getNewsById(widget.newsId);
+    _newsFuture = ref.read(newsControllerProvider).getNewsById(widget.newsId);
   }
 
   Future<void> _refresh() async {
     setState(() {
-      _newsFuture = FirestoreService().getNewsById(widget.newsId);
+      _newsFuture = ref.read(newsControllerProvider).getNewsById(widget.newsId);
     });
     await _newsFuture;
   }

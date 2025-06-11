@@ -21,7 +21,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>(); // 🆕
+  final _formKey = GlobalKey<FormState>();
 
   bool get _isFormFilled =>
       emailController.text.isNotEmpty && passwordController.text.isNotEmpty;
