@@ -4,33 +4,28 @@ import 'package:go_router/go_router.dart';
 
 import 'infrastructure/user_service_impl.dart';
 
-class SplashScreen extends ConsumerStatefulWidget {
+class SplashScreen extends ConsumerWidget {
   const SplashScreen({super.key});
 
   @override
-  ConsumerState<SplashScreen> createState() => _SplashScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authNotifierProvider);
 
-class _SplashScreenState extends ConsumerState<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    _navigate();
-  }
-
-  Future<void> _navigate() async {
-    await Future.delayed(const Duration(seconds: 2));
-
-    final user = ref.read(authNotifierProvider).currentUser;
-    if (user != null) {
-      context.go('/volunteerings');
-    } else {
-      context.go('/welcome');
+    if (authState.isInitializing) {
+      return const Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: Image(image: AssetImage('assets/logos/logo_square.png'), width: 120, height: 120)),
+      );
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
+    Future.microtask(() {
+      if (authState.currentUser != null) {
+        context.go('/volunteerings');
+      } else {
+        context.go('/welcome');
+      }
+    });
+
     return const Scaffold(
       backgroundColor: Colors.white,
       body: Center(child: Image(image: AssetImage('assets/logos/logo_square.png'), width: 120, height: 120)),

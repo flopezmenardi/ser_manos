@@ -83,7 +83,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
     final fbUser = _userRepo.currentFirebaseUser;
     if (fbUser != null) {
       final user = await _userRepo.getUserById(fbUser.uid);
-      state = state.copyWith(currentUser: user);
+      state = state.copyWith(currentUser: user, isInitializing: false);
+    } else {
+      state = state.copyWith(isInitializing: false);
     }
   }
 
@@ -133,20 +135,20 @@ class AuthNotifier extends StateNotifier<AuthState> {
 }
 
 class AuthState {
+  final bool isInitializing;
   final bool isLoading;
   final String? errorMessage;
   final User? currentUser;
 
-  AuthState({required this.isLoading, this.errorMessage, this.currentUser});
+  AuthState({required this.isInitializing, required this.isLoading, this.errorMessage, this.currentUser});
 
-  factory AuthState.initial() => AuthState(isLoading: false, currentUser: null);
+  factory AuthState.initial() => AuthState(isInitializing: true, isLoading: false, currentUser: null);
 
-  get user => currentUser;
-
-  AuthState copyWith({bool? isLoading, String? errorMessage, User? currentUser}) {
+  AuthState copyWith({bool? isInitializing, bool? isLoading, String? errorMessage, User? currentUser}) {
     return AuthState(
+      isInitializing: isInitializing ?? this.isInitializing,
       isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage,
+      errorMessage: errorMessage ?? this.errorMessage,
       currentUser: currentUser ?? this.currentUser,
     );
   }
