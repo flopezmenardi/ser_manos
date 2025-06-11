@@ -62,6 +62,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = ref.read(volunteeringsControllerProvider);
     final volunteeringListAsync = ref.watch(volunteeringSearchProvider);
     final queryNotifier = ref.read(volunteeringQueryProvider.notifier);
     final user = ref.watch(currentUserProvider);
@@ -234,11 +235,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                         onFavoritePressed: () async {
                                           if (user == null) return;
 
-                                          final toggleFavorite = ref.read(
-                                            toggleFavoriteProvider(user.uuid),
-                                          );
-
-                                          await toggleFavorite(
+                                          await controller.toggleFavorite(
                                             item.id,
                                             isFavorite,
                                           );
