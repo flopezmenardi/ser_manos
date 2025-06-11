@@ -4,7 +4,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/providers/user_provider.dart';
 
-import '../../../services/firestore_service.dart';
+import '../../../infrastructure/firestore_service.dart';
 
 final registerControllerProvider = Provider<RegisterController>((ref) {
   return RegisterController(ref);

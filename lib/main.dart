@@ -12,10 +12,10 @@ import 'package:ser_manos/features/auth/screens/register_screen.dart';
 import 'package:ser_manos/features/auth/screens/welcome_screen.dart';
 import 'package:ser_manos/features/news/screens/news_details_screen.dart';
 import 'package:ser_manos/features/news/screens/news_screen.dart';
-import 'package:ser_manos/features/profile/profile_modal_screen.dart';
+import 'package:ser_manos/features/profile/screens/profile_modal_screen.dart';
 import 'package:ser_manos/splash_screen.dart';
 
-import 'features/profile/profile_screen.dart';
+import 'features/profile/screens/profile_screen.dart';
 import 'features/volunteerings/screens/volunteering_detail_screen.dart';
 import 'features/volunteerings/screens/volunteerings_screen.dart';
 import 'firebase_options.dart';
