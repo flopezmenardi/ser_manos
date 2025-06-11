@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/organisms/modal.dart';
-import 'package:ser_manos/infrastructure/user_service.dart';
+import 'package:ser_manos/infrastructure/user_service_impl.dart';
 
 import '../../../design_system/atoms/logos/logo_square.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
@@ -23,8 +23,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
-  bool get _isFormFilled =>
-      emailController.text.isNotEmpty && passwordController.text.isNotEmpty;
+  bool get _isFormFilled => emailController.text.isNotEmpty && passwordController.text.isNotEmpty;
 
   @override
   void initState() {
@@ -65,10 +64,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                   Form(
                     key: _formKey,
-                    child: LoginForms(
-                      emailController: emailController,
-                      passwordController: passwordController,
-                    ),
+                    child: LoginForms(emailController: emailController, passwordController: passwordController),
                   ),
                 ],
               ),
@@ -78,14 +74,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     text: 'Iniciar Sesión',
                     isEnabled: _isFormFilled && !authState.isLoading,
                     onPressed: () async {
-                      final isValid =
-                          _formKey.currentState?.validate() ?? false;
+                      final isValid = _formKey.currentState?.validate() ?? false;
                       if (!isValid) return;
 
-                      await authNotifier.login(
-                        email: emailController.text,
-                        password: passwordController.text,
-                      );
+                      await authNotifier.login(email: emailController.text, password: passwordController.text);
 
                       final error = ref.read(authNotifierProvider).errorMessage;
                       if (error == null) {
@@ -97,8 +89,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               (_) => Center(
                                 child: ModalSermanos(
                                   title: 'Error al iniciar sesión',
-                                  subtitle:
-                                      'El email o la contraseña son incorrectos.',
+                                  subtitle: 'El email o la contraseña son incorrectos.',
                                   confimationText: 'Reintentar',
                                   cancelText: 'Cancelar',
                                   onCancel: () => Navigator.of(context).pop(),

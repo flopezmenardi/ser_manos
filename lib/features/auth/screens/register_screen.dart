@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/organisms/forms/register.dart';
-import 'package:ser_manos/infrastructure/user_service.dart';
+import 'package:ser_manos/infrastructure/user_service_impl.dart';
 
 import '../../../design_system/atoms/logos/logo_square.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
@@ -72,9 +72,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       context.go('/volunteerings');
     } else {
       print('❌ Error en el registro: $error');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(error)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
     }
   }
 

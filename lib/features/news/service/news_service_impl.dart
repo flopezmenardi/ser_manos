@@ -2,19 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/models/news_model.dart';
 
-final newsServiceProvider = Provider<NewsServiceImpl>((ref) {
+import 'news_service.dart';
+
+final newsServiceProvider = Provider<NewsService>((ref) {
   return NewsServiceImpl();
 });
 
-class NewsServiceImpl {
+class NewsServiceImpl implements NewsService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Future<List<News>> getNewsOrderedByDate() async {
-    final snapshot =
-        await _db
-            .collection('novedades')
-            .orderBy('fechaCreacion', descending: true)
-            .get();
+    final snapshot = await _db.collection('novedades').orderBy('fechaCreacion', descending: true).get();
 
     return snapshot.docs.map((doc) => News.fromDocumentSnapshot(doc)).toList();
   }

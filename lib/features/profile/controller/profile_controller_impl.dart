@@ -2,15 +2,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/features/profile/controller/profile_controller.dart';
 
 import '../../../infrastructure/user_service.dart';
+import '../../../infrastructure/user_service_impl.dart';
 import '../../../models/user_model.dart';
 
 final profileControllerProvider = Provider<ProfileController>((ref) {
-  final userRepository = ref.read(userRepositoryProvider);
+  final userRepository = ref.read(userServiceProvider);
   return ProfileControllerImpl(userRepository);
 });
 
 class ProfileControllerImpl implements ProfileController {
-  final UserRepository _userRepository;
+  final UserService _userRepository;
 
   ProfileControllerImpl(this._userRepository);
 
