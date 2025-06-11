@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/models/user_model.dart';
-import 'package:ser_manos/providers/firestore_provider.dart';
+
+import '../../../services/firestore_service.dart';
 
 /// Obtener usuario por ID
 final userByIdProvider = FutureProvider.family<User, String>((ref, uid) async {
