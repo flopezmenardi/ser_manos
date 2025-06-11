@@ -4,68 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
 import 'package:ser_manos/providers/auth_provider.dart';
-import 'package:ser_manos/providers/firestore_provider.dart';
 
-// Returns a specific volunteering, requires the uuid
-final volunteeringByIdProvider = FutureProvider.family<Volunteering, String>((
-  ref,
-  id,
-) async {
-  final firestore = ref.watch(firestoreServiceProvider);
-  final volunteering = await firestore.getVolunteeringById(id);
-  if (volunteering == null) {
-    throw Exception('Volunteering with id $id not found');
-  }
-  return volunteering;
-});
+import '../service/volunteerings_service.dart';
 
-// Subscribes a user to a specific volunterring
-final applyToVolunteeringProvider = Provider.family<void Function(), String>((
-  ref,
-  volunteeringId,
-) {
-  final firestore = ref.read(firestoreServiceProvider);
-  final currentUser = ref.read(currentUserProvider)!;
-
-  return () async {
-    // Verificación de perfil completo
-    if (currentUser.telefono.isEmpty ||
-        currentUser.genero.isEmpty ||
-        currentUser.fechaNacimiento.isEmpty) {
-      throw Exception('Tu perfil no está completo');
-    }
-
-    if (currentUser.voluntariado != null || currentUser.voluntariado != '') {
-      throw Exception('Ya estás postulado a un voluntariado');
-    }
-
-    final volunteering = await firestore.getVolunteeringById(volunteeringId);
-    if (volunteering == null || volunteering.vacantes <= 0) {
-      throw Exception('No hay vacantes disponibles');
-    }
-
-    await firestore.applyToVolunteering(currentUser.uuid, volunteeringId);
-  };
-});
-
-// Mark as favorite
-final toggleFavoriteProvider = Provider.family<
-  Future<void> Function(String volunteeringId, bool isFavorite),
-  String
->((ref, uid) {
-  final firestore = ref.watch(firestoreServiceProvider);
-  return (String volunteeringId, bool isFavorite) async {
-    await firestore.toggleFavorite(
-      uid: uid,
-      volunteeringId: volunteeringId,
-      isFavorite: isFavorite,
-    );
-    ref.invalidate(currentUserProvider); // Actualizar el usuario
-  };
-});
-
-/////// SEARCH & FEED
-// Order Criteria and Search Input data structures
+/// VolunteeringSortMode & VolunteeringQueryState (NO cambian)
 enum VolunteeringSortMode { date, proximity }
 
 class VolunteeringQueryState {
@@ -92,8 +34,7 @@ class VolunteeringQueryState {
   }
 }
 
-// Manages the state which has both the sorting criteria and the text input
-// Also manages the debouncing for the text input
+/// Notifier del estado de búsqueda (NO cambia)
 class VolunteeringQueryNotifier extends StateNotifier<VolunteeringQueryState> {
   VolunteeringQueryNotifier()
     : super(
@@ -133,32 +74,28 @@ class VolunteeringQueryNotifier extends StateNotifier<VolunteeringQueryState> {
   }
 }
 
-// Holds search query, sort mode (date/proximity), and optionally the user’s location
-// The state is mutated by the VolunteeringQueryNotifier
+/// Provider de búsqueda
 final volunteeringQueryProvider =
-    StateNotifierProvider<VolunteeringQueryNotifier, VolunteeringQueryState>((
-      ref,
-    ) {
-      return VolunteeringQueryNotifier();
-    });
+    StateNotifierProvider<VolunteeringQueryNotifier, VolunteeringQueryState>(
+      (ref) => VolunteeringQueryNotifier(),
+    );
 
-// Manages both the sorting criteria and the results of the search query
 final volunteeringSearchProvider = FutureProvider<List<Volunteering>>((
   ref,
 ) async {
   final queryState = ref.watch(volunteeringQueryProvider);
-  final firestore = ref.watch(firestoreServiceProvider);
+  final volunteeringsService = ref.watch(volunteeringsServiceProvider);
 
   List<Volunteering> all;
 
   if (queryState.sortMode == VolunteeringSortMode.proximity &&
       queryState.userLocation != null) {
-    all = await firestore.getAllVolunteeringsSorted(
+    all = await volunteeringsService.getAllVolunteeringsSorted(
       sortMode: VolunteeringSortMode.proximity,
       userLocation: queryState.userLocation,
     );
   } else {
-    all = await firestore.getAllVolunteeringsSorted(
+    all = await volunteeringsService.getAllVolunteeringsSorted(
       sortMode: VolunteeringSortMode.date,
     );
   }
@@ -172,4 +109,91 @@ final volunteeringSearchProvider = FutureProvider<List<Volunteering>>((
         v.descripcion.toLowerCase().contains(lowered) ||
         v.resumen.toLowerCase().contains(lowered);
   }).toList();
+});
+
+/// Provider obtener volunteering por ID
+final volunteeringByIdProvider = FutureProvider.family<Volunteering, String>((
+  ref,
+  id,
+) async {
+  final volunteeringsService = ref.watch(volunteeringsServiceProvider);
+  final volunteering = await volunteeringsService.getVolunteeringById(id);
+  if (volunteering == null) {
+    throw Exception('Volunteering with id $id not found');
+  }
+  return volunteering;
+});
+
+/// Provider para aplicar a un volunteering
+final applyToVolunteeringProvider =
+    Provider.family<Future<void> Function(), String>((ref, volunteeringId) {
+      final volunteeringsService = ref.read(volunteeringsServiceProvider);
+      final currentUser = ref.read(currentUserProvider)!;
+
+      return () async {
+        if (currentUser.telefono.isEmpty ||
+            currentUser.genero.isEmpty ||
+            currentUser.fechaNacimiento.isEmpty) {
+          throw Exception('Tu perfil no está completo');
+        }
+
+        if (currentUser.voluntariado != null &&
+            currentUser.voluntariado != '') {
+          throw Exception('Ya estás postulado a un voluntariado');
+        }
+
+        final volunteering = await volunteeringsService.getVolunteeringById(
+          volunteeringId,
+        );
+        if (volunteering == null || volunteering.vacantes <= 0) {
+          throw Exception('No hay vacantes disponibles');
+        }
+
+        await volunteeringsService.applyToVolunteering(
+          currentUser.uuid,
+          volunteeringId,
+        );
+      };
+    });
+
+/// Provider para abandonar voluntariado (cuando ya estás aceptado)
+final abandonVolunteeringProvider =
+    Provider.family<Future<void> Function(), String>((ref, volunteeringId) {
+      final volunteeringsService = ref.read(volunteeringsServiceProvider);
+      final currentUser = ref.read(currentUserProvider)!;
+
+      return () async {
+        await volunteeringsService.abandonVolunteering(
+          currentUser.uuid,
+          volunteeringId,
+        );
+        ref.invalidate(currentUserProvider);
+      };
+    });
+
+/// Provider para retirar postulación (cuando estás postulado pero no aceptado)
+final withdrawApplicationProvider = Provider<Future<void> Function()>((ref) {
+  final volunteeringsService = ref.read(volunteeringsServiceProvider);
+  final currentUser = ref.read(currentUserProvider)!;
+
+  return () async {
+    await volunteeringsService.withdrawApplication(currentUser.uuid);
+    ref.invalidate(currentUserProvider);
+  };
+});
+
+/// Provider para toggle de favoritos
+final toggleFavoriteProvider = Provider.family<
+  Future<void> Function(String volunteeringId, bool isFavorite),
+  String
+>((ref, uid) {
+  final volunteeringsService = ref.watch(volunteeringsServiceProvider);
+  return (String volunteeringId, bool isFavorite) async {
+    await volunteeringsService.toggleFavorite(
+      uid: uid,
+      volunteeringId: volunteeringId,
+      isFavorite: isFavorite,
+    );
+    ref.invalidate(currentUserProvider);
+  };
 });

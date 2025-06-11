@@ -4,7 +4,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/providers/user_provider.dart';
 
-import '../../../providers/firestore_provider.dart';
+import '../../../services/firestore_service.dart';
 
 final registerControllerProvider = Provider<RegisterController>((ref) {
   return RegisterController(ref);
@@ -37,8 +37,8 @@ class RegisterController {
           name: 'user_creation_success',
           parameters: {'source': 'RegisterController'},
         );
-      } catch(e, stack) {
-          FirebaseCrashlytics.instance.recordError(
+      } catch (e, stack) {
+        FirebaseCrashlytics.instance.recordError(
           e,
           stack,
           reason: 'Failed to create user document in Firestore',

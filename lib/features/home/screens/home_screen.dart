@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ser_manos/providers/firestore_provider.dart';
 import 'package:ser_manos/services/analytics_service.dart';
 import 'package:ser_manos/services/volunteering_view_tracker.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -43,12 +42,10 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
 
   Future<void> _determineSortMode() async {
     final notifier = ref.read(volunteeringQueryProvider.notifier);
-    // Check and request permission
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
-    // If granted, sort by proximity, otherwise default to date
     if (permission == LocationPermission.whileInUse ||
         permission == LocationPermission.always) {
       try {
@@ -72,7 +69,6 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
     final remoteConfig = ref.watch(remoteConfigProvider);
     final showProximityButton = remoteConfig.getBool('show_proximity_button');
 
-    // Sync favoritos en cada build si cambia user
     if (user != null) {
       localFavorites = Set.from(user.favoritos);
     }
@@ -221,11 +217,12 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                     GestureDetector(
                                       behavior: HitTestBehavior.translucent,
                                       onTap: () {
-                                        print("vistas ya registradas: ${VolunteeringViewTracker.viewsCount}");
-                                        print("por registrar vista: ${item.id}");
-                                        // Register view and log analytics
-                                        VolunteeringViewTracker.registerView(item.id);
-                                        AnalyticsService.logViewedVolunteering(item.id);
+                                        VolunteeringViewTracker.registerView(
+                                          item.id,
+                                        );
+                                        AnalyticsService.logViewedVolunteering(
+                                          item.id,
+                                        );
                                         context.go('/volunteering/${item.id}');
                                       },
                                       child: VolunteeringCard(
@@ -237,20 +234,15 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                         onFavoritePressed: () async {
                                           if (user == null) return;
 
-                                          final firestore = ref.read(
-                                            firestoreServiceProvider,
-                                          );
-                                          final refreshUser = ref.read(
-                                            refreshUserProvider,
+                                          final toggleFavorite = ref.read(
+                                            toggleFavoriteProvider(user.uuid),
                                           );
 
-                                          await firestore.toggleFavorite(
-                                            uid: user.uuid,
-                                            volunteeringId: item.id,
-                                            isFavorite: isFavorite,
+                                          await toggleFavorite(
+                                            item.id,
+                                            isFavorite,
                                           );
 
-                                          // Local update for UI response
                                           setState(() {
                                             if (isFavorite) {
                                               localFavorites.remove(item.id);
@@ -258,10 +250,8 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                               localFavorites.add(item.id);
                                             }
                                           });
-
-                                          // Refresh for full user update
-                                          await refreshUser();
                                         },
+
                                         onLocationPressed: () {
                                           final lat = item.ubicacion.latitude;
                                           final lng = item.ubicacion.longitude;
