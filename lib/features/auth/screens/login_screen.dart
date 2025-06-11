@@ -19,6 +19,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>(); // 🆕
+
   bool get _isFormFilled =>
       emailController.text.isNotEmpty && passwordController.text.isNotEmpty;
 
@@ -30,7 +32,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _updateState() {
-    setState(() {});
+    setState(() {}); 
   }
 
   @override
@@ -58,9 +60,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 96),
                   const LogoSquare(size: 150),
                   const SizedBox(height: 32),
-                  LoginForms(
-                    emailController: emailController,
-                    passwordController: passwordController,
+
+                  Form(
+                    key: _formKey,
+                    child: LoginForms(
+                      emailController: emailController,
+                      passwordController: passwordController,
+                    ),
                   ),
                 ],
               ),
@@ -70,16 +76,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     text: 'Iniciar Sesión',
                     isEnabled: _isFormFilled && !authState.isLoading,
                     onPressed: () async {
+                      final isValid = _formKey.currentState?.validate() ?? false;
+                      if (!isValid) return;
+
                       await authNotifier.login(
                         email: emailController.text,
                         password: passwordController.text,
                       );
-                      if (ref.read(authStateProvider).errorMessage == null) {
+
+                      final error = ref.read(authStateProvider).errorMessage;
+                      if (error == null) {
                         context.go('/home');
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Error: ${ref.read(authStateProvider).errorMessage}')),
-                        );
                       }
                     },
                   ),
