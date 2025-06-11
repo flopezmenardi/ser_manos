@@ -1,20 +1,19 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ser_manos/providers/user_provider.dart';
 
-import '../../../infrastructure/firestore_service.dart';
+import '../../../infrastructure/user_service.dart';
 
 final registerControllerProvider = Provider<RegisterController>((ref) {
-  return RegisterController(ref);
+  final userRepo = ref.read(userRepositoryProvider);
+  final authNotifier = ref.read(authNotifierProvider.notifier);
+  return RegisterController(ref, userRepo, authNotifier);
 });
 
 class RegisterController {
   final Ref ref;
-  final fb_auth.FirebaseAuth _auth = fb_auth.FirebaseAuth.instance;
+  final UserRepository _userRepository;
+  final AuthNotifier _authNotifier;
 
-  RegisterController(this.ref);
+  RegisterController(this.ref, this._userRepository, this._authNotifier);
 
   Future<String?> registerUser({
     required String nombre,
@@ -23,44 +22,16 @@ class RegisterController {
     required String password,
   }) async {
     try {
-      final userCredential = await _auth.createUserWithEmailAndPassword(
+      await _authNotifier.register(
+        nombre: nombre,
+        apellido: apellido,
         email: email,
         password: password,
       );
-
-      final uid = userCredential.user!.uid;
-
-      final firestore = ref.read(firestoreServiceProvider);
-      try {
-        await firestore.createUser(uid, nombre, apellido, email);
-        FirebaseAnalytics.instance.logEvent(
-          name: 'user_creation_success',
-          parameters: {'source': 'RegisterController'},
-        );
-      } catch (e, stack) {
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          stack,
-          reason: 'Failed to create user document in Firestore',
-          fatal: false,
-        );
-        FirebaseAnalytics.instance.logEvent(
-          name: 'user_creation_failed',
-          parameters: {'source': 'RegisterController'},
-        );
-        rethrow;
-      }
-
-      final user = await firestore.getUserById(uid);
-      if (user != null) {
-        ref.read(userProvider.notifier).setUser(user);
-      }
-
-      return null;
-    } on fb_auth.FirebaseAuthException catch (e) {
-      return e.message;
-    } catch (e) {
-      return 'Error desconocido';
+      return null; // Success
+    } catch (e, stack) {
+      // Optionally log error (Crashlytics, Analytics)
+      return e.toString();
     }
   }
 
@@ -69,24 +40,10 @@ class RegisterController {
     required String password,
   }) async {
     try {
-      final userCredential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      final uid = userCredential.user!.uid;
-      final firestore = ref.read(firestoreServiceProvider);
-      final user = await firestore.getUserById(uid);
-
-      if (user != null) {
-        ref.read(userProvider.notifier).setUser(user);
-      }
-
-      return null;
-    } on fb_auth.FirebaseAuthException catch (e) {
-      return e.message;
+      await _authNotifier.login(email: email, password: password);
+      return null; // Success
     } catch (e) {
-      return 'Error desconocido';
+      return e.toString();
     }
   }
 }

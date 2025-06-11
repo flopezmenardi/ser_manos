@@ -14,10 +14,10 @@ import 'package:ser_manos/design_system/organisms/modal.dart';
 import 'package:ser_manos/design_system/tokens/colors.dart';
 import 'package:ser_manos/design_system/tokens/grid.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
-import 'package:ser_manos/providers/auth_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../infrastructure/analytics_service.dart';
+import '../../../infrastructure/user_service.dart';
 import '../../../infrastructure/volunteering_view_tracker.dart';
 import '../controller/volunteerings_controller.dart';
 
@@ -29,7 +29,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final volunteeringAsync = ref.watch(volunteeringByIdProvider(id));
-    final user = ref.watch(currentUserProvider);
+    final user = ref.watch(authNotifierProvider).currentUser;
     final controller = ref.read(volunteeringsControllerProvider);
 
     if (user == null) {
@@ -95,7 +95,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                   if (!confirmed) return;
                   await controller.abandonVolunteering(volunteering.id);
                   ref.invalidate(volunteeringByIdProvider(volunteering.id));
-                  await ref.read(refreshUserProvider)();
+                  await ref.read(authNotifierProvider.notifier).refreshUser();
                 },
               ),
             ],
@@ -143,7 +143,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                   if (!confirmed) return;
                   await controller.withdrawApplication();
                   ref.invalidate(volunteeringByIdProvider(id));
-                  await ref.read(refreshUserProvider)();
+                  await ref.read(authNotifierProvider.notifier).refreshUser();
                 },
               ),
             ],
@@ -184,7 +184,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                   if (!confirmed) return;
                   await controller.withdrawApplication();
                   ref.invalidate(volunteeringByIdProvider(id));
-                  await ref.read(refreshUserProvider)();
+                  await ref.read(authNotifierProvider.notifier).refreshUser();
                 },
               ),
               const SizedBox(height: 8),
@@ -269,7 +269,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
 
               await controller.applyToVolunteering(volunteering.id);
               ref.invalidate(volunteeringByIdProvider(volunteering.id));
-              await ref.read(refreshUserProvider)();
+              await ref.read(authNotifierProvider.notifier).refreshUser();
             },
           );
         }

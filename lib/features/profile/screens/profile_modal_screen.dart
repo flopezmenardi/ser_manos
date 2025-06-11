@@ -11,7 +11,7 @@ import '../../../design_system/organisms/cards/input_card.dart';
 import '../../../design_system/organisms/headers/header_modal.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/grid.dart';
-import '../../../providers/auth_provider.dart';
+import '../../../infrastructure/user_service.dart';
 import '../controller/profile_controller.dart';
 
 class ProfileModalScreen extends ConsumerStatefulWidget {
@@ -28,7 +28,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
   @override
   void initState() {
     super.initState();
-    final user = ref.read(currentUserProvider);
+    final user = ref.read(authNotifierProvider).currentUser;
     if (user != null) {
       _sexoIndex = _genderToIndex(user.genero);
     }
@@ -48,9 +48,8 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(currentUserProvider);
-    final updateUser = ref.watch(updateUserProvider);
-    final refreshUser = ref.read(refreshUserProvider);
+    final user = ref.watch(authNotifierProvider).currentUser;
+    final profileController = ref.read(profileControllerProvider);
 
     if (user == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -170,14 +169,17 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
 
                           final values = _formKey.currentState!.value;
 
-                          await updateUser(user.uuid, {
+                          await profileController.updateUser(user.uuid, {
                             'fechaNacimiento': values['birthDate'],
                             'telefono': values['phone'],
                             'email': values['email'],
                             'genero': _indexToGender(_sexoIndex),
                           });
 
-                          await refreshUser();
+                          await ref
+                              .read(authNotifierProvider.notifier)
+                              .refreshUser();
+
                           context.pop();
                         },
                       ),

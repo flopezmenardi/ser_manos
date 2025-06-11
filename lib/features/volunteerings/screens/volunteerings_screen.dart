@@ -14,8 +14,8 @@ import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/typography.dart';
 import '../../../infrastructure/analytics_service.dart';
 import '../../../infrastructure/remote_config_provider.dart';
+import '../../../infrastructure/user_service.dart';
 import '../../../infrastructure/volunteering_view_tracker.dart';
-import '../../../providers/auth_provider.dart';
 import '../controller/volunteerings_controller.dart';
 
 class VolunteeringListPage extends ConsumerStatefulWidget {
@@ -65,7 +65,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
     final controller = ref.read(volunteeringsControllerProvider);
     final volunteeringListAsync = ref.watch(volunteeringSearchProvider);
     final queryNotifier = ref.read(volunteeringQueryProvider.notifier);
-    final user = ref.watch(currentUserProvider);
+    final user = ref.watch(authNotifierProvider).currentUser;
     final queryState = ref.watch(volunteeringQueryProvider);
     final remoteConfig = ref.watch(remoteConfigProvider);
     final showProximityButton = remoteConfig.getBool('show_proximity_button');
