@@ -20,12 +20,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   Future<void> _navigate() async {
     final authNotifier = ref.read(authStateProvider.notifier);
     await authNotifier.initialize();
-    
+
     await Future.delayed(const Duration(seconds: 2)); // para mostrar el logo
 
     final user = ref.read(currentUserProvider);
     if (user != null) {
-      context.go('/home');
+      context.go('/volunteerings');
     } else {
       context.go('/welcome');
     }

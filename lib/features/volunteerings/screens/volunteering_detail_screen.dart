@@ -19,7 +19,7 @@ import 'package:ser_manos/services/analytics_service.dart';
 import 'package:ser_manos/services/volunteering_view_tracker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../controller/volunteering_controller.dart';
+import '../controller/volunteerings_controller.dart';
 
 class VolunteeringDetailScreen extends ConsumerWidget {
   final String id;
@@ -321,7 +321,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                           icon: AppIcons.getBackIcon(
                             state: IconState.defaultState,
                           ),
-                          onPressed: () => context.go('/home'),
+                          onPressed: () => context.go('/volunteerings'),
                         ),
                       ),
                     ],
