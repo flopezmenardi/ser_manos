@@ -12,6 +12,7 @@ class VolunteeringCard extends StatelessWidget {
   final bool isFavorite;
   final VoidCallback onFavoritePressed;
   final VoidCallback onLocationPressed;
+  final int likeCount;
 
   const VolunteeringCard({
     super.key,
@@ -22,6 +23,7 @@ class VolunteeringCard extends StatelessWidget {
     required this.isFavorite,
     required this.onFavoritePressed,
     required this.onLocationPressed,
+    required this.likeCount,
   });
 
   @override
@@ -83,6 +85,14 @@ class VolunteeringCard extends StatelessWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
+                              if (likeCount > 0)
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 6),
+                                  child: Text(
+                                    '$likeCount',
+                                    style: AppTypography.body2.copyWith(color: AppColors.primary100),
+                                  ),
+                                ),
                               GestureDetector(
                                 onTap: onFavoritePressed,
                                 child: Icon(

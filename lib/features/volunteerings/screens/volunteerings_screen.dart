@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/models/volunteering_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../design_system/molecules/inputs/search_input.dart';
@@ -22,8 +23,7 @@ class VolunteeringListPage extends ConsumerStatefulWidget {
   const VolunteeringListPage({super.key});
 
   @override
-  ConsumerState<VolunteeringListPage> createState() =>
-      _VolunteeringListPageState();
+  ConsumerState<VolunteeringListPage> createState() => _VolunteeringListPageState();
 }
 
 class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
@@ -69,6 +69,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
     final queryState = ref.watch(volunteeringQueryProvider);
     final remoteConfig = ref.watch(remoteConfigProvider);
     final showProximityButton = remoteConfig.getBool('show_proximity_button');
+    final showLikeCounter = remoteConfig.getBool('show_like_counter');
 
     if (user != null) {
       localFavorites = Set.from(user.favoritos);
@@ -96,7 +97,6 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                     ),
                     const SizedBox(height: 24),
 
-                    // UNWATCHABLE PROXIMITY BUTTON
                     if (showProximityButton)
                       Align(
                         alignment: Alignment.centerLeft,
@@ -108,40 +108,30 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                           ),
                           icon: const Icon(Icons.my_location),
                           label: Text(
-                            queryState.sortMode ==
-                                    VolunteeringSortMode.proximity
+                            queryState.sortMode == VolunteeringSortMode.proximity
                                 ? "Ordenar por fecha"
                                 : "Ordenar por cercanía",
                           ),
                           onPressed: () async {
-                            if (queryState.sortMode ==
-                                VolunteeringSortMode.proximity) {
-                              queryNotifier.updateSortMode(
-                                VolunteeringSortMode.date,
-                              );
+                            if (queryState.sortMode == VolunteeringSortMode.proximity) {
+                              queryNotifier.updateSortMode(VolunteeringSortMode.date);
                             } else {
-                              LocationPermission permission =
-                                  await Geolocator.checkPermission();
+                              LocationPermission permission = await Geolocator.checkPermission();
                               if (permission == LocationPermission.denied) {
-                                permission =
-                                    await Geolocator.requestPermission();
+                                permission = await Geolocator.requestPermission();
                                 if (permission == LocationPermission.denied) {
                                   return;
                                 }
                               }
-                              if (permission ==
-                                  LocationPermission.deniedForever) {
+                              if (permission == LocationPermission.deniedForever) {
                                 return;
                               }
 
-                              final position =
-                                  await Geolocator.getCurrentPosition();
+                              final position = await Geolocator.getCurrentPosition();
                               queryNotifier.setLocation(
                                 GeoPoint(position.latitude, position.longitude),
                               );
-                              queryNotifier.updateSortMode(
-                                VolunteeringSortMode.proximity,
-                              );
+                              queryNotifier.updateSortMode(VolunteeringSortMode.proximity);
                             }
                           },
                         ),
@@ -152,7 +142,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                       error: (_, __) => const SizedBox.shrink(),
                       data: (volunteerings) {
                         if (user != null &&
-                            user.voluntariado != null &&
+                          user.voluntariado != null &&
                             user.voluntariado != '' &&
                             volunteerings.any(
                               (v) => v.id == user.voluntariado,
@@ -160,30 +150,30 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                           final current = volunteerings.firstWhere(
                             (v) => v.id == user.voluntariado,
                           );
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Tu actividad",
-                                style: AppTypography.headline1.copyWith(
-                                  color: AppColors.neutral100,
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Tu actividad",
+                                  style: AppTypography.headline1.copyWith(
+                                    color: AppColors.neutral100,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 16),
-                              CurrentVolunteerCard(
-                                category: current.emisor,
-                                name: current.titulo,
-                                onLocationPressed: () {
+                                const SizedBox(height: 16),
+                                CurrentVolunteerCard(
+                                  category: current.emisor,
+                                  name: current.titulo,
+                                  onLocationPressed: () {
                                   final lat = current.ubicacion.latitude;
                                   final lng = current.ubicacion.longitude;
-                                  final uri = Uri.parse(
-                                    "https://www.google.com/maps/search/?api=1&query=$lat,$lng",
-                                  );
-                                  launchUrl(uri);
-                                },
-                              ),
-                              const SizedBox(height: 24),
-                            ],
+                                    final uri = Uri.parse(
+                                      "https://www.google.com/maps/search/?api=1&query=$lat,$lng",
+                                    );
+                                    launchUrl(uri);
+                                  },
+                                ),
+                                const SizedBox(height: 24),
+                              ],
                           );
                         }
                         return const SizedBox.shrink();
@@ -213,20 +203,26 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                   item.id,
                                 );
 
-                                return Column(
-                                  children: [
-                                    GestureDetector(
-                                      behavior: HitTestBehavior.translucent,
-                                      onTap: () {
+                            return Column(
+                              children: [
+                                GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
                                         VolunteeringViewTracker.registerView(
                                           item.id,
                                         );
                                         AnalyticsService.logViewedVolunteering(
                                           item.id,
                                         );
-                                        context.go('/volunteering/${item.id}');
-                                      },
-                                      child: VolunteeringCard(
+                                    context.go('/volunteering/${item.id}');
+                                  },
+                                  child: FutureBuilder<int>(
+                                    future: showLikeCounter
+                                        ? controller.getFavoritesCount(item.id)
+                                        : Future.value(0),
+                                    builder: (context, snapshot) {
+                                      final likeCount = snapshot.data ?? 0;
+                                      return VolunteeringCard(
                                         imagePath: item.imagenURL,
                                         category: item.emisor,
                                         title: item.titulo,
@@ -234,12 +230,10 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                         isFavorite: isFavorite,
                                         onFavoritePressed: () async {
                                           if (user == null) return;
-
                                           await controller.toggleFavorite(
                                             item.id,
                                             isFavorite,
                                           );
-
                                           setState(() {
                                             if (isFavorite) {
                                               localFavorites.remove(item.id);
@@ -248,7 +242,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                             }
                                           });
                                         },
-
+                                        likeCount: showLikeCounter ? likeCount : 0,
                                         onLocationPressed: () {
                                           final lat = item.ubicacion.latitude;
                                           final lng = item.ubicacion.longitude;
@@ -257,12 +251,14 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                           );
                                           launchUrl(uri);
                                         },
-                                      ),
-                                    ),
-                                    const SizedBox(height: 16),
-                                  ],
-                                );
-                              }).toList(),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                              ],
+                            );
+                          }).toList(),
                         );
                       },
                     ),
