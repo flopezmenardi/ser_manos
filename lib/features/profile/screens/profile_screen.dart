@@ -4,16 +4,16 @@ import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/organisms/modal.dart';
 import 'package:ser_manos/models/user_model.dart';
 
-import '../../design_system/atoms/icons.dart';
-import '../../design_system/molecules/buttons/cta_button.dart';
-import '../../design_system/molecules/buttons/text_button.dart';
-import '../../design_system/molecules/components/profile_picture.dart';
-import '../../design_system/organisms/cards/information_card.dart';
-import '../../design_system/organisms/headers/header.dart';
-import '../../design_system/tokens/colors.dart';
-import '../../design_system/tokens/grid.dart';
-import '../../design_system/tokens/typography.dart';
-import '../../providers/auth_provider.dart';
+import '../../../design_system/atoms/icons.dart';
+import '../../../design_system/molecules/buttons/cta_button.dart';
+import '../../../design_system/molecules/buttons/text_button.dart';
+import '../../../design_system/molecules/components/profile_picture.dart';
+import '../../../design_system/organisms/cards/information_card.dart';
+import '../../../design_system/organisms/headers/header.dart';
+import '../../../design_system/tokens/colors.dart';
+import '../../../design_system/tokens/grid.dart';
+import '../../../design_system/tokens/typography.dart';
+import '../../../providers/auth_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -102,20 +102,21 @@ class ProfileScreen extends ConsumerWidget {
             onPressed: () async {
               showDialog(
                 context: context,
-                builder: (_) => Center(
-                  child: ModalSermanos(
-                    title: 'Cerrar sesión',
-                    subtitle: '¿Estás seguro que querés cerrar sesión?',
-                    confimationText: 'Cerrar sesión',
-                    cancelText: 'Cancelar',
-                    onCancel: () => Navigator.of(context).pop(),
-                    onConfirm: () async {
-                      await ref.read(authStateProvider.notifier).logout();
-                      Navigator.of(context).pop();
-                      context.go('/login');
-                    },
-                  ),
-                ),
+                builder:
+                    (_) => Center(
+                      child: ModalSermanos(
+                        title: 'Cerrar sesión',
+                        subtitle: '¿Estás seguro que querés cerrar sesión?',
+                        confimationText: 'Cerrar sesión',
+                        cancelText: 'Cancelar',
+                        onCancel: () => Navigator.of(context).pop(),
+                        onConfirm: () async {
+                          await ref.read(authStateProvider.notifier).logout();
+                          Navigator.of(context).pop();
+                          context.go('/login');
+                        },
+                      ),
+                    ),
               );
             },
           ),
@@ -156,20 +157,21 @@ class ProfileScreen extends ConsumerWidget {
             onPressed: () async {
               showDialog(
                 context: context,
-                builder: (_) => Center(
-                  child: ModalSermanos(
-                    title: 'Cerrar sesión',
-                    subtitle: '¿Estás seguro que querés cerrar sesión?',
-                    confimationText: 'Cerrar sesión',
-                    cancelText: 'Cancelar',
-                    onCancel: () => Navigator.of(context).pop(),
-                    onConfirm: () async {
-                      await ref.read(authStateProvider.notifier).logout();
-                      Navigator.of(context).pop();
-                      context.go('/login');
-                    },
-                  ),
-                ),
+                builder:
+                    (_) => Center(
+                      child: ModalSermanos(
+                        title: 'Cerrar sesión',
+                        subtitle: '¿Estás seguro que querés cerrar sesión?',
+                        confimationText: 'Cerrar sesión',
+                        cancelText: 'Cancelar',
+                        onCancel: () => Navigator.of(context).pop(),
+                        onConfirm: () async {
+                          await ref.read(authStateProvider.notifier).logout();
+                          Navigator.of(context).pop();
+                          context.go('/login');
+                        },
+                      ),
+                    ),
               );
             },
           ),

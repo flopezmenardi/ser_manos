@@ -15,10 +15,10 @@ import 'package:ser_manos/design_system/tokens/colors.dart';
 import 'package:ser_manos/design_system/tokens/grid.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
 import 'package:ser_manos/providers/auth_provider.dart';
-import 'package:ser_manos/services/analytics_service.dart';
-import 'package:ser_manos/services/volunteering_view_tracker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../infrastructure/analytics_service.dart';
+import '../../../infrastructure/volunteering_view_tracker.dart';
 import '../controller/volunteerings_controller.dart';
 
 class VolunteeringDetailScreen extends ConsumerWidget {

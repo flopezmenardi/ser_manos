@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ser_manos/services/analytics_service.dart';
-import 'package:ser_manos/services/volunteering_view_tracker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../design_system/molecules/inputs/search_input.dart';
@@ -14,8 +12,10 @@ import '../../../design_system/organisms/cards/volunteer_card.dart';
 import '../../../design_system/organisms/headers/header.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/typography.dart';
+import '../../../infrastructure/analytics_service.dart';
+import '../../../infrastructure/remote_config_provider.dart';
+import '../../../infrastructure/volunteering_view_tracker.dart';
 import '../../../providers/auth_provider.dart';
-import '../../../providers/remote_config_provider.dart';
 import '../controller/volunteerings_controller.dart';
 
 class VolunteeringListPage extends ConsumerStatefulWidget {
