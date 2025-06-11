@@ -29,6 +29,7 @@ dependencies:
   firebase_remote_config: ^5.4.5
   flutter_form_builder: ^9.1.1
   form_builder_validators: ^11.1.2
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -40,3 +41,8 @@ flutter:
   assets:
     - assets/images/
     - assets/logos/
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logos/logo_base.png"
