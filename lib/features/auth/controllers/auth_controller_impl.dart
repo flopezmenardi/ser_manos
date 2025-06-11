@@ -1,19 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ser_manos/features/auth/controllers/auth_controller.dart';
 
 import '../../../infrastructure/user_service.dart';
 
-final registerControllerProvider = Provider<RegisterController>((ref) {
+final authControllerProvider = Provider<AuthController>((ref) {
   final userRepo = ref.read(userRepositoryProvider);
   final authNotifier = ref.read(authNotifierProvider.notifier);
-  return RegisterController(ref, userRepo, authNotifier);
+  return AuthControllerImpl(ref, userRepo, authNotifier);
 });
 
-class RegisterController {
+class AuthControllerImpl implements AuthController {
   final Ref ref;
   final UserRepository _userRepository;
   final AuthNotifier _authNotifier;
 
-  RegisterController(this.ref, this._userRepository, this._authNotifier);
+  AuthControllerImpl(this.ref, this._userRepository, this._authNotifier);
 
   Future<String?> registerUser({
     required String nombre,
