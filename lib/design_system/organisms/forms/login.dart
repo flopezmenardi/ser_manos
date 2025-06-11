@@ -21,6 +21,11 @@ class LoginForms extends StatelessWidget {
           label: 'Email',
           placeholder: 'Ej: juanbarcena@mail.com',
           controller: emailController,
+          validator: (value) {
+            if (value == null || value.isEmpty) return 'Email requerido';
+            if (!value.contains('@')) return 'Email inválido';
+            return null;
+          },
         ),
         const SizedBox(height: 24),
         _PasswordInput(controller: passwordController),
@@ -61,8 +66,14 @@ class _PasswordInputState extends State<_PasswordInput> {
         ),
         onPressed: _toggleVisibility,
       ),
-      readOnly: false,
-      onTap: null,
+      validator: (value) {
+        if (value == null || value.isEmpty) return 'Contraseña requerida';
+        if (value.length < 8) return 'Contraseña debe contener al menos 8 caracteres';
+        if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)').hasMatch(value)) {
+          return 'Debe contener una letra mayúscula, una minúscula y un número';
+        }
+        return null;
+      },
     );
   }
 }
