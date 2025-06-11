@@ -6,7 +6,7 @@ import '../../../design_system/organisms/cards/news_card.dart';
 import '../../../design_system/organisms/headers/header.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../models/news_model.dart';
-import '../controller/news_controller.dart';
+import '../controller/news_controller_impl.dart';
 
 // Add this FutureProvider outside the widget
 final newsListProvider = FutureProvider.autoDispose<List<News>>((ref) {
