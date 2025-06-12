@@ -18,7 +18,7 @@ final volunteeringQueryProvider = StateNotifierProvider<VolunteeringQueryNotifie
 
 final volunteeringsControllerProvider = Provider<VolunteeringsController>((ref) {
   final volunteeringsService = ref.read(volunteeringsServiceProvider);
-  final currentUser = ref.read(authNotifierProvider).currentUser!;
+  final currentUser = ref.watch(authNotifierProvider).currentUser!;
   return VolunteeringsControllerImpl(volunteeringsService: volunteeringsService, currentUser: currentUser);
 });
 
@@ -29,10 +29,14 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
   VolunteeringsControllerImpl({required this.volunteeringsService, required this.currentUser});
 
   Future<void> applyToVolunteering(String volunteeringId) async {
+    print(currentUser.genero);
+    print(currentUser.telefono);
+    print(currentUser.fechaNacimiento);
     if (currentUser.telefono.isEmpty || currentUser.genero.isEmpty || currentUser.fechaNacimiento.isEmpty) {
       throw Exception('Tu perfil no está completo');
     }
 
+    print(currentUser.voluntariado);
     if (currentUser.voluntariado != null && currentUser.voluntariado != '') {
       throw Exception('Ya estás postulado a un voluntariado');
     }
@@ -96,10 +100,7 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
   }
 
   Future<void> logLikedVolunteering(String volunteeringId, bool isLiked) async {
-    await AnalyticsService.logLikedVolunteering(
-      volunteeringId: volunteeringId,
-      isLiked: isLiked,
-    );
+    await AnalyticsService.logLikedVolunteering(volunteeringId: volunteeringId, isLiked: isLiked);
   }
 
   Future<void> logViewedVolunteering(String volunteeringId) async {
