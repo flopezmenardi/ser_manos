@@ -196,7 +196,6 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                         ? controller.getFavoritesCount(item.id)
                                         : Future.value(0),
                                     builder: (context, snapshot) {
-                                      final likeCount = snapshot.data ?? 0;
                                       return VolunteeringCard(
                                         imagePath: item.imagenURL,
                                         category: item.emisor,
@@ -207,8 +206,9 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                           if (user == null) return;
                                           await controller.toggleFavorite(item.id, isFavorite);
                                           ref.read(authNotifierProvider.notifier).refreshUser();
+                                          ref.invalidate(volunteeringSearchProvider);
                                         },
-                                        likeCount: showLikeCounter ? likeCount : 0,
+                                        likeCount: showLikeCounter ? item.likes : 0,
                                         onLocationPressed: () {
                                           final lat = item.ubicacion.latitude;
                                           final lng = item.ubicacion.longitude;

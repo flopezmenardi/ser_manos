@@ -286,6 +286,11 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         Text(volunteering.titulo, style: AppTypography.headline1.copyWith(color: AppColors.neutral100)),
                         const SizedBox(height: 8),
                         Text(volunteering.resumen, style: AppTypography.body1.copyWith(color: AppColors.secondary200)),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Fecha de inicio: ${volunteering.fechaInicio.toDate().day}/${volunteering.fechaInicio.toDate().month}/${volunteering.fechaInicio.toDate().year}',
+                          style: AppTypography.body2.copyWith(color: AppColors.neutral50),
+                        ),
                         const SizedBox(height: 24),
                         Text(
                           'Sobre la actividad',
