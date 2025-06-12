@@ -3,7 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 class AnalyticsService {
   static final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
-  /// Llama cuando un usuario ve un detalle de voluntariado
+  // Llamado cuando un usuario ve un detalle de voluntariado
   static Future<void> logViewedVolunteering(String volunteeringId) async {
     await _analytics.logEvent(
       name: 'view_volunteering',
@@ -14,7 +14,7 @@ class AnalyticsService {
     );
   }
 
-  /// Llama cuando un usuario se postula
+  // Llamado cuando un usuario se postula
   static Future<void> logVolunteeringApplication({
     required String volunteeringId,
     required int viewsBeforeApplying,
@@ -24,6 +24,21 @@ class AnalyticsService {
       parameters: {
         'volunteering_id': volunteeringId,
         'views_before': viewsBeforeApplying,
+        'timestamp': DateTime.now().toIso8601String(),
+      },
+    );
+  }
+
+  // Llamado cuando un usuario le da like a un voluntariado
+  static Future<void> logLikedVolunteering({
+    required String volunteeringId,
+    required bool isLiked,
+  }) async {
+    await _analytics.logEvent(
+      name: 'like_volunteering',
+      parameters: {
+        'volunteering_id': volunteeringId,
+        'liked': isLiked,
         'timestamp': DateTime.now().toIso8601String(),
       },
     );

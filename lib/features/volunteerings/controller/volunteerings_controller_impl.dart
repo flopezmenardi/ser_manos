@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/features/volunteerings/controller/volunteerings_controller.dart';
+import 'package:ser_manos/infrastructure/analytics_service.dart';
+import 'package:ser_manos/infrastructure/volunteering_view_tracker.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
 
 import '../../../infrastructure/user_service_impl.dart';
@@ -59,7 +61,6 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
     );
   }
 
-  @override
   Future<int> getFavoritesCount(String volunteeringId) {
     return volunteeringsService.getFavoritesCount(volunteeringId);
   }
@@ -92,6 +93,18 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
       throw Exception('Volunteering with id $id not found');
     }
     return volunteering;
+  }
+
+  Future<void> logLikedVolunteering(String volunteeringId, bool isLiked) async {
+    await AnalyticsService.logLikedVolunteering(
+      volunteeringId: volunteeringId,
+      isLiked: isLiked,
+    );
+  }
+
+  Future<void> logViewedVolunteering(String volunteeringId) async {
+    VolunteeringViewTracker.registerView(volunteeringId);
+    await AnalyticsService.logViewedVolunteering(volunteeringId);
   }
 }
 

@@ -10,4 +10,6 @@ abstract class VolunteeringsController {
   Future<int> getFavoritesCount(String volunteeringId);
   Future<List<Volunteering>> searchVolunteerings(VolunteeringQueryState queryState);
   Future<Volunteering> getVolunteeringById(String id);
+  Future<void> logLikedVolunteering(String volunteeringId, bool isLiked);
+  Future<void> logViewedVolunteering(String volunteeringId);
 }
