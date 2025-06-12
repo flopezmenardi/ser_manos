@@ -188,12 +188,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                 GestureDetector(
                                   behavior: HitTestBehavior.translucent,
                                   onTap: () {
-                                        VolunteeringViewTracker.registerView(
-                                          item.id,
-                                        );
-                                        AnalyticsService.logViewedVolunteering(
-                                          item.id,
-                                        );
+                                        controller.logViewedVolunteering(item.id);
                                     context.go('/volunteering/${item.id}');
                                   },
                                   child: FutureBuilder<int>(
