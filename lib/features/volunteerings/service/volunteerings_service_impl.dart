@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/features/volunteerings/service/volunteerings_service.dart';
+import 'package:ser_manos/infrastructure/analytics_service.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
 
 import '../controller/volunteerings_controller_impl.dart';
@@ -55,9 +56,28 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
   }
 
   Future<void> abandonVolunteering(String uid, String volunteeringId) async {
-    await _db.collection('usuarios').doc(uid).update({'voluntariado': null, 'voluntariadoAceptado': false});
+    final volunteeringDoc = await _db.collection('voluntariados').doc(volunteeringId).get();
+    final data = volunteeringDoc.data();
 
-    await _db.collection('voluntariados').doc(volunteeringId).update({'vacantes': FieldValue.increment(1)});
+    if (data != null && data.containsKey('fechaInicio')) {
+      final fechaInicio = (data['fechaInicio'] as Timestamp).toDate();
+      final now = DateTime.now();
+      final daysBefore = fechaInicio.difference(now).inDays;
+
+      await AnalyticsService.logWithdrawVolunteering(
+        volunteeringId: volunteeringId,
+        daysBeforeStart: daysBefore,
+      );
+    }
+
+    await _db.collection('usuarios').doc(uid).update({
+      'voluntariado': null,
+      'voluntariadoAceptado': false,
+    });
+
+    await _db.collection('voluntariados').doc(volunteeringId).update({
+      'vacantes': FieldValue.increment(1),
+    });
   }
 
   Future<void> toggleFavorite({

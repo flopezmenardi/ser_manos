@@ -30,8 +30,6 @@ class UserServiceImpl implements UserService {
     final uid = userCredential.user!.uid;
 
     await createUser(uid, nombre, apellido, email);
-
-    FirebaseAnalytics.instance.logEvent(name: 'user_creation_success');
     return getUserById(uid);
   }
 

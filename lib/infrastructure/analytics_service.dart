@@ -43,4 +43,18 @@ class AnalyticsService {
       },
     );
   }
+
+  static Future<void> logWithdrawVolunteering({
+    required String volunteeringId,
+    required int daysBeforeStart,
+  }) async {
+    await _analytics.logEvent(
+      name: 'withdraw_volunteering',
+      parameters: {
+        'volunteering_id': volunteeringId,
+        'days_before_start': daysBeforeStart,
+        'timestamp': DateTime.now().toIso8601String(),
+      },
+    );
+  }
 }

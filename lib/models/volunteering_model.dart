@@ -12,6 +12,8 @@ class Volunteering {
   final GeoPoint ubicacion;
   final String imagenURL;
   final Timestamp fechaCreacion;
+  final int likes;
+  final Timestamp fechaInicio;
 
   Volunteering({
     required this.id,
@@ -25,6 +27,8 @@ class Volunteering {
     required this.ubicacion,
     required this.imagenURL,
     required this.fechaCreacion,
+    required this.likes,
+    required this.fechaInicio,
   });
 
   factory Volunteering.fromDocumentSnapshot(DocumentSnapshot doc) {
@@ -41,6 +45,8 @@ class Volunteering {
       ubicacion: data['ubicacion'] ?? '',
       imagenURL: data['imagenURL'] ?? '',
       fechaCreacion: data['fechaCreacion'] ?? '',
+      likes: data['likes'] ?? 0,
+      fechaInicio: data['fechaInicio'] ?? '',
     );
   }
 }
