@@ -192,7 +192,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                     ) ??
                     false;
 
-                if (goToProfile) context.go('/profile');
+                if (goToProfile) context.go('/profile/edit?fromVolunteering=$id');
                 return;
               }
 

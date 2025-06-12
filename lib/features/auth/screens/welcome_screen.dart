@@ -41,7 +41,7 @@ class WelcomeScreen extends StatelessWidget {
                   CTAButton(
                     text: 'Comenzar',
                     onPressed: () async {
-                      context.go('/initial');
+                      context.go('/volunteerings');
                     },
                   ),
                   const SizedBox(height: 84),

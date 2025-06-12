@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/molecules/inputs/form_builder_input.dart';
+import 'package:ser_manos/design_system/organisms/modal.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
+import 'package:ser_manos/features/volunteerings/controller/volunteerings_controller_impl.dart';
 
 import '../../../design_system/molecules/buttons/cta_button.dart';
 import '../../../design_system/organisms/cards/input_card.dart';
@@ -46,6 +48,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final fromVolunteering = GoRouterState.of(context).uri.queryParameters['fromVolunteering'];
     final user = ref.watch(authNotifierProvider).currentUser;
     final profileController = ref.read(profileControllerProvider);
 
@@ -152,7 +155,32 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
 
                           await ref.read(authNotifierProvider.notifier).refreshUser();
 
-                          context.pop();
+                          if (fromVolunteering != null) {
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (_) => Center(
+                                child: ModalSermanos(
+                                  title: 'Confirmar postulación',
+                                  subtitle: '¿Querés postularte al voluntariado?',
+                                  confimationText: 'Sí, postularme',
+                                  cancelText: 'Cancelar',
+                                  onCancel: () => Navigator.of(context).pop(false),
+                                  onConfirm: () => Navigator.of(context).pop(true),
+                                ),
+                              ),
+                            ) ?? false;
+
+                            if (confirm) {
+                              final controller = ref.read(volunteeringsControllerProvider);
+                              await controller.applyToVolunteering(fromVolunteering);
+                              await ref.read(authNotifierProvider.notifier).refreshUser();
+                              context.go('/volunteering/$fromVolunteering');
+                              return;
+                            }
+                          }
+
+                          // Si no vino desde voluntariado, comportamiento normal
+                          context.go('/profile');
                         },
                       ),
                       const SizedBox(height: 24),

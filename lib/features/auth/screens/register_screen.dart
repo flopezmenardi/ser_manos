@@ -69,7 +69,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final error = ref.read(authNotifierProvider).errorMessage;
     if (error == null) {
       print('✅ Registro exitoso');
-      context.go('/volunteerings');
+      context.go('/welcome');
     } else {
       print('❌ Error en el registro: $error');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
