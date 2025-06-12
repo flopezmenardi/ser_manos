@@ -149,17 +149,23 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                   ),
                                 ),
                                 const SizedBox(height: 16),
-                                CurrentVolunteerCard(
-                                  category: current.emisor,
-                                  name: current.titulo,
-                                  onLocationPressed: () {
-                                  final lat = current.ubicacion.latitude;
-                                  final lng = current.ubicacion.longitude;
-                                    final uri = Uri.parse(
-                                      "https://www.google.com/maps/search/?api=1&query=$lat,$lng",
-                                    );
-                                    launchUrl(uri);
+                                GestureDetector(
+                                  onTap: () {
+                                    controller.logViewedVolunteering(current.id);
+                                    context.go('/volunteering/${current.id}');
                                   },
+                                  child: CurrentVolunteerCard(
+                                    category: current.emisor,
+                                    name: current.titulo,
+                                    onLocationPressed: () {
+                                      final lat = current.ubicacion.latitude;
+                                      final lng = current.ubicacion.longitude;
+                                      final uri = Uri.parse(
+                                        "https://www.google.com/maps/search/?api=1&query=$lat,$lng",
+                                      );
+                                      launchUrl(uri);
+                                    },
+                                  ),
                                 ),
                                 const SizedBox(height: 24),
                               ],
@@ -188,7 +194,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                 GestureDetector(
                                   behavior: HitTestBehavior.translucent,
                                   onTap: () {
-                                        controller.logViewedVolunteering(item.id);
+                                    controller.logViewedVolunteering(item.id);
                                     context.go('/volunteering/${item.id}');
                                   },
                                   child: FutureBuilder<int>(

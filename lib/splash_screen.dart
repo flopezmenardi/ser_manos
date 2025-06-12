@@ -22,7 +22,7 @@ class SplashScreen extends ConsumerWidget {
       if (authState.currentUser != null) {
         context.go('/volunteerings');
       } else {
-        context.go('/welcome');
+        context.go('/initial');
       }
     });
 
