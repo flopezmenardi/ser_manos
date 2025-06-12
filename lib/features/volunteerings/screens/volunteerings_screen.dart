@@ -26,12 +26,9 @@ class VolunteeringListPage extends ConsumerStatefulWidget {
 }
 
 class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
-  late Set<String> localFavorites;
-
   @override
   void initState() {
     super.initState();
-    localFavorites = {};
 
     final remoteConfig = FirebaseRemoteConfig.instance;
     if (!remoteConfig.getBool('show_proximity_button')) {
@@ -68,10 +65,6 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
     final remoteConfig = ref.watch(remoteConfigProvider);
     final showProximityButton = remoteConfig.getBool('show_proximity_button');
     final showLikeCounter = remoteConfig.getBool('show_like_counter');
-
-    if (user != null) {
-      localFavorites = Set.from(user.favoritos);
-    }
 
     return Scaffold(
       backgroundColor: AppColors.secondary10,
@@ -188,7 +181,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                         return Column(
                           children:
                               volunteerings.map((item) {
-                                final isFavorite = localFavorites.contains(item.id);
+                                final isFavorite = user?.favoritos.contains(item.id) ?? false;
 
                             return Column(
                               children: [
@@ -217,17 +210,8 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                         isFavorite: isFavorite,
                                         onFavoritePressed: () async {
                                           if (user == null) return;
-                                          await controller.toggleFavorite(
-                                            item.id,
-                                            isFavorite,
-                                          );
-                                          setState(() {
-                                            if (isFavorite) {
-                                              localFavorites.remove(item.id);
-                                            } else {
-                                              localFavorites.add(item.id);
-                                            }
-                                          });
+                                          await controller.toggleFavorite(item.id, isFavorite);
+                                          ref.read(authNotifierProvider.notifier).refreshUser();
                                         },
                                         likeCount: showLikeCounter ? likeCount : 0,
                                         onLocationPressed: () {

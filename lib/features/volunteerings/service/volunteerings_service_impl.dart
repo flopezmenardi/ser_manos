@@ -60,26 +60,32 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
     await _db.collection('voluntariados').doc(volunteeringId).update({'vacantes': FieldValue.increment(1)});
   }
 
-  Future<void> toggleFavorite({required String uid, required String volunteeringId, required bool isFavorite}) async {
+  Future<void> toggleFavorite({
+    required String uid,
+    required String volunteeringId,
+    required bool isFavorite,
+  }) async {
     final userRef = _db.collection('usuarios').doc(uid);
     final volunteeringRef = _db.collection('voluntariados').doc(volunteeringId);
 
-    // Run everything in a batch or transaction to keep it atomic
     await _db.runTransaction((transaction) async {
-      // Update user's favorites list
+      //Read from volunteering document
+      final snapshot = await transaction.get(volunteeringRef);
+      final currentLikes = snapshot.get('likes') as int? ?? 0;
+
+      //Compute new like count
+      final newLikes = isFavorite ? currentLikes - 1 : currentLikes + 1;
+
+      //Write to user and volunteering
       transaction.update(userRef, {
         'favoritos': isFavorite
             ? FieldValue.arrayRemove([volunteeringId])
             : FieldValue.arrayUnion([volunteeringId]),
       });
 
-      // Get current likes
-      final snapshot = await transaction.get(volunteeringRef);
-      final currentLikes = snapshot.get('likes') as int? ?? 0;
-
-      // Update like count
-      final newLikes = isFavorite ? currentLikes - 1 : currentLikes + 1;
-      transaction.update(volunteeringRef, {'likes': newLikes.clamp(0, double.infinity)});
+      transaction.update(volunteeringRef, {
+        'likes': newLikes.clamp(0, double.infinity),
+      });
     });
   }
 

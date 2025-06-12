@@ -68,10 +68,6 @@ class _PasswordInputState extends State<_PasswordInput> {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) return 'Contraseña requerida';
-        if (value.length < 8) return 'Contraseña debe contener al menos 8 caracteres';
-        if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)').hasMatch(value)) {
-          return 'Debe contener una letra mayúscula, una minúscula y un número';
-        }
         return null;
       },
     );
