@@ -28,8 +28,8 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
   @override
   void initState() {
     super.initState();
-
     final remoteConfig = FirebaseRemoteConfig.instance;
+
     if (!remoteConfig.getBool('show_proximity_button')) {
       _determineSortMode();
     }
@@ -57,10 +57,14 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
   @override
   Widget build(BuildContext context) {
     final controller = ref.read(volunteeringsControllerProvider);
+
     final volunteeringListAsync = ref.watch(volunteeringSearchProvider);
+    final volunteeringSearchNotifier = ref.read(volunteeringSearchProvider.notifier);
+
     final queryNotifier = ref.read(volunteeringQueryProvider.notifier);
-    final user = ref.watch(authNotifierProvider).currentUser;
     final queryState = ref.watch(volunteeringQueryProvider);
+    final user = ref.watch(authNotifierProvider).currentUser;
+
     final remoteConfig = ref.watch(remoteConfigProvider);
     final showProximityButton = remoteConfig.getBool('show_proximity_button');
     final showLikeCounter = remoteConfig.getBool('show_like_counter');
@@ -75,7 +79,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
               padding: const EdgeInsets.all(16),
               child: RefreshIndicator(
                 onRefresh: () async {
-                  await ref.refresh(volunteeringSearchProvider.future);
+                  await volunteeringSearchNotifier.refreshSearch();
                 },
                 child: ListView(
                   physics: const AlwaysScrollableScrollPhysics(),
@@ -167,7 +171,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                     const SizedBox(height: 16),
                     volunteeringListAsync.when(
                       loading: () => const Center(child: CircularProgressIndicator()),
-                      error: (error, _) => Text('Error: \$error'),
+                      error: (error, _) => Text('Error: $error'),
                       data: (volunteerings) {
                         if (volunteerings.isEmpty) {
                           return _emptyVolunteeringsMessage();

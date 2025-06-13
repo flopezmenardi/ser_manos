@@ -15,6 +15,8 @@ abstract class VolunteeringsController {
   Future<void> logViewedVolunteering(String volunteeringId);
 }
 
+// This could be transitioned into an implementation detail and simplify the contract into taking
+// String, SortMode and GeoPoint instead of the full VolunteeringQueryState class
 class VolunteeringQueryState {
   final String query;
   final SortMode sortMode;
