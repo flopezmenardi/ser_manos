@@ -5,14 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../design_system/organisms/cards/news_card.dart';
 import '../../../design_system/organisms/headers/header.dart';
 import '../../../design_system/tokens/colors.dart';
-import '../../../models/news_model.dart';
 import '../controller/news_controller_impl.dart';
-
-// Add this FutureProvider outside the widget
-final newsListProvider = FutureProvider.autoDispose<List<News>>((ref) {
-  final newsController = ref.read(newsControllerProvider);
-  return newsController.getNewsOrderedByDate();
-});
 
 class NewsScreen extends ConsumerWidget {
   const NewsScreen({super.key});
@@ -20,7 +13,7 @@ class NewsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = 2;
-    final newsAsync = ref.watch(newsListProvider);
+    final newsState = ref.watch(newsListNotifierProvider);
 
     return Scaffold(
       backgroundColor: AppColors.secondary10,
@@ -28,13 +21,13 @@ class NewsScreen extends ConsumerWidget {
         children: [
           AppHeader(selectedIndex: selectedIndex),
           Expanded(
-            child: newsAsync.when(
+            child: newsState.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Center(child: Text('Error: $e')),
               data:
                   (novedades) => RefreshIndicator(
                     onRefresh: () async {
-                      await ref.refresh(newsListProvider.future);
+                      await ref.read(newsListNotifierProvider.notifier).fetchNews();
                     },
                     child: ListView.separated(
                       padding: const EdgeInsets.all(16),
