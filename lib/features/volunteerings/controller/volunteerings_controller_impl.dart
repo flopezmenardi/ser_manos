@@ -12,10 +12,6 @@ import '../../../models/user_model.dart';
 import '../service/volunteerings_service.dart';
 import '../service/volunteerings_service_impl.dart';
 
-final volunteeringQueryProvider = StateNotifierProvider<VolunteeringQueryNotifier, VolunteeringQueryState>(
-  (ref) => VolunteeringQueryNotifier(),
-);
-
 final volunteeringsControllerProvider = Provider<VolunteeringsController>((ref) {
   final volunteeringsService = ref.read(volunteeringsServiceProvider);
   final currentUser = ref.watch(authNotifierProvider).currentUser!;
@@ -91,6 +87,7 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
     }).toList();
   }
 
+  // Transition this into state notifier!
   Future<Volunteering> getVolunteeringById(String id) async {
     final volunteering = await volunteeringsService.getVolunteeringById(id);
     if (volunteering == null) {
@@ -109,42 +106,52 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
   }
 }
 
-// ================ SEARCH
-// UI
-// └──> watches volunteeringSearchProvider
-// └──> watches volunteeringQueryProvider (holds query state)
-// └──> calls controller.searchVolunteerings(queryState)
-// └──> calls service.getAllVolunteeringsSorted(sortMode, userLocation)
+// =============== DETAIL STATE NOTIFIER
+final volunteeringDetailProvider =
+    StateNotifierProvider.family<VolunteeringDetailNotifier, AsyncValue<Volunteering>, String>((ref, id) {
+      final controller = ref.read(volunteeringsControllerProvider);
+      return VolunteeringDetailNotifier(controller, id);
+    });
 
-enum VolunteeringSortMode { date, proximity }
+class VolunteeringDetailNotifier extends StateNotifier<AsyncValue<Volunteering>> {
+  VolunteeringDetailNotifier(this._controller, this.volunteeringId) : super(const AsyncValue.loading()) {
+    fetchVolunteeringDetail();
+  }
 
-class VolunteeringQueryState {
-  final String query;
-  final VolunteeringSortMode sortMode;
-  final GeoPoint? userLocation;
+  final VolunteeringsController _controller;
+  final String volunteeringId;
 
-  VolunteeringQueryState({required this.query, required this.sortMode, this.userLocation});
-
-  VolunteeringQueryState copyWith({String? query, VolunteeringSortMode? sortMode, GeoPoint? userLocation}) {
-    return VolunteeringQueryState(
-      query: query ?? this.query,
-      sortMode: sortMode ?? this.sortMode,
-      userLocation: userLocation ?? this.userLocation,
-    );
+  Future<void> fetchVolunteeringDetail() async {
+    try {
+      final volunteering = await _controller.getVolunteeringById(volunteeringId);
+      state = AsyncValue.data(volunteering);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
   }
 }
 
+// ================ SEARCH
+// UI
+// └──> watches VolunteeringSearchProvider
+//    └──> watches VolunteeringQueryProvider (holds query state) and reads the VolunteeringsControllerProvider
+// UI
+// └──> changes the VolunteeringQueryState through the VolunteeringQueryNotifier (i.e. by searching something)
+// └──> the change is delayed due to the debouncing, after the delay the state is changed
+// └──> the VolunteeringSearchProvider which was watching the Query State is activated and the controller.searchVolunteerings is finally used
+
+// I think this should be part of the interface
+enum VolunteeringSortMode { date, proximity }
+
 final volunteeringSearchProvider = FutureProvider<List<Volunteering>>((ref) async {
   final queryState = ref.watch(volunteeringQueryProvider);
-  final controller = ref.watch(volunteeringsControllerProvider);
+  final controller = ref.read(volunteeringsControllerProvider);
   return await controller.searchVolunteerings(queryState);
 });
 
-// Get volunteering by ID provider
-final volunteeringByIdProvider = FutureProvider.family<Volunteering, String>((ref, id) async {
-  final controller = ref.watch(volunteeringsControllerProvider);
-  return await controller.getVolunteeringById(id);
-});
+final volunteeringQueryProvider = StateNotifierProvider<VolunteeringQueryNotifier, VolunteeringQueryState>(
+  (ref) => VolunteeringQueryNotifier(),
+);
 
 class VolunteeringQueryNotifier extends StateNotifier<VolunteeringQueryState> {
   VolunteeringQueryNotifier()
@@ -176,5 +183,21 @@ class VolunteeringQueryNotifier extends StateNotifier<VolunteeringQueryState> {
   void dispose() {
     _debounce?.cancel();
     super.dispose();
+  }
+}
+
+class VolunteeringQueryState {
+  final String query;
+  final VolunteeringSortMode sortMode;
+  final GeoPoint? userLocation;
+
+  VolunteeringQueryState({required this.query, required this.sortMode, this.userLocation});
+
+  VolunteeringQueryState copyWith({String? query, VolunteeringSortMode? sortMode, GeoPoint? userLocation}) {
+    return VolunteeringQueryState(
+      query: query ?? this.query,
+      sortMode: sortMode ?? this.sortMode,
+      userLocation: userLocation ?? this.userLocation,
+    );
   }
 }

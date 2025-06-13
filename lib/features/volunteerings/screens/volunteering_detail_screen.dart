@@ -1,5 +1,3 @@
-// lib/features/volunteering/ui/volunteering_detail_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,7 +26,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final volunteeringAsync = ref.watch(volunteeringByIdProvider(id));
+    final volunteeringAsync = ref.watch(volunteeringDetailProvider(id));
     final user = ref.watch(authNotifierProvider).currentUser;
     final controller = ref.read(volunteeringsControllerProvider);
 
@@ -78,7 +76,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
 
                   if (!confirmed) return;
                   await controller.abandonVolunteering(volunteering.id);
-                  ref.invalidate(volunteeringByIdProvider(volunteering.id));
+                  await ref.read(volunteeringDetailProvider(id).notifier).fetchVolunteeringDetail();
                   await ref.read(authNotifierProvider.notifier).refreshUser();
                 },
               ),
@@ -115,7 +113,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
 
                   if (!confirmed) return;
                   await controller.withdrawApplication();
-                  ref.invalidate(volunteeringByIdProvider(id));
+                  await ref.read(volunteeringDetailProvider(id).notifier).fetchVolunteeringDetail();
                   await ref.read(authNotifierProvider.notifier).refreshUser();
                 },
               ),
@@ -150,7 +148,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
 
                   if (!confirmed) return;
                   await controller.withdrawApplication();
-                  ref.invalidate(volunteeringByIdProvider(id));
+                  await ref.read(volunteeringDetailProvider(id).notifier).fetchVolunteeringDetail();
                   await ref.read(authNotifierProvider.notifier).refreshUser();
                 },
               ),
@@ -222,7 +220,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
               VolunteeringViewTracker.reset();
 
               await controller.applyToVolunteering(volunteering.id);
-              ref.invalidate(volunteeringByIdProvider(volunteering.id));
+              await ref.read(volunteeringDetailProvider(volunteering.id).notifier).fetchVolunteeringDetail();
               await ref.read(authNotifierProvider.notifier).refreshUser();
             },
           );
@@ -232,7 +230,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
           backgroundColor: AppColors.neutral0,
           body: RefreshIndicator(
             onRefresh: () async {
-              await ref.refresh(volunteeringByIdProvider(id).future);
+              await ref.read(volunteeringDetailProvider(id).notifier).fetchVolunteeringDetail();
             },
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
