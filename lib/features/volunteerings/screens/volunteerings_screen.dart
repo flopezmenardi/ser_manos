@@ -12,10 +12,8 @@ import '../../../design_system/organisms/cards/volunteer_card.dart';
 import '../../../design_system/organisms/headers/header.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/typography.dart';
-import '../../../infrastructure/analytics_service.dart';
 import '../../../infrastructure/remote_config_provider.dart';
-import '../../../infrastructure/user_service_impl.dart';
-import '../../../infrastructure/volunteering_view_tracker.dart';
+import '../../auth/controllers/auth_controller_impl.dart';
 import '../controller/volunteerings_controller_impl.dart';
 
 class VolunteeringListPage extends ConsumerStatefulWidget {
@@ -131,44 +129,36 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                       error: (_, __) => const SizedBox.shrink(),
                       data: (volunteerings) {
                         if (user != null &&
-                          user.voluntariado != null &&
+                            user.voluntariado != null &&
                             user.voluntariado != '' &&
-                            volunteerings.any(
-                              (v) => v.id == user.voluntariado,
-                            )) {
-                          final current = volunteerings.firstWhere(
-                            (v) => v.id == user.voluntariado,
-                          );
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Tu actividad",
-                                  style: AppTypography.headline1.copyWith(
-                                    color: AppColors.neutral100,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                GestureDetector(
-                                  onTap: () {
-                                    controller.logViewedVolunteering(current.id);
-                                    context.go('/volunteering/${current.id}');
+                            volunteerings.any((v) => v.id == user.voluntariado)) {
+                          final current = volunteerings.firstWhere((v) => v.id == user.voluntariado);
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Tu actividad",
+                                style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
+                              ),
+                              const SizedBox(height: 16),
+                              GestureDetector(
+                                onTap: () {
+                                  controller.logViewedVolunteering(current.id);
+                                  context.go('/volunteering/${current.id}');
+                                },
+                                child: CurrentVolunteerCard(
+                                  category: current.emisor,
+                                  name: current.titulo,
+                                  onLocationPressed: () {
+                                    final lat = current.ubicacion.latitude;
+                                    final lng = current.ubicacion.longitude;
+                                    final uri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng");
+                                    launchUrl(uri);
                                   },
-                                  child: CurrentVolunteerCard(
-                                    category: current.emisor,
-                                    name: current.titulo,
-                                    onLocationPressed: () {
-                                      final lat = current.ubicacion.latitude;
-                                      final lng = current.ubicacion.longitude;
-                                      final uri = Uri.parse(
-                                        "https://www.google.com/maps/search/?api=1&query=$lat,$lng",
-                                      );
-                                      launchUrl(uri);
-                                    },
-                                  ),
                                 ),
-                                const SizedBox(height: 24),
-                              ],
+                              ),
+                              const SizedBox(height: 24),
+                            ],
                           );
                         }
                         return const SizedBox.shrink();
@@ -189,48 +179,47 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                               volunteerings.map((item) {
                                 final isFavorite = user?.favoritos.contains(item.id) ?? false;
 
-                            return Column(
-                              children: [
-                                GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: () {
-                                    controller.logViewedVolunteering(item.id);
-                                    context.go('/volunteering/${item.id}');
-                                  },
-                                  child: FutureBuilder<int>(
-                                    future: showLikeCounter
-                                        ? controller.getFavoritesCount(item.id)
-                                        : Future.value(0),
-                                    builder: (context, snapshot) {
-                                      return VolunteeringCard(
-                                        imagePath: item.imagenURL,
-                                        category: item.emisor,
-                                        title: item.titulo,
-                                        vacancies: item.vacantes,
-                                        isFavorite: isFavorite,
-                                        onFavoritePressed: () async {
-                                          if (user == null) return;
-                                          await controller.toggleFavorite(item.id, isFavorite);
-                                          ref.read(authNotifierProvider.notifier).refreshUser();
-                                          ref.invalidate(volunteeringSearchProvider);
-                                        },
-                                        likeCount: showLikeCounter ? item.likes : 0,
-                                        onLocationPressed: () {
-                                          final lat = item.ubicacion.latitude;
-                                          final lng = item.ubicacion.longitude;
-                                          final uri = Uri.parse(
-                                            "https://www.google.com/maps/search/?api=1&query=$lat,$lng",
+                                return Column(
+                                  children: [
+                                    GestureDetector(
+                                      behavior: HitTestBehavior.translucent,
+                                      onTap: () {
+                                        controller.logViewedVolunteering(item.id);
+                                        context.go('/volunteering/${item.id}');
+                                      },
+                                      child: FutureBuilder<int>(
+                                        future:
+                                            showLikeCounter ? controller.getFavoritesCount(item.id) : Future.value(0),
+                                        builder: (context, snapshot) {
+                                          return VolunteeringCard(
+                                            imagePath: item.imagenURL,
+                                            category: item.emisor,
+                                            title: item.titulo,
+                                            vacancies: item.vacantes,
+                                            isFavorite: isFavorite,
+                                            onFavoritePressed: () async {
+                                              if (user == null) return;
+                                              await controller.toggleFavorite(item.id, isFavorite);
+                                              ref.read(authNotifierProvider.notifier).refreshUser();
+                                              ref.invalidate(volunteeringSearchProvider);
+                                            },
+                                            likeCount: showLikeCounter ? item.likes : 0,
+                                            onLocationPressed: () {
+                                              final lat = item.ubicacion.latitude;
+                                              final lng = item.ubicacion.longitude;
+                                              final uri = Uri.parse(
+                                                "https://www.google.com/maps/search/?api=1&query=$lat,$lng",
+                                              );
+                                              launchUrl(uri);
+                                            },
                                           );
-                                          launchUrl(uri);
                                         },
-                                      );
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                              ],
-                            );
-                          }).toList(),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                  ],
+                                );
+                              }).toList(),
                         );
                       },
                     ),

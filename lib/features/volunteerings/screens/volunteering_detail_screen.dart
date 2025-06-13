@@ -15,8 +15,8 @@ import 'package:ser_manos/design_system/tokens/typography.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../infrastructure/analytics_service.dart';
-import '../../../infrastructure/user_service_impl.dart';
 import '../../../infrastructure/volunteering_view_tracker.dart';
+import '../../auth/controllers/auth_controller_impl.dart';
 import '../controller/volunteerings_controller_impl.dart';
 
 class VolunteeringDetailScreen extends ConsumerWidget {

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/organisms/modal.dart';
-import 'package:ser_manos/infrastructure/user_service_impl.dart';
 
 import '../../../design_system/atoms/logos/logo_square.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
 import '../../../design_system/molecules/buttons/text_button.dart';
 import '../../../design_system/organisms/forms/login.dart';
 import '../../../design_system/tokens/colors.dart';
+import '../controllers/auth_controller_impl.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -66,10 +66,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const SizedBox(height: 32),
                       Form(
                         key: _formKey,
-                        child: LoginForms(
-                          emailController: emailController,
-                          passwordController: passwordController,
-                        ),
+                        child: LoginForms(emailController: emailController, passwordController: passwordController),
                       ),
                       const Spacer(),
                       CTAButton(
@@ -79,10 +76,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           final isValid = _formKey.currentState?.validate() ?? false;
                           if (!isValid) return;
 
-                          await authNotifier.login(
-                            email: emailController.text,
-                            password: passwordController.text,
-                          );
+                          await authNotifier.login(email: emailController.text, password: passwordController.text);
 
                           final error = ref.read(authNotifierProvider).errorMessage;
                           if (error == null) {
@@ -90,16 +84,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           } else {
                             showDialog(
                               context: context,
-                              builder: (_) => Center(
-                                child: ModalSermanos(
-                                  title: 'Error al iniciar sesión',
-                                  subtitle: 'El email o la contraseña son incorrectos.',
-                                  confimationText: 'Reintentar',
-                                  cancelText: 'Cancelar',
-                                  onCancel: () => Navigator.of(context).pop(),
-                                  onConfirm: () => Navigator.of(context).pop(),
-                                ),
-                              ),
+                              builder:
+                                  (_) => Center(
+                                    child: ModalSermanos(
+                                      title: 'Error al iniciar sesión',
+                                      subtitle: 'El email o la contraseña son incorrectos.',
+                                      confimationText: 'Reintentar',
+                                      cancelText: 'Cancelar',
+                                      onCancel: () => Navigator.of(context).pop(),
+                                      onConfirm: () => Navigator.of(context).pop(),
+                                    ),
+                                  ),
                             );
                           }
                         },
@@ -107,7 +102,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const SizedBox(height: 16),
                       TextOnlyButton(
                         text: 'No tengo cuenta',
-                        onPressed: () async { 
+                        onPressed: () async {
                           context.go('/register');
                         },
                       ),
