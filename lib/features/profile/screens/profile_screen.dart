@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/design_system/molecules/buttons/short_button.dart';
 import 'package:ser_manos/design_system/organisms/modal.dart';
 import 'package:ser_manos/infrastructure/user_service_impl.dart';
 import 'package:ser_manos/models/user_model.dart';
@@ -79,6 +80,7 @@ class ProfileScreen extends ConsumerWidget {
           CTAButton(text: 'Editar perfil', onPressed: () => context.push('/profile/edit')),
           TextOnlyButton(
             text: 'Cerrar sesión',
+            color: AppColors.error100,
             onPressed: () async {
               showDialog(
                 context: context,
@@ -124,10 +126,11 @@ class ProfileScreen extends ConsumerWidget {
             style: AppTypography.body1.copyWith(color: AppColors.neutral75),
           ),
           const SizedBox(height: 24),
-          CTAButton(text: '+ Completar', onPressed: () => context.push('/profile/edit')),
+          ShortButton(text: 'Completar', icon: Icons.add , onPressed: () => context.push('/profile/edit')),
           const SizedBox(height: 16),
           TextOnlyButton(
             text: 'Cerrar sesión',
+            color: AppColors.error100,
             onPressed: () async {
               showDialog(
                 context: context,

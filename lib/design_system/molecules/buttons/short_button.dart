@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../tokens/typography.dart';
 import '../../tokens/colors.dart';
+import '../../tokens/typography.dart';
 
 class ShortButton extends StatefulWidget {
   final String text;
+  final IconData icon;
   final Future<void> Function()? onPressed;
   final bool isEnabled;
   final bool isLarge; // true = 48px alto, false = 40px
@@ -11,6 +12,7 @@ class ShortButton extends StatefulWidget {
   const ShortButton({
     super.key,
     required this.text,
+    required this.icon,
     required this.onPressed,
     this.isEnabled = true,
     this.isLarge = true,
@@ -32,22 +34,25 @@ class _ShortButtonState extends State<ShortButton> {
 
   @override
   Widget build(BuildContext context) {
+    final height = widget.isLarge ? 48.0 : 40.0;
+    final bgColor = widget.isEnabled ? AppColors.primary100 : AppColors.neutral25;
+    final fgColor = widget.isEnabled ? AppColors.neutral0 : AppColors.neutral50;
+
     return SizedBox(
-      height: widget.isLarge ? 48 : 40,
+      height: height,
+      width: 130,
       child: ElevatedButton(
         onPressed: (widget.isEnabled && !isLoading) ? _handlePress : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: widget.isEnabled ? AppColors.primary100 : AppColors.neutral25,
-          foregroundColor: widget.isEnabled ? AppColors.neutral0 : AppColors.neutral50,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-          minimumSize: const Size(0, 0),
+          backgroundColor: bgColor,
+          foregroundColor: fgColor,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+          minimumSize: const Size(123, 48),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
         child: isLoading
-            ? SizedBox(
+            ? const SizedBox(
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
@@ -55,11 +60,16 @@ class _ShortButtonState extends State<ShortButton> {
                   strokeWidth: 2,
                 ),
               )
-            : Text(
-                widget.text,
-                style: AppTypography.button.copyWith(
-                  color: widget.isEnabled ? AppColors.neutral0 : AppColors.neutral50,
-                ),
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(widget.icon, size: 24, color: fgColor),
+                  const SizedBox(width: 8),
+                  Text(
+                    widget.text,
+                    style: AppTypography.button.copyWith(color: fgColor),
+                  ),
+                ],
               ),
       ),
     );

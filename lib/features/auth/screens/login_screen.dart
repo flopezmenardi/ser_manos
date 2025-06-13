@@ -51,42 +51,46 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       backgroundColor: AppColors.neutral0,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  const SizedBox(height: 96),
-                  const LogoSquare(size: 150),
-                  const SizedBox(height: 32),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 96),
+                      const LogoSquare(size: 150),
+                      const SizedBox(height: 32),
+                      Form(
+                        key: _formKey,
+                        child: LoginForms(
+                          emailController: emailController,
+                          passwordController: passwordController,
+                        ),
+                      ),
+                      const Spacer(),
+                      CTAButton(
+                        text: 'Iniciar Sesión',
+                        isEnabled: _isFormFilled && !authState.isLoading,
+                        onPressed: () async {
+                          final isValid = _formKey.currentState?.validate() ?? false;
+                          if (!isValid) return;
 
-                  Form(
-                    key: _formKey,
-                    child: LoginForms(emailController: emailController, passwordController: passwordController),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  CTAButton(
-                    text: 'Iniciar Sesión',
-                    isEnabled: _isFormFilled && !authState.isLoading,
-                    onPressed: () async {
-                      final isValid = _formKey.currentState?.validate() ?? false;
-                      if (!isValid) return;
+                          await authNotifier.login(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
 
-                      await authNotifier.login(email: emailController.text, password: passwordController.text);
-
-                      final error = ref.read(authNotifierProvider).errorMessage;
-                      if (error == null) {
-                        context.go('/volunteerings');
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder:
-                              (_) => Center(
+                          final error = ref.read(authNotifierProvider).errorMessage;
+                          if (error == null) {
+                            context.go('/volunteerings');
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (_) => Center(
                                 child: ModalSermanos(
                                   title: 'Error al iniciar sesión',
                                   subtitle: 'El email o la contraseña son incorrectos.',
@@ -96,22 +100,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   onConfirm: () => Navigator.of(context).pop(),
                                 ),
                               ),
-                        );
-                      }
-                    },
+                            );
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextOnlyButton(
+                        text: 'No tengo cuenta',
+                        onPressed: () async { 
+                          context.go('/register');
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  TextOnlyButton(
-                    text: 'No tengo cuenta',
-                    onPressed: () async {
-                      context.go('/register');
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                ],
+                ),
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

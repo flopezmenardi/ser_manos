@@ -82,55 +82,57 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       _emailController.text.isNotEmpty &&
       _passwordController.text.isNotEmpty;
 
-  @override
-  Widget build(BuildContext context) {
-    final state = ref.watch(authNotifierProvider);
+@override
+Widget build(BuildContext context) {
+  final state = ref.watch(authNotifierProvider);
 
-    return Scaffold(
-      backgroundColor: AppColors.neutral0,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    const SizedBox(height: 24),
-                    const LogoSquare(size: 150),
-                    const SizedBox(height: 32),
-                    RegisterForms(
-                      nameController: _nameController,
-                      lastNameController: _lastNameController,
-                      emailController: _emailController,
-                      passwordController: _passwordController,
-                    ),
-                  ],
+  return Scaffold(
+    backgroundColor: AppColors.neutral0,
+    body: SafeArea(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 24),
+                      const LogoSquare(size: 150),
+                      const SizedBox(height: 32),
+                      RegisterForms(
+                        nameController: _nameController,
+                        lastNameController: _lastNameController,
+                        emailController: _emailController,
+                        passwordController: _passwordController,
+                      ),
+                      const Spacer(),
+                      CTAButton(
+                        text: state.isLoading ? 'Registrando...' : 'Registrarse',
+                        isEnabled: _isFormFilled && !state.isLoading,
+                        onPressed: _handleRegister,
+                      ),
+                      const SizedBox(height: 16),
+                      TextOnlyButton(
+                        text: 'Ya tengo cuenta',
+                        onPressed: () async { 
+                          context.go('/login');
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
                 ),
-                Column(
-                  children: [
-                    CTAButton(
-                      text: state.isLoading ? 'Registrando...' : 'Registrarse',
-                      isEnabled: _isFormFilled && !state.isLoading,
-                      onPressed: _handleRegister,
-                    ),
-                    const SizedBox(height: 16),
-                    TextOnlyButton(
-                      text: 'Ya tengo cuenta',
-                      onPressed: () async {
-                        context.go('/login');
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
-    );
-  }
+    ),
+  );
+}
 }

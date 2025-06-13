@@ -6,12 +6,14 @@ class TextOnlyButton extends StatefulWidget {
   final String text;
   final Future<void> Function()? onPressed;
   final bool isEnabled;
+  final Color? color;
 
   const TextOnlyButton({
     super.key,
     required this.text,
     required this.onPressed,
     this.isEnabled = true,
+    this.color,
   });
 
   @override
@@ -30,10 +32,11 @@ class _TextOnlyButtonState extends State<TextOnlyButton> {
 
   @override
   Widget build(BuildContext context) {
+    final buttonColor = widget.color ?? AppColors.primary100;
     return TextButton(
       onPressed: (widget.isEnabled && !isLoading) ? _handlePress : null,
       style: TextButton.styleFrom(
-        foregroundColor: widget.isEnabled ? AppColors.primary100 : AppColors.neutral50,
+        foregroundColor: widget.isEnabled ? buttonColor : AppColors.neutral50,
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         textStyle: const TextStyle(fontSize: 14),
       ),
