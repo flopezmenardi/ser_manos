@@ -1,0 +1,1 @@
+enum SortMode { date, proximity }

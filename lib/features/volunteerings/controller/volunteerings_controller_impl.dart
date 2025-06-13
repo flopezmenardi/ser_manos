@@ -7,6 +7,7 @@ import 'package:ser_manos/infrastructure/analytics_service.dart';
 import 'package:ser_manos/infrastructure/volunteering_view_tracker.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
 
+import '../../../models/enums/sort_mode.dart';
 import '../../../models/user_model.dart';
 import '../../auth/controllers/auth_controller_impl.dart';
 import '../service/volunteerings_service.dart';
@@ -68,13 +69,13 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
   Future<List<Volunteering>> searchVolunteerings(VolunteeringQueryState queryState) async {
     List<Volunteering> all;
 
-    if (queryState.sortMode == VolunteeringSortMode.proximity && queryState.userLocation != null) {
+    if (queryState.sortMode == SortMode.proximity && queryState.userLocation != null) {
       all = await volunteeringsService.getAllVolunteeringsSorted(
-        sortMode: VolunteeringSortMode.proximity,
+        sortMode: SortMode.proximity,
         userLocation: queryState.userLocation,
       );
     } else {
-      all = await volunteeringsService.getAllVolunteeringsSorted(sortMode: VolunteeringSortMode.date);
+      all = await volunteeringsService.getAllVolunteeringsSorted(sortMode: SortMode.date);
     }
 
     if (queryState.query.isEmpty) return all;
@@ -140,9 +141,6 @@ class VolunteeringDetailNotifier extends StateNotifier<AsyncValue<Volunteering>>
 // └──> the change is delayed due to the debouncing, after the delay the state is changed
 // └──> the VolunteeringSearchProvider which was watching the Query State is activated and the controller.searchVolunteerings is finally used
 
-// I think this should be part of the interface
-enum VolunteeringSortMode { date, proximity }
-
 final volunteeringSearchProvider = FutureProvider<List<Volunteering>>((ref) async {
   final queryState = ref.watch(volunteeringQueryProvider);
   final controller = ref.read(volunteeringsControllerProvider);
@@ -154,8 +152,7 @@ final volunteeringQueryProvider = StateNotifierProvider<VolunteeringQueryNotifie
 );
 
 class VolunteeringQueryNotifier extends StateNotifier<VolunteeringQueryState> {
-  VolunteeringQueryNotifier()
-    : super(VolunteeringQueryState(query: '', sortMode: VolunteeringSortMode.date, userLocation: null));
+  VolunteeringQueryNotifier() : super(VolunteeringQueryState(query: '', sortMode: SortMode.date, userLocation: null));
 
   Timer? _debounce;
 
@@ -166,7 +163,7 @@ class VolunteeringQueryNotifier extends StateNotifier<VolunteeringQueryState> {
     });
   }
 
-  void updateSortMode(VolunteeringSortMode newMode) {
+  void updateSortMode(SortMode newMode) {
     state = state.copyWith(sortMode: newMode);
   }
 
@@ -183,21 +180,5 @@ class VolunteeringQueryNotifier extends StateNotifier<VolunteeringQueryState> {
   void dispose() {
     _debounce?.cancel();
     super.dispose();
-  }
-}
-
-class VolunteeringQueryState {
-  final String query;
-  final VolunteeringSortMode sortMode;
-  final GeoPoint? userLocation;
-
-  VolunteeringQueryState({required this.query, required this.sortMode, this.userLocation});
-
-  VolunteeringQueryState copyWith({String? query, VolunteeringSortMode? sortMode, GeoPoint? userLocation}) {
-    return VolunteeringQueryState(
-      query: query ?? this.query,
-      sortMode: sortMode ?? this.sortMode,
-      userLocation: userLocation ?? this.userLocation,
-    );
   }
 }

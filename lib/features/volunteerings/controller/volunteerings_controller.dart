@@ -1,5 +1,6 @@
-import 'package:ser_manos/features/volunteerings/controller/volunteerings_controller_impl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../models/enums/sort_mode.dart';
 import '../../../models/volunteering_model.dart';
 
 abstract class VolunteeringsController {
@@ -12,4 +13,20 @@ abstract class VolunteeringsController {
   Future<Volunteering> getVolunteeringById(String id);
   Future<void> logLikedVolunteering(String volunteeringId, bool isLiked);
   Future<void> logViewedVolunteering(String volunteeringId);
+}
+
+class VolunteeringQueryState {
+  final String query;
+  final SortMode sortMode;
+  final GeoPoint? userLocation;
+
+  VolunteeringQueryState({required this.query, required this.sortMode, this.userLocation});
+
+  VolunteeringQueryState copyWith({String? query, SortMode? sortMode, GeoPoint? userLocation}) {
+    return VolunteeringQueryState(
+      query: query ?? this.query,
+      sortMode: sortMode ?? this.sortMode,
+      userLocation: userLocation ?? this.userLocation,
+    );
+  }
 }
