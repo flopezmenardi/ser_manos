@@ -89,13 +89,21 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<void> login({required String email, required String password}) async {
+  Future<bool> login({required String email, required String password}) async {
     try {
       state = state.copyWith(isLoading: true, errorMessage: null);
       final user = await _authController.loginUser(email: email, password: password);
+
+      if (user == null) {
+        state = state.copyWith(isLoading: false, errorMessage: 'Usuario no encontrado');
+        return false;
+      }
+
       state = state.copyWith(currentUser: user, isLoading: false);
+      return true;
     } catch (e) {
       state = state.copyWith(errorMessage: e.toString(), isLoading: false);
+      return false;
     }
   }
 
