@@ -26,14 +26,10 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
   VolunteeringsControllerImpl({required this.volunteeringsService, required this.currentUser});
 
   Future<void> applyToVolunteering(String volunteeringId) async {
-    print(currentUser.genero);
-    print(currentUser.telefono);
-    print(currentUser.fechaNacimiento);
     if (currentUser.telefono.isEmpty || currentUser.genero.isEmpty || currentUser.fechaNacimiento.isEmpty) {
       throw Exception('Tu perfil no está completo');
     }
 
-    print(currentUser.voluntariado);
     if (currentUser.voluntariado != null && currentUser.voluntariado != '') {
       throw Exception('Ya estás postulado a un voluntariado');
     }
@@ -141,15 +137,27 @@ class VolunteeringDetailNotifier extends StateNotifier<AsyncValue<Volunteering>>
 // └──> the change is delayed due to the debouncing, after the delay the state is changed
 // └──> the VolunteeringSearchProvider which was watching the Query State is activated and the controller.searchVolunteerings is finally used
 
-final volunteeringSearchProvider = FutureProvider<List<Volunteering>>((ref) async {
-  final queryState = ref.watch(volunteeringQueryProvider);
-  final controller = ref.read(volunteeringsControllerProvider);
-  return await controller.searchVolunteerings(queryState);
+final volunteeringSearchProvider = AsyncNotifierProvider<VolunteeringSearchNotifier, List<Volunteering>>(() {
+  return VolunteeringSearchNotifier();
 });
 
-final volunteeringQueryProvider = StateNotifierProvider<VolunteeringQueryNotifier, VolunteeringQueryState>(
-  (ref) => VolunteeringQueryNotifier(),
-);
+class VolunteeringSearchNotifier extends AsyncNotifier<List<Volunteering>> {
+  @override
+  Future<List<Volunteering>> build() async {
+    final queryState = ref.watch(volunteeringQueryProvider);
+    final controller = ref.read(volunteeringsControllerProvider);
+    return await controller.searchVolunteerings(queryState);
+  }
+
+  Future<void> refreshSearch() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => build());
+  }
+}
+
+final volunteeringQueryProvider = StateNotifierProvider<VolunteeringQueryNotifier, VolunteeringQueryState>((ref) {
+  return VolunteeringQueryNotifier();
+});
 
 class VolunteeringQueryNotifier extends StateNotifier<VolunteeringQueryState> {
   VolunteeringQueryNotifier() : super(VolunteeringQueryState(query: '', sortMode: SortMode.date, userLocation: null));
@@ -164,10 +172,17 @@ class VolunteeringQueryNotifier extends StateNotifier<VolunteeringQueryState> {
   }
 
   void updateSortMode(SortMode newMode) {
+    if (state.sortMode == newMode) {
+      return;
+    }
     state = state.copyWith(sortMode: newMode);
   }
 
   void setLocation(GeoPoint location) {
+    final current = state.userLocation;
+    if (current != null && current.latitude == location.latitude && current.longitude == location.longitude) {
+      return;
+    }
     state = state.copyWith(userLocation: location);
   }
 
