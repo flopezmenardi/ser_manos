@@ -4,15 +4,15 @@ import '../../tokens/typography.dart';
 
 class ShortButton extends StatefulWidget {
   final String text;
-  final IconData icon;
+  final IconData? icon; // Now optional
   final Future<void> Function()? onPressed;
   final bool isEnabled;
-  final bool isLarge; // true = 48px alto, false = 40px
+  final bool isLarge;
 
   const ShortButton({
     super.key,
     required this.text,
-    required this.icon,
+    this.icon,
     required this.onPressed,
     this.isEnabled = true,
     this.isLarge = true,
@@ -48,7 +48,7 @@ class _ShortButtonState extends State<ShortButton> {
           foregroundColor: fgColor,
           padding: const EdgeInsets.symmetric(horizontal: 12),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          minimumSize: const Size(123, 48),
+          minimumSize: Size(130, height),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
         child: isLoading
@@ -62,9 +62,12 @@ class _ShortButtonState extends State<ShortButton> {
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(widget.icon, size: 24, color: fgColor),
-                  const SizedBox(width: 8),
+                  if (widget.icon != null) ...[
+                    Icon(widget.icon, size: 24, color: fgColor),
+                    const SizedBox(width: 8),
+                  ],
                   Text(
                     widget.text,
                     style: AppTypography.button.copyWith(color: fgColor),

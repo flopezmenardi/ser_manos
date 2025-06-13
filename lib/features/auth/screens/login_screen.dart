@@ -76,25 +76,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           final isValid = _formKey.currentState?.validate() ?? false;
                           if (!isValid) return;
 
-                          await authNotifier.login(email: emailController.text, password: passwordController.text);
+                          final success = await authNotifier.login(email: emailController.text, password: passwordController.text);
 
-                          final error = ref.read(authNotifierProvider).errorMessage;
-                          if (error == null) {
+                          if (success) {
                             context.go('/volunteerings');
                           } else {
                             showDialog(
                               context: context,
-                              builder:
-                                  (_) => Center(
-                                    child: ModalSermanos(
-                                      title: 'Error al iniciar sesión',
-                                      subtitle: 'El email o la contraseña son incorrectos.',
-                                      confimationText: 'Reintentar',
-                                      cancelText: 'Cancelar',
-                                      onCancel: () => Navigator.of(context).pop(),
-                                      onConfirm: () => Navigator.of(context).pop(),
-                                    ),
-                                  ),
+                              builder: (_) => Center(
+                                child: ModalSermanos(
+                                  title: 'Error al iniciar sesión',
+                                  subtitle: 'El email o la contraseña son incorrectos.',
+                                  confimationText: 'Reintentar',
+                                  cancelText: 'Cancelar',
+                                  onCancel: () => Navigator.of(context).pop(),
+                                  onConfirm: () => Navigator.of(context).pop(),
+                                ),
+                              ),
                             );
                           }
                         },
