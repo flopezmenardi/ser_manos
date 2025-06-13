@@ -13,6 +13,7 @@ import '../../../design_system/organisms/headers/header.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/typography.dart';
 import '../../../infrastructure/remote_config_provider.dart';
+import '../../../models/enums/sort_mode.dart';
 import '../../auth/controllers/auth_controller_impl.dart';
 import '../controller/volunteerings_controller_impl.dart';
 
@@ -44,12 +45,12 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
       try {
         final position = await Geolocator.getCurrentPosition();
         notifier.setLocation(GeoPoint(position.latitude, position.longitude));
-        notifier.updateSortMode(VolunteeringSortMode.proximity);
+        notifier.updateSortMode(SortMode.proximity);
       } catch (_) {
-        notifier.updateSortMode(VolunteeringSortMode.date);
+        notifier.updateSortMode(SortMode.date);
       }
     } else {
-      notifier.updateSortMode(VolunteeringSortMode.date);
+      notifier.updateSortMode(SortMode.date);
     }
   }
 
@@ -97,13 +98,11 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                           ),
                           icon: const Icon(Icons.my_location),
                           label: Text(
-                            queryState.sortMode == VolunteeringSortMode.proximity
-                                ? "Ordenar por fecha"
-                                : "Ordenar por cercanía",
+                            queryState.sortMode == SortMode.proximity ? "Ordenar por fecha" : "Ordenar por cercanía",
                           ),
                           onPressed: () async {
-                            if (queryState.sortMode == VolunteeringSortMode.proximity) {
-                              queryNotifier.updateSortMode(VolunteeringSortMode.date);
+                            if (queryState.sortMode == SortMode.proximity) {
+                              queryNotifier.updateSortMode(SortMode.date);
                             } else {
                               LocationPermission permission = await Geolocator.checkPermission();
                               if (permission == LocationPermission.denied) {
@@ -118,7 +117,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
 
                               final position = await Geolocator.getCurrentPosition();
                               queryNotifier.setLocation(GeoPoint(position.latitude, position.longitude));
-                              queryNotifier.updateSortMode(VolunteeringSortMode.proximity);
+                              queryNotifier.updateSortMode(SortMode.proximity);
                             }
                           },
                         ),

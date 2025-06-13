@@ -6,7 +6,7 @@ import 'package:ser_manos/features/volunteerings/service/volunteerings_service.d
 import 'package:ser_manos/infrastructure/analytics_service.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
 
-import '../controller/volunteerings_controller_impl.dart';
+import '../../../models/enums/sort_mode.dart';
 
 final volunteeringsServiceProvider = Provider<VolunteeringsService>((ref) {
   return VolunteeringsServiceImpl();
@@ -15,18 +15,15 @@ final volunteeringsServiceProvider = Provider<VolunteeringsService>((ref) {
 class VolunteeringsServiceImpl implements VolunteeringsService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<List<Volunteering>> getAllVolunteeringsSorted({
-    required VolunteeringSortMode sortMode,
-    GeoPoint? userLocation,
-  }) async {
+  Future<List<Volunteering>> getAllVolunteeringsSorted({required SortMode sortMode, GeoPoint? userLocation}) async {
     final snapshot = await _db.collection('voluntariados').get();
     final volunteerings = snapshot.docs.map((doc) => Volunteering.fromDocumentSnapshot(doc)).toList();
 
     switch (sortMode) {
-      case VolunteeringSortMode.date:
+      case SortMode.date:
         volunteerings.sort((a, b) => b.fechaCreacion.compareTo(a.fechaCreacion));
         break;
-      case VolunteeringSortMode.proximity:
+      case SortMode.proximity:
         if (userLocation == null) {
           throw Exception('User location is required for proximity sorting.');
         }
@@ -64,27 +61,15 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
       final now = DateTime.now();
       final daysBefore = fechaInicio.difference(now).inDays;
 
-      await AnalyticsService.logWithdrawVolunteering(
-        volunteeringId: volunteeringId,
-        daysBeforeStart: daysBefore,
-      );
+      await AnalyticsService.logWithdrawVolunteering(volunteeringId: volunteeringId, daysBeforeStart: daysBefore);
     }
 
-    await _db.collection('usuarios').doc(uid).update({
-      'voluntariado': null,
-      'voluntariadoAceptado': false,
-    });
+    await _db.collection('usuarios').doc(uid).update({'voluntariado': null, 'voluntariadoAceptado': false});
 
-    await _db.collection('voluntariados').doc(volunteeringId).update({
-      'vacantes': FieldValue.increment(1),
-    });
+    await _db.collection('voluntariados').doc(volunteeringId).update({'vacantes': FieldValue.increment(1)});
   }
 
-  Future<void> toggleFavorite({
-    required String uid,
-    required String volunteeringId,
-    required bool isFavorite,
-  }) async {
+  Future<void> toggleFavorite({required String uid, required String volunteeringId, required bool isFavorite}) async {
     final userRef = _db.collection('usuarios').doc(uid);
     final volunteeringRef = _db.collection('voluntariados').doc(volunteeringId);
 
@@ -98,14 +83,10 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
 
       //Write to user and volunteering
       transaction.update(userRef, {
-        'favoritos': isFavorite
-            ? FieldValue.arrayRemove([volunteeringId])
-            : FieldValue.arrayUnion([volunteeringId]),
+        'favoritos': isFavorite ? FieldValue.arrayRemove([volunteeringId]) : FieldValue.arrayUnion([volunteeringId]),
       });
 
-      transaction.update(volunteeringRef, {
-        'likes': newLikes.clamp(0, double.infinity),
-      });
+      transaction.update(volunteeringRef, {'likes': newLikes.clamp(0, double.infinity)});
     });
   }
 

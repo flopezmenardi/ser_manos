@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../models/enums/sort_mode.dart';
 import '../../../models/volunteering_model.dart';
-import '../controller/volunteerings_controller_impl.dart';
 
 abstract class VolunteeringsService {
-  Future<List<Volunteering>> getAllVolunteeringsSorted({
-    required VolunteeringSortMode sortMode,
-    GeoPoint? userLocation,
-  });
+  Future<List<Volunteering>> getAllVolunteeringsSorted({required SortMode sortMode, GeoPoint? userLocation});
   Future<Volunteering?> getVolunteeringById(String id);
   Future<void> applyToVolunteering(String uid, String volunteeringId);
   Future<void> withdrawApplication(String uid);
