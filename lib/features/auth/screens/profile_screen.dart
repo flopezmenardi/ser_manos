@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/molecules/buttons/short_button.dart';
 import 'package:ser_manos/design_system/organisms/modal.dart';
-import 'package:ser_manos/infrastructure/user_service_impl.dart';
 import 'package:ser_manos/models/user_model.dart';
 
 import '../../../design_system/atoms/icons.dart';
@@ -15,6 +14,7 @@ import '../../../design_system/organisms/headers/header.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/grid.dart';
 import '../../../design_system/tokens/typography.dart';
+import '../controllers/auth_controller_impl.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -126,7 +126,7 @@ class ProfileScreen extends ConsumerWidget {
             style: AppTypography.body1.copyWith(color: AppColors.neutral75),
           ),
           const SizedBox(height: 24),
-          ShortButton(text: 'Completar', icon: Icons.add , onPressed: () => context.push('/profile/edit')),
+          ShortButton(text: 'Completar', icon: Icons.add, onPressed: () => context.push('/profile/edit')),
           const SizedBox(height: 16),
           TextOnlyButton(
             text: 'Cerrar sesión',

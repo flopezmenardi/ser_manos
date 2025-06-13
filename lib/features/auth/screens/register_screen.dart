@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/design_system/organisms/forms/register.dart';
-import 'package:ser_manos/infrastructure/user_service_impl.dart';
 
 import '../../../design_system/atoms/logos/logo_square.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
 import '../../../design_system/molecules/buttons/text_button.dart';
 import '../../../design_system/tokens/colors.dart';
+import '../controllers/auth_controller_impl.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -82,57 +82,57 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       _emailController.text.isNotEmpty &&
       _passwordController.text.isNotEmpty;
 
-@override
-Widget build(BuildContext context) {
-  final state = ref.watch(authNotifierProvider);
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(authNotifierProvider);
 
-  return Scaffold(
-    backgroundColor: AppColors.neutral0,
-    body: SafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: IntrinsicHeight(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: 24),
-                      const LogoSquare(size: 150),
-                      const SizedBox(height: 32),
-                      RegisterForms(
-                        nameController: _nameController,
-                        lastNameController: _lastNameController,
-                        emailController: _emailController,
-                        passwordController: _passwordController,
-                      ),
-                      const Spacer(),
-                      CTAButton(
-                        text: state.isLoading ? 'Registrando...' : 'Registrarse',
-                        isEnabled: _isFormFilled && !state.isLoading,
-                        onPressed: _handleRegister,
-                      ),
-                      const SizedBox(height: 16),
-                      TextOnlyButton(
-                        text: 'Ya tengo cuenta',
-                        onPressed: () async { 
-                          context.go('/login');
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                    ],
+    return Scaffold(
+      backgroundColor: AppColors.neutral0,
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 24),
+                        const LogoSquare(size: 150),
+                        const SizedBox(height: 32),
+                        RegisterForms(
+                          nameController: _nameController,
+                          lastNameController: _lastNameController,
+                          emailController: _emailController,
+                          passwordController: _passwordController,
+                        ),
+                        const Spacer(),
+                        CTAButton(
+                          text: state.isLoading ? 'Registrando...' : 'Registrarse',
+                          isEnabled: _isFormFilled && !state.isLoading,
+                          onPressed: _handleRegister,
+                        ),
+                        const SizedBox(height: 16),
+                        TextOnlyButton(
+                          text: 'Ya tengo cuenta',
+                          onPressed: () async {
+                            context.go('/login');
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

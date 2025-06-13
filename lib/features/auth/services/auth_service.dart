@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 
-import '../models/user_model.dart';
+import '../../../models/user_model.dart';
 
 abstract class UserService {
   Future<User?> getUserById(String uid);

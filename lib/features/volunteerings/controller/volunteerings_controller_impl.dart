@@ -7,8 +7,8 @@ import 'package:ser_manos/infrastructure/analytics_service.dart';
 import 'package:ser_manos/infrastructure/volunteering_view_tracker.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
 
-import '../../../infrastructure/user_service_impl.dart';
 import '../../../models/user_model.dart';
+import '../../auth/controllers/auth_controller_impl.dart';
 import '../service/volunteerings_service.dart';
 import '../service/volunteerings_service_impl.dart';
 

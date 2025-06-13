@@ -13,8 +13,7 @@ import '../../../design_system/organisms/cards/input_card.dart';
 import '../../../design_system/organisms/headers/header_modal.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/grid.dart';
-import '../../../infrastructure/user_service_impl.dart';
-import '../controller/profile_controller_impl.dart';
+import '../controllers/auth_controller_impl.dart';
 
 class ProfileModalScreen extends ConsumerStatefulWidget {
   const ProfileModalScreen({super.key});
@@ -50,7 +49,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
   Widget build(BuildContext context) {
     final fromVolunteering = GoRouterState.of(context).uri.queryParameters['fromVolunteering'];
     final user = ref.watch(authNotifierProvider).currentUser;
-    final profileController = ref.read(profileControllerProvider);
+    final authController = ref.read(authControllerProvider);
 
     if (user == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -146,7 +145,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
 
                           final values = _formKey.currentState!.value;
 
-                          await profileController.updateUser(user.uuid, {
+                          await authController.updateUser(user.uuid, {
                             'fechaNacimiento': values['birthDate'],
                             'telefono': values['phone'],
                             'email': values['email'],
@@ -156,19 +155,22 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                           await ref.read(authNotifierProvider.notifier).refreshUser();
 
                           if (fromVolunteering != null) {
-                            final confirm = await showDialog<bool>(
-                              context: context,
-                              builder: (_) => Center(
-                                child: ModalSermanos(
-                                  title: 'Confirmar postulación',
-                                  subtitle: '¿Querés postularte al voluntariado?',
-                                  confimationText: 'Sí, postularme',
-                                  cancelText: 'Cancelar',
-                                  onCancel: () => Navigator.of(context).pop(false),
-                                  onConfirm: () => Navigator.of(context).pop(true),
-                                ),
-                              ),
-                            ) ?? false;
+                            final confirm =
+                                await showDialog<bool>(
+                                  context: context,
+                                  builder:
+                                      (_) => Center(
+                                        child: ModalSermanos(
+                                          title: 'Confirmar postulación',
+                                          subtitle: '¿Querés postularte al voluntariado?',
+                                          confimationText: 'Sí, postularme',
+                                          cancelText: 'Cancelar',
+                                          onCancel: () => Navigator.of(context).pop(false),
+                                          onConfirm: () => Navigator.of(context).pop(true),
+                                        ),
+                                      ),
+                                ) ??
+                                false;
 
                             if (confirm) {
                               final controller = ref.read(volunteeringsControllerProvider);
