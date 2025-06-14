@@ -3,7 +3,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../models/user_model.dart';
 
-abstract class AuthController {
+abstract class UserController {
   Future<User?> registerUser({
     required String nombre,
     required String apellido,

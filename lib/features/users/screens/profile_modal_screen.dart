@@ -17,7 +17,7 @@ import '../../../design_system/organisms/cards/input_card.dart';
 import '../../../design_system/organisms/headers/header_modal.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/grid.dart';
-import '../controllers/auth_controller_impl.dart';
+import '../controllers/user_controller_impl.dart';
 
 class ProfileModalScreen extends ConsumerStatefulWidget {
   const ProfileModalScreen({super.key});
@@ -67,7 +67,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
   Widget build(BuildContext context) {
     final fromVolunteering = GoRouterState.of(context).uri.queryParameters['fromVolunteering'];
     final user = ref.watch(authNotifierProvider).currentUser;
-    final authController = ref.read(authControllerProvider);
+    final authController = ref.read(userControllerProvider);
 
     if (user == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));

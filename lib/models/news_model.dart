@@ -32,3 +32,17 @@ class News {
     );
   }
 }
+
+extension NewsToMap on News {
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'titulo': titulo,
+      'descripcion': descripcion,
+      'resumen': resumen,
+      'emisor': emisor,
+      'imagenURL': imagenURL,
+      'fechaCreacion': fechaCreacion,
+    };
+  }
+}

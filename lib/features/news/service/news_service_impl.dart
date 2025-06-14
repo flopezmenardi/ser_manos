@@ -9,7 +9,9 @@ final newsServiceProvider = Provider<NewsService>((ref) {
 });
 
 class NewsServiceImpl implements NewsService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _db;
+
+  NewsServiceImpl([FirebaseFirestore? db]) : _db = db ?? FirebaseFirestore.instance;
 
   Future<List<News>> getNewsOrderedByDate() async {
     final snapshot = await _db.collection('novedades').orderBy('fechaCreacion', descending: true).get();
