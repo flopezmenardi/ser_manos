@@ -39,7 +39,10 @@ class ChangeProfilePictureCellule extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const ProfilePictureButton(text: 'Cambiar foto'),
+                ProfilePictureButton(
+                  text: 'Cambiar foto',
+                  onPressed: () async => onChangePressed(),      // forward to _pickPhoto()
+                ),
               ],
             ),
           ),

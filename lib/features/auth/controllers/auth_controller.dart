@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+import 'package:image_picker/image_picker.dart';
 
 import '../../../models/user_model.dart';
 
@@ -15,6 +16,8 @@ abstract class AuthController {
   Future<void> logout();
 
   Future<void> updateUser(String uid, Map<String, dynamic> data);
+
+  Future<void> uploadProfilePicture(String uid, XFile xfile);
 
   Future<User?> getCurrentUser();
 

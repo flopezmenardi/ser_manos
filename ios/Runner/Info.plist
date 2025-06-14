@@ -53,5 +53,10 @@
 	<!-- Camera permission explanation -->
 	<key>NSCameraUsageDescription</key>
 	<string>Necesitamos acceder a la cámara para actualizar tu foto de perfil.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Necesitamos acceder a la cámara para tu foto de perfil</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Necesitamos acceder a tu galería para tu foto de perfil</string>
+
 </dict>
 </plist>

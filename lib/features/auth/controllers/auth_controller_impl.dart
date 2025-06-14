@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ser_manos/features/auth/controllers/auth_controller.dart';
 
 import '../../../models/user_model.dart';
@@ -39,6 +44,35 @@ class AuthControllerImpl implements AuthController {
   @override
   Future<void> updateUser(String uid, Map<String, dynamic> data) {
     return _userService.updateUser(uid, data);
+  }
+
+  Future<void> uploadProfilePicture(String uid, XFile xfile) async {
+    final ref = FirebaseStorage.instance
+        .ref('users/$uid/profile_picture.jpg');
+
+    UploadTask task;
+    if (kIsWeb) {
+      final bytes = await xfile.readAsBytes();
+      task = ref.putData(
+        bytes,
+        SettableMetadata(contentType: 'image/jpeg'),
+      );
+    } else {
+      task = ref.putFile(
+        File(xfile.path),
+        SettableMetadata(contentType: 'image/jpeg'),
+      );
+    }
+
+    // debug logs
+    debugPrint('Uploading profile picture for user $uid');
+
+    final snapshot = await task.whenComplete(() {});
+    final url = await snapshot.ref.getDownloadURL();
+
+    debugPrint('Profile picture uploaded successfully: $url');
+    await _userService.updateUser(uid, {'photoUrl': url});
+    debugPrint('User $uid updated with new profile picture URL: $url');
   }
 
   @override
