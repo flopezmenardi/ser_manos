@@ -57,10 +57,8 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
   @override
   Widget build(BuildContext context) {
     final controller = ref.read(volunteeringsControllerProvider);
-
     final volunteeringListAsync = ref.watch(volunteeringSearchProvider);
     final volunteeringSearchNotifier = ref.read(volunteeringSearchProvider.notifier);
-
     final queryNotifier = ref.read(volunteeringQueryProvider.notifier);
     final queryState = ref.watch(volunteeringQueryProvider);
     final user = ref.watch(authNotifierProvider).currentUser;
@@ -75,162 +73,84 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
         children: [
           AppHeader(selectedIndex: 0),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  await volunteeringSearchNotifier.refreshSearch();
-                },
-                child: ListView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  children: [
-                    SearchInput(
-                      onChanged: (text) => queryNotifier.updateQuery(text),
-                      onSubmitted: (text) => queryNotifier.submitNow(text),
-                      mode: SearchInputMode.map,
-                    ),
-                    const SizedBox(height: 24),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                await volunteeringSearchNotifier.refreshSearch();
+              },
+              child: ListView(
+                padding: const EdgeInsets.all(16),
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [
+                  SearchInput(
+                    onChanged: (text) => queryNotifier.updateQuery(text),
+                    onSubmitted: (text) => queryNotifier.submitNow(text),
+                    mode: SearchInputMode.map,
+                  ),
+                  const SizedBox(height: 24),
 
-                    if (showProximityButton)
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary100,
-                            foregroundColor: Colors.white,
-                            elevation: 2,
-                          ),
-                          icon: const Icon(Icons.my_location),
-                          label: Text(
-                            queryState.sortMode == SortMode.proximity ? "Ordenar por fecha" : "Ordenar por cercanía",
-                          ),
-                          onPressed: () async {
-                            if (queryState.sortMode == SortMode.proximity) {
-                              queryNotifier.updateSortMode(SortMode.date);
-                            } else {
-                              LocationPermission permission = await Geolocator.checkPermission();
+                  if (showProximityButton)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary100,
+                          foregroundColor: Colors.white,
+                          elevation: 2,
+                        ),
+                        icon: const Icon(Icons.my_location),
+                        label: Text(
+                          queryState.sortMode == SortMode.proximity ? "Ordenar por fecha" : "Ordenar por cercanía",
+                        ),
+                        onPressed: () async {
+                          if (queryState.sortMode == SortMode.proximity) {
+                            queryNotifier.updateSortMode(SortMode.date);
+                          } else {
+                            LocationPermission permission = await Geolocator.checkPermission();
+                            if (permission == LocationPermission.denied) {
+                              permission = await Geolocator.requestPermission();
                               if (permission == LocationPermission.denied) {
-                                permission = await Geolocator.requestPermission();
-                                if (permission == LocationPermission.denied) {
-                                  return;
-                                }
-                              }
-                              if (permission == LocationPermission.deniedForever) {
                                 return;
                               }
-
-                              final position = await Geolocator.getCurrentPosition();
-                              queryNotifier.setLocation(GeoPoint(position.latitude, position.longitude));
-                              queryNotifier.updateSortMode(SortMode.proximity);
                             }
-                          },
-                        ),
+                            if (permission == LocationPermission.deniedForever) {
+                              return;
+                            }
+
+                            final position = await Geolocator.getCurrentPosition();
+                            queryNotifier.setLocation(GeoPoint(position.latitude, position.longitude));
+                            queryNotifier.updateSortMode(SortMode.proximity);
+                          }
+                        },
                       ),
-
-                    volunteeringListAsync.when(
-                      loading: () => const SizedBox.shrink(),
-                      error: (_, __) => const SizedBox.shrink(),
-                      data: (volunteerings) {
-                        if (user != null &&
-                            user.voluntariado != null &&
-                            user.voluntariado != '' &&
-                            volunteerings.any((v) => v.id == user.voluntariado)) {
-                          final current = volunteerings.firstWhere((v) => v.id == user.voluntariado);
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Tu actividad",
-                                style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
-                              ),
-                              const SizedBox(height: 16),
-                              GestureDetector(
-                                onTap: () {
-                                  controller.logViewedVolunteering(current.id);
-                                  context.go('/volunteering/${current.id}');
-                                },
-                                child: CurrentVolunteerCard(
-                                  category: current.emisor,
-                                  name: current.titulo,
-                                  onLocationPressed: () {
-                                    final lat = current.ubicacion.latitude;
-                                    final lng = current.ubicacion.longitude;
-                                    final uri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng");
-                                    launchUrl(uri);
-                                  },
-                                ),
-                              ),
-                              const SizedBox(height: 24),
-                            ],
-                          );
-                        }
-                        return const SizedBox.shrink();
-                      },
                     ),
-                    Text("Voluntariados", style: AppTypography.headline1.copyWith(color: AppColors.neutral100)),
-                    const SizedBox(height: 16),
-                    volunteeringListAsync.when(
-                      loading: () => const Center(child: CircularProgressIndicator()),
-                      error: (error, _) => Text('Error: $error'),
-                      data: (volunteerings) {
-                        if (volunteerings.isEmpty) {
-                          return _emptyVolunteeringsMessage();
-                        }
 
-                        return Column(
-                          children:
-                              volunteerings.map((item) {
-                                final isFavorite = user?.favoritos.contains(item.id) ?? false;
+                  volunteeringListAsync.when(
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (error, _) => Text('Error: $error'),
+                    data: (volunteerings) {
+                      final hasCurrent =
+                          user != null &&
+                          user.voluntariado != null &&
+                          user.voluntariado != '' &&
+                          volunteerings.any((v) => v.id == user.voluntariado);
 
-                                return Column(
-                                  children: [
-                                    GestureDetector(
-                                      behavior: HitTestBehavior.translucent,
-                                      onTap: () {
-                                        controller.logViewedVolunteering(item.id);
-                                        context.go('/volunteering/${item.id}');
-                                      },
-                                      child: FutureBuilder<int>(
-                                        future:
-                                            showLikeCounter ? controller.getFavoritesCount(item.id) : Future.value(0),
-                                        builder: (context, snapshot) {
-                                          return VolunteeringCard(
-                                            imagePath: item.imagenURL,
-                                            category: item.emisor,
-                                            title: item.titulo,
-                                            vacancies: item.vacantes,
-                                            isFavorite: isFavorite,
-                                            onFavoritePressed: () async {
-                                              if (user == null) return;
-                                              await controller.toggleFavorite(item.id, isFavorite);
-                                              ref.read(authNotifierProvider.notifier).refreshUser();
-                                              ref.invalidate(volunteeringSearchProvider);
-                                              if(!isFavorite) {
-                                                controller.logLikedVolunteering(item.id);
-                                              }
-                                            },
-                                            likeCount: showLikeCounter ? item.likes : 0,
-                                            onLocationPressed: () {
-                                              final lat = item.ubicacion.latitude;
-                                              final lng = item.ubicacion.longitude;
-                                              final uri = Uri.parse(
-                                                "https://www.google.com/maps/search/?api=1&query=$lat,$lng",
-                                              );
-                                              launchUrl(uri);
-                                            },
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(height: 16),
-                                  ],
-                                );
-                              }).toList(),
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (hasCurrent) ..._buildCurrentVolunteering(volunteerings, user!, controller),
+                          Text("Voluntariados", style: AppTypography.headline1.copyWith(color: AppColors.neutral100)),
+                          const SizedBox(height: 16),
+                          if (volunteerings.isEmpty)
+                            _emptyVolunteeringsMessage(queryState.query.isEmpty)
+                          else
+                            ...volunteerings
+                                .map((item) => _buildVolunteeringCard(item, user, controller, showLikeCounter))
+                                .toList(),
+                        ],
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
           ),
@@ -239,13 +159,87 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
     );
   }
 
-  Widget _emptyVolunteeringsMessage() {
+  List<Widget> _buildCurrentVolunteering(List volunteerings, user, controller) {
+    final current = volunteerings.firstWhere((v) => v.id == user.voluntariado);
+    return [
+      Text("Tu actividad", style: AppTypography.headline1.copyWith(color: AppColors.neutral100)),
+      const SizedBox(height: 16),
+      GestureDetector(
+        onTap: () {
+          controller.logViewedVolunteering(current.id);
+          context.go('/volunteering/${current.id}');
+        },
+        child: CurrentVolunteerCard(
+          category: current.emisor,
+          name: current.titulo,
+          onLocationPressed: () {
+            final lat = current.ubicacion.latitude;
+            final lng = current.ubicacion.longitude;
+            final uri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng");
+            launchUrl(uri);
+          },
+        ),
+      ),
+      const SizedBox(height: 24),
+    ];
+  }
+
+  Widget _buildVolunteeringCard(item, user, controller, showLikeCounter) {
+    final isFavorite = user?.favoritos.contains(item.id) ?? false;
+
+    return Column(
+      children: [
+        GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            controller.logViewedVolunteering(item.id);
+            context.go('/volunteering/${item.id}');
+          },
+          child: FutureBuilder<int>(
+            future: showLikeCounter ? controller.getFavoritesCount(item.id) : Future.value(0),
+            builder: (context, snapshot) {
+              return VolunteeringCard(
+                imagePath: item.imagenURL,
+                category: item.emisor,
+                title: item.titulo,
+                vacancies: item.vacantes,
+                isFavorite: isFavorite,
+                onFavoritePressed: () async {
+                  if (user == null) return;
+                  await controller.toggleFavorite(item.id, isFavorite);
+                  ref.read(authNotifierProvider.notifier).refreshUser();
+                  ref.invalidate(volunteeringSearchProvider);
+                  if(!isFavorite) {
+                    controller.logLikedVolunteering(item.id);
+                  }
+                },
+                likeCount: showLikeCounter ? item.likes : 0,
+                onLocationPressed: () {
+                  final lat = item.ubicacion.latitude;
+                  final lng = item.ubicacion.longitude;
+                  final uri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng");
+                  launchUrl(uri);
+                },
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _emptyVolunteeringsMessage(bool isGeneralEmpty) {
+    final message =
+        isGeneralEmpty
+            ? "Actualmente no hay voluntariados vigentes.\nPronto se irán incorporando nuevos."
+            : "No hay voluntariados vigentes para tu búsqueda.";
     return Container(
       padding: const EdgeInsets.all(32),
       alignment: Alignment.center,
       decoration: BoxDecoration(color: AppColors.neutral0, borderRadius: BorderRadius.circular(8)),
       child: Text(
-        "Actualmente no hay voluntariados vigentes.\nPronto se irán incorporando nuevos.",
+        message,
         textAlign: TextAlign.center,
         style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
       ),
