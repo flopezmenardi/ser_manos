@@ -31,14 +31,12 @@ class AnalyticsService {
 
   // Llamado cuando un usuario le da like a un voluntariado
   static Future<void> logLikedVolunteering({
-    required String volunteeringId,
-    required bool isLiked,
+    required String volunteeringId
   }) async {
     await _analytics.logEvent(
       name: 'like_volunteering',
       parameters: {
         'volunteering_id': volunteeringId,
-        'liked': isLiked,
         'timestamp': DateTime.now().toIso8601String(),
       },
     );

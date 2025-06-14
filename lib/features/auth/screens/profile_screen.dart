@@ -54,7 +54,7 @@ class ProfileScreen extends ConsumerWidget {
         children: [
           const SizedBox(height: 24),
           ProfilePicture(
-            imagePath: user.photoUrl != null ? user.photoUrl! : '/assets/images/profile_picture.jpg',
+            imagePath: user.photoUrl != null ? user.photoUrl! : '/assets/icons/foto_perfil.png',
             size: ProfilePictureSize.large,
           ),
           const SizedBox(height: 8),
@@ -115,20 +115,30 @@ class ProfileScreen extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppGrid.horizontalMargin),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AppIcons.getAccountIcon(color: AppColors.secondary90, size: 100),
-          const SizedBox(height: 8),
-          Text('VOLUNTARIO', style: AppTypography.overline.copyWith(color: AppColors.neutral75)),
-          const SizedBox(height: 16),
-          Text(name, style: AppTypography.subtitle1),
-          const SizedBox(height: 16),
-          Text(
-            '¡Completá tu perfil para tener acceso a mejores oportunidades!',
-            textAlign: TextAlign.center,
-            style: AppTypography.body1.copyWith(color: AppColors.neutral75),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/icons/profile/Foto_perfil1.png',
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+                const SizedBox(height: 8),
+                Text('VOLUNTARIO', style: AppTypography.overline.copyWith(color: AppColors.neutral75)),
+                const SizedBox(height: 16),
+                Text(name, style: AppTypography.subtitle1),
+                const SizedBox(height: 16),
+                Text(
+                  '¡Completá tu perfil para tener\nacceso a mejores oportunidades!',
+                  textAlign: TextAlign.center,
+                  style: AppTypography.body1.copyWith(color: AppColors.neutral75),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 24),
           ShortButton(text: 'Completar', icon: Icons.add, onPressed: () => context.push('/profile/edit')),
           const SizedBox(height: 16),
           TextOnlyButton(
@@ -137,24 +147,24 @@ class ProfileScreen extends ConsumerWidget {
             onPressed: () async {
               showDialog(
                 context: context,
-                builder:
-                    (_) => Center(
-                      child: ModalSermanos(
-                        title: 'Cerrar sesión',
-                        subtitle: '¿Estás seguro que querés cerrar sesión?',
-                        confimationText: 'Cerrar sesión',
-                        cancelText: 'Cancelar',
-                        onCancel: () => Navigator.of(context).pop(),
-                        onConfirm: () async {
-                          await ref.read(authNotifierProvider.notifier).logout();
-                          Navigator.of(context).pop();
-                          context.go('/login');
-                        },
-                      ),
-                    ),
+                builder: (_) => Center(
+                  child: ModalSermanos(
+                    title: 'Cerrar sesión',
+                    subtitle: '¿Estás seguro que querés cerrar sesión?',
+                    confimationText: 'Cerrar sesión',
+                    cancelText: 'Cancelar',
+                    onCancel: () => Navigator.of(context).pop(),
+                    onConfirm: () async {
+                      await ref.read(authNotifierProvider.notifier).logout();
+                      Navigator.of(context).pop();
+                      context.go('/login');
+                    },
+                  ),
+                ),
               );
             },
           ),
+          const SizedBox(height: 24),
         ],
       ),
     );

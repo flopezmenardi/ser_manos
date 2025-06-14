@@ -205,6 +205,9 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                                               await controller.toggleFavorite(item.id, isFavorite);
                                               ref.read(authNotifierProvider.notifier).refreshUser();
                                               ref.invalidate(volunteeringSearchProvider);
+                                              if(!isFavorite) {
+                                                controller.logLikedVolunteering(item.id);
+                                              }
                                             },
                                             likeCount: showLikeCounter ? item.likes : 0,
                                             onLocationPressed: () {

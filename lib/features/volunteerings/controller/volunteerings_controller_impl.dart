@@ -93,8 +93,8 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
     return volunteering;
   }
 
-  Future<void> logLikedVolunteering(String volunteeringId, bool isLiked) async {
-    await AnalyticsService.logLikedVolunteering(volunteeringId: volunteeringId, isLiked: isLiked);
+  Future<void> logLikedVolunteering(String volunteeringId) async {
+    await AnalyticsService.logLikedVolunteering(volunteeringId: volunteeringId);
   }
 
   Future<void> logViewedVolunteering(String volunteeringId) async {
