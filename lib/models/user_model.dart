@@ -46,4 +46,50 @@ class User {
       favoritos: List<String>.from(data['favoritos'] ?? []),
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'nombre': nombre,
+      'apellido': apellido,
+      'email': email,
+      'fechaNacimiento': fechaNacimiento,
+      'fechaRegistro': fechaRegistro,
+      'genero': genero,
+      'telefono': telefono,
+      'voluntariado': voluntariado,
+      'voluntariadoAceptado': voluntariadoAceptado,
+      'photoUrl': photoUrl,
+      'favoritos': favoritos,
+    };
+  }
+
+  User copyWith({
+    String? uuid,
+    String? nombre,
+    String? apellido,
+    String? email,
+    String? fechaNacimiento,
+    Timestamp? fechaRegistro,
+    String? genero,
+    String? telefono,
+    String? voluntariado,
+    String? photoUrl,
+    bool? voluntariadoAceptado,
+    List<String>? favoritos,
+  }) {
+    return User(
+      uuid: uuid ?? this.uuid,
+      nombre: nombre ?? this.nombre,
+      apellido: apellido ?? this.apellido,
+      email: email ?? this.email,
+      fechaNacimiento: fechaNacimiento ?? this.fechaNacimiento,
+      fechaRegistro: fechaRegistro ?? this.fechaRegistro,
+      genero: genero ?? this.genero,
+      telefono: telefono ?? this.telefono,
+      voluntariado: voluntariado ?? this.voluntariado,
+      photoUrl: photoUrl ?? this.photoUrl,
+      voluntariadoAceptado: voluntariadoAceptado ?? this.voluntariadoAceptado,
+      favoritos: favoritos ?? this.favoritos,
+    );
+  }
 }

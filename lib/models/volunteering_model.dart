@@ -49,4 +49,53 @@ class Volunteering {
       fechaInicio: data['fechaInicio'] ?? '',
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'titulo': titulo,
+      'descripcion': descripcion,
+      'resumen': resumen,
+      'emisor': emisor,
+      'vacantes': vacantes,
+      'requisitos': requisitos,
+      'direccion': direccion,
+      'ubicacion': ubicacion,
+      'imagenURL': imagenURL,
+      'fechaCreacion': fechaCreacion,
+      'likes': likes,
+      'fechaInicio': fechaInicio,
+    };
+  }
+
+  Volunteering copyWith({
+    String? id,
+    String? titulo,
+    String? descripcion,
+    String? resumen,
+    String? emisor,
+    int? vacantes,
+    String? requisitos,
+    String? direccion,
+    GeoPoint? ubicacion,
+    String? imagenURL,
+    Timestamp? fechaCreacion,
+    int? likes,
+    Timestamp? fechaInicio,
+  }) {
+    return Volunteering(
+      id: id ?? this.id,
+      titulo: titulo ?? this.titulo,
+      descripcion: descripcion ?? this.descripcion,
+      resumen: resumen ?? this.resumen,
+      emisor: emisor ?? this.emisor,
+      vacantes: vacantes ?? this.vacantes,
+      requisitos: requisitos ?? this.requisitos,
+      direccion: direccion ?? this.direccion,
+      ubicacion: ubicacion ?? this.ubicacion,
+      imagenURL: imagenURL ?? this.imagenURL,
+      fechaCreacion: fechaCreacion ?? this.fechaCreacion,
+      likes: likes ?? this.likes,
+      fechaInicio: fechaInicio ?? this.fechaInicio,
+    );
+  }
 }

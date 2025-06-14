@@ -13,7 +13,8 @@ final volunteeringsServiceProvider = Provider<VolunteeringsService>((ref) {
 });
 
 class VolunteeringsServiceImpl implements VolunteeringsService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _db;
+  VolunteeringsServiceImpl([FirebaseFirestore? db]) : _db = db ?? FirebaseFirestore.instance;
 
   Future<List<Volunteering>> getAllVolunteeringsSorted({required SortMode sortMode, GeoPoint? userLocation}) async {
     final snapshot = await _db.collection('voluntariados').get();

@@ -1,104 +1,96 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:ser_manos/features/news/controller/news_controller_impl.dart';
-import 'package:ser_manos/features/news/service/news_service_impl.dart';
+import 'package:ser_manos/features/news/controller/news_controller.dart';
 import 'package:ser_manos/models/news_model.dart';
 
+import '../mocks/news_service_mock.mocks.dart';
+
 void main() {
-  group('NewsController Tests', () {
-    late FakeFirebaseFirestore fakeFirestore;
-    late NewsControllerImpl controller;
+  late MockNewsService mockService;
+  late NewsController controller;
 
-    final mockNews = News(
-      id: '1',
-      titulo: 'Título de prueba',
-      descripcion: 'Descripción de prueba',
-      resumen: 'Resumen de prueba',
-      emisor: 'Emisor',
-      imagenURL: 'https://example.com/image.jpg',
-      fechaCreacion: Timestamp.fromDate(DateTime(2024, 1, 1)),
-    );
+  final mockNews = News(
+    id: '1',
+    titulo: 'Título de prueba',
+    descripcion: 'Descripción de prueba',
+    resumen: 'Resumen de prueba',
+    emisor: 'Emisor',
+    imagenURL: 'https://example.com/image.jpg',
+    fechaCreacion: Timestamp.fromDate(DateTime(2024, 1, 1)),
+  );
 
-    setUp(() async {
-      fakeFirestore = FakeFirebaseFirestore();
-      await fakeFirestore.collection('novedades').doc(mockNews.id).set(mockNews.toMap());
+  setUp(() {
+    mockService = MockNewsService();
+    controller = NewsControllerImpl(mockService);
+  });
 
-      final newsService = NewsServiceImpl(fakeFirestore);
-      controller = NewsControllerImpl(newsService);
-    });
+  group('NewsController', () {
+    test('getNewsOrderedByDate returns list of News', () async {
+      when(mockService.getNewsOrderedByDate()).thenAnswer((_) async => [mockNews]);
 
-    test('getNewsOrderedByDate returns list of News ordered by date', () async {
       final result = await controller.getNewsOrderedByDate();
+
       expect(result, isA<List<News>>());
       expect(result.length, 1);
       expect(result.first.id, mockNews.id);
     });
 
-    test('getNewsById returns a News item when it exists', () async {
+    test('getNewsById returns a News when it exists', () async {
+      when(mockService.getNewsById('1')).thenAnswer((_) async => mockNews);
+
       final result = await controller.getNewsById('1');
+
       expect(result, isA<News>());
       expect(result?.titulo, mockNews.titulo);
     });
 
-    test('getNewsById returns null when it does not exist', () async {
+    test('getNewsById returns null when not found', () async {
+      when(mockService.getNewsById('nonexistent')).thenAnswer((_) async => null);
+
       final result = await controller.getNewsById('nonexistent');
+
       expect(result, isNull);
     });
   });
 
-  group('NewsListNotifier Tests', () {
+    group('NewsListNotifier', () {
     test('fetchNews sets state with list of news', () async {
-      final fakeFirestore = FakeFirebaseFirestore();
-      final news = News(
-        id: '1',
-        titulo: 'Test',
-        descripcion: 'Desc',
-        resumen: 'Resumen',
-        emisor: 'Emisor',
-        imagenURL: 'https://image.com',
-        fechaCreacion: Timestamp.fromDate(DateTime(2024, 1, 1)),
-      );
-      await fakeFirestore.collection('novedades').doc(news.id).set(news.toMap());
+      final mockService = MockNewsService();
+      final controller = NewsControllerImpl(mockService);
 
-      final service = NewsServiceImpl(fakeFirestore);
-      final controller = NewsControllerImpl(service);
+      when(mockService.getNewsOrderedByDate()).thenAnswer((_) async => [mockNews]);
+
       final notifier = NewsListNotifier(controller);
 
-      await Future.delayed(Duration.zero);
+      await Future.delayed(Duration.zero); // Esperamos al fetchNews del constructor
       expect(notifier.state.value?.length, 1);
     });
   });
 
-  group('NewsDetailNotifier Tests', () {
+  group('NewsDetailNotifier', () {
     test('fetchNewsDetail sets state with news detail', () async {
-      final fakeFirestore = FakeFirebaseFirestore();
-      final news = News(
-        id: '1',
-        titulo: 'Detalle',
-        descripcion: 'Desc',
-        resumen: 'Resumen',
-        emisor: 'Emisor',
-        imagenURL: 'https://image.com',
-        fechaCreacion: Timestamp.fromDate(DateTime(2024, 1, 1)),
-      );
-      await fakeFirestore.collection('novedades').doc(news.id).set(news.toMap());
+      final mockService = MockNewsService();
+      final controller = NewsControllerImpl(mockService);
 
-      final service = NewsServiceImpl(fakeFirestore);
-      final controller = NewsControllerImpl(service);
+      when(mockService.getNewsById('1')).thenAnswer((_) async => mockNews);
+
       final notifier = NewsDetailNotifier(controller, '1');
-
       await Future.delayed(Duration.zero);
-      expect(notifier.state.value?.titulo, 'Detalle');
+
+      expect(notifier.state.value?.titulo, 'Título de prueba');
     });
 
-    test('fetchNewsDetail sets state to null if news not found', () async {
-      final fakeFirestore = FakeFirebaseFirestore();
-      final service = NewsServiceImpl(fakeFirestore);
-      final controller = NewsControllerImpl(service);
-      final notifier = NewsDetailNotifier(controller, 'missing');
+    test('fetchNewsDetail sets state to null if not found', () async {
+      final mockService = MockNewsService();
+      final controller = NewsControllerImpl(mockService);
 
+      when(mockService.getNewsById('missing')).thenAnswer((_) async => null);
+
+      final notifier = NewsDetailNotifier(controller, 'missing');
       await Future.delayed(Duration.zero);
+
       expect(notifier.state.value, isNull);
     });
   });
