@@ -10,6 +10,7 @@ class User {
   final String genero;
   final String telefono;
   final String? voluntariado;
+  final String? photoUrl;
   final bool voluntariadoAceptado;
   final List<String> favoritos;
 
@@ -23,6 +24,7 @@ class User {
     required this.genero,
     required this.telefono,
     this.voluntariado,
+    this.photoUrl,
     required this.voluntariadoAceptado,
     required this.favoritos,
   });
@@ -40,6 +42,7 @@ class User {
       telefono: data['telefono'] ?? '',
       voluntariado: data['voluntariado'] ?? '',
       voluntariadoAceptado: data['voluntariadoAceptado'] ?? false,
+      photoUrl: data['photoUrl'] as String?,
       favoritos: List<String>.from(data['favoritos'] ?? []),
     );
   }

@@ -27,6 +27,7 @@ dependencies:
   firebase_analytics: ^11.4.6
   firebase_crashlytics: ^4.3.6
   firebase_remote_config: ^5.4.5
+  firebase_storage: ^12.1.0
   flutter_form_builder: ^9.1.1
   form_builder_validators: ^11.1.2
   flutter_launcher_icons: ^0.13.1

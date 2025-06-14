@@ -3,7 +3,10 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ser_manos/design_system/molecules/inputs/form_builder_input.dart';
+import 'package:ser_manos/design_system/organisms/cards/change_profile_picture.dart';
+import 'package:ser_manos/design_system/organisms/cards/upload_profile_picture.dart';
 import 'package:ser_manos/design_system/organisms/modal.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
 import 'package:ser_manos/features/volunteerings/controller/volunteerings_controller_impl.dart';
@@ -26,6 +29,9 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   int? _sexoIndex;
 
+  XFile? _newPhoto;            //  ← NEW
+  String? _newPhotoPath;       //  local preview path
+
   @override
   void initState() {
     super.initState();
@@ -43,6 +49,21 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
   String? _indexToGender(int? index) {
     const options = ['Hombre', 'Mujer', 'No binario'];
     return (index != null && index >= 0 && index < options.length) ? options[index] : null;
+  }
+
+  Future<void> _pickPhoto() async {
+    final picker = ImagePicker();
+    final photo = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 800,
+      imageQuality: 85,
+    );
+    if (photo == null) return;
+
+    setState(() {
+      _newPhoto = photo;
+      _newPhotoPath = photo.path;          // for immediate preview
+    });
   }
 
   @override
@@ -98,8 +119,17 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                           });
                         },
                       ),
-                      const SizedBox(height: 32),
-
+                      
+                      const SizedBox(height: 24),
+                      if (user.photoUrl != null || _newPhotoPath != null)
+                        ChangeProfilePictureCellule(
+                          // show the freshly picked photo if present, otherwise the current one
+                          imagePath: _newPhotoPath ?? user.photoUrl!,
+                          onChangePressed: _pickPhoto,
+                        )
+                      else
+                        UploadProfilePicture(onUploadPressed: _pickPhoto),
+                      const SizedBox(height: 24),
                       Text('Datos de contacto', style: AppTypography.headline1.copyWith(color: AppColors.neutral100)),
                       const SizedBox(height: 24),
 
@@ -145,11 +175,16 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
 
                           final values = _formKey.currentState!.value;
 
+                          if (_newPhoto != null) {
+                            await authController.uploadProfilePicture(user.uuid, _newPhoto!);
+                            _newPhoto = null;           // optional: clear once uploaded
+                          }
+
                           await authController.updateUser(user.uuid, {
                             'fechaNacimiento': values['birthDate'],
                             'telefono': values['phone'],
                             'email': values['email'],
-                            'genero': _indexToGender(_sexoIndex),
+                            'genero': _indexToGender(_sexoIndex)
                           });
 
                           await ref.read(authNotifierProvider.notifier).refreshUser();
@@ -182,7 +217,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                           }
 
                           // Si no vino desde voluntariado, comportamiento normal
-                          context.go('/profile');
+                          context.push('/profile');
                         },
                       ),
                       const SizedBox(height: 24),

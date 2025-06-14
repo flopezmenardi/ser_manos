@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ser_manos/design_system/organisms/cards/profile_picture_button.dart';
 import '../../tokens/colors.dart';
 import '../../tokens/typography.dart';
-import '../../molecules/buttons/short_button.dart'; 
 
 class UploadProfilePicture extends StatelessWidget {
   final VoidCallback onUploadPressed;
@@ -30,7 +29,11 @@ class UploadProfilePicture extends StatelessWidget {
               color: AppColors.neutral100,
             ),
           ),
-          const ProfilePictureButton(text: 'Subir foto'),
+          ProfilePictureButton(
+            text: 'Subir foto',
+            onPressed: () async => onUploadPressed(),      // forward to _pickPhoto()
+          ),
+
         ],
       ),
     );

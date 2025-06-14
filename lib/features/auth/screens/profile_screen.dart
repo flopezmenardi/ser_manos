@@ -53,7 +53,10 @@ class ProfileScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 24),
-          const ProfilePicture(imagePath: 'assets/images/profile_picture.jpg', size: ProfilePictureSize.large),
+          ProfilePicture(
+            imagePath: user.photoUrl != null ? user.photoUrl! : '/assets/images/profile_picture.jpg',
+            size: ProfilePictureSize.large,
+          ),
           const SizedBox(height: 8),
           Text('VOLUNTARIO', style: AppTypography.overline.copyWith(color: AppColors.neutral75)),
           const SizedBox(height: 4),
@@ -77,7 +80,7 @@ class ProfileScreen extends ConsumerWidget {
             secondContent: user.email,
           ),
           const SizedBox(height: 24),
-          CTAButton(text: 'Editar perfil', onPressed: () => context.push('/profile/edit')),
+          CTAButton(text: 'Editar perfil', onPressed: () async => context.push('/profile/edit')),
           TextOnlyButton(
             text: 'Cerrar sesión',
             color: AppColors.error100,

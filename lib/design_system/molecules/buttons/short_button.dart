@@ -4,7 +4,7 @@ import '../../tokens/typography.dart';
 
 class ShortButton extends StatefulWidget {
   final String text;
-  final IconData? icon; // Now optional
+  final IconData? icon;
   final Future<void> Function()? onPressed;
   final bool isEnabled;
   final bool isLarge;
