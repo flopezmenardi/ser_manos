@@ -93,12 +93,15 @@ class NewsDetailsScreen extends ConsumerWidget {
                               final file = File('${tempDir.path}/shared_news.jpg');
                               await file.writeAsBytes(bytes);
 
+                              final url = 'http://sermanos.app/news/${novedad.id}';
+
                               await Share.shareXFiles(
                                 [XFile(file.path)],
-                                text: novedad.resumen,
+                                text: novedad.resumen + '\n\n' + url,
                                 subject: novedad.titulo,
                               );
                             } catch (e) {
+                              debugPrint('Error al compartir la novedad: $e');
                               ScaffoldMessenger.of(
                                 context,
                               ).showSnackBar(const SnackBar(content: Text('Error al compartir la novedad.')));

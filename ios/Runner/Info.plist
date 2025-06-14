@@ -57,6 +57,14 @@
 	<string>Necesitamos acceder a la cámara para tu foto de perfil</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Necesitamos acceder a tu galería para tu foto de perfil</string>
-
+	<key>CFBundleURLTypes</key>
+	<array>
+	<dict>
+		<key>CFBundleURLSchemes</key>
+		<array>
+		<string>sermanos</string>
+		</array>
+	</dict>
+	</array>
 </dict>
 </plist>

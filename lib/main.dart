@@ -73,6 +73,7 @@ final GoRouter _router = GoRouter(
         final id = state.pathParameters['id']!;
         return NewsDetailsScreen(newsId: id);
       },
+      name: 'news',
     ),
     GoRoute(path: '/profile', builder: (context, state) => const ProfileScreen()),
     GoRoute(path: '/profile/edit', builder: (context, state) => const ProfileModalScreen()),
