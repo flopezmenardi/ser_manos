@@ -36,14 +36,16 @@ class _SearchInputState extends State<SearchInput> {
     super.initState();
     _controller = widget.controller ?? TextEditingController();
     _controller.addListener(() {
-      setState(() {}); // Update UI on text changes
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 
   @override
   void dispose() {
     if (widget.controller == null) {
-      _controller.dispose(); // Dispose if we created it internally
+      _controller.dispose();
     }
     super.dispose();
   }
@@ -91,10 +93,7 @@ class _SearchInputState extends State<SearchInput> {
               padding: const EdgeInsets.only(left: 16, right: 8),
               child: AppIcons.getSearchIcon(state: IconState.defaultState),
             ),
-            prefixIconConstraints: const BoxConstraints(
-              minWidth: 0,
-              minHeight: 0,
-            ),
+            prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
             suffixIcon: _buildSuffixIcon(hasText),
           ),
         ),
@@ -103,27 +102,18 @@ class _SearchInputState extends State<SearchInput> {
   }
 
   Widget? _buildSuffixIcon(bool hasText) {
-    if (hasText) {
-      // User typed -> show clear button
-      return IconButton(
-        icon: AppIcons.getCloseIcon(state: IconState.defaultState),
-        onPressed: _clearInput,
-      );
-    } else if (!_isFocused) {
-      // Not focused -> show map/list icon that can be pressed to trigger proximity sort
+    if (_isFocused && hasText) {
+      // Si el usuario está escribiendo -> mostrar el close icon
+      return IconButton(icon: AppIcons.getCloseIcon(state: IconState.defaultState), onPressed: _clearInput);
+    } else {
+      // En cualquier otro caso (no enfocado o vacío) -> mostrar el ListIcon
       return GestureDetector(
         onTap: widget.onSortByProximityRequested,
         child: Padding(
           padding: const EdgeInsets.only(right: 16),
-          child:
-              widget.mode == SearchInputMode.map
-                  ? AppIcons.getMapIcon(state: IconState.enabled)
-                  : AppIcons.getListIcon(state: IconState.enabled),
+          child: AppIcons.getListIcon(state: IconState.enabled),
         ),
       );
-    } else {
-      // Focused but empty -> no icon, keep space
-      return const SizedBox(width: 24);
     }
   }
 }
