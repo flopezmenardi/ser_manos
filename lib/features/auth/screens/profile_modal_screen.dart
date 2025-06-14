@@ -8,6 +8,7 @@ import 'package:ser_manos/design_system/molecules/inputs/form_builder_input.dart
 import 'package:ser_manos/design_system/organisms/cards/change_profile_picture.dart';
 import 'package:ser_manos/design_system/organisms/cards/upload_profile_picture.dart';
 import 'package:ser_manos/design_system/organisms/modal.dart';
+import 'package:ser_manos/design_system/organisms/utils/photo_picker_model.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
 import 'package:ser_manos/features/volunteerings/controller/volunteerings_controller_impl.dart';
 
@@ -52,17 +53,13 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
   }
 
   Future<void> _pickPhoto() async {
-    final picker = ImagePicker();
-    final photo = await picker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 800,
-      imageQuality: 85,
-    );
+    final XFile? photo =
+        await PhotoPickerUtil.selectFromCameraOrGallery(context);
     if (photo == null) return;
 
     setState(() {
-      _newPhoto = photo;
-      _newPhotoPath = photo.path;          // for immediate preview
+      _newPhoto     = photo;
+      _newPhotoPath = photo.path; 
     });
   }
 
