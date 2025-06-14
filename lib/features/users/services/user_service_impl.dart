@@ -10,8 +10,12 @@ final userServiceProvider = Provider<UserService>((ref) {
 });
 
 class UserServiceImpl implements UserService {
-  final fb_auth.FirebaseAuth _auth = fb_auth.FirebaseAuth.instance;
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final fb_auth.FirebaseAuth _auth;
+  final FirebaseFirestore _db;
+
+  UserServiceImpl({fb_auth.FirebaseAuth? auth, FirebaseFirestore? db})
+    : _auth = auth ?? fb_auth.FirebaseAuth.instance,
+      _db = db ?? FirebaseFirestore.instance;
 
   Future<User?> getUserById(String uid) async {
     final doc = await _db.collection('usuarios').doc(uid).get();
