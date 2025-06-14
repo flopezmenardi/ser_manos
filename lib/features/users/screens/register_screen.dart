@@ -7,7 +7,7 @@ import '../../../design_system/atoms/logos/logo_square.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
 import '../../../design_system/molecules/buttons/text_button.dart';
 import '../../../design_system/tokens/colors.dart';
-import '../controllers/auth_controller_impl.dart';
+import '../controllers/user_controller_impl.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});

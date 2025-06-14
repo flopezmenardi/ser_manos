@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ser_manos/features/auth/services/auth_service.dart';
+import 'package:ser_manos/features/users/services/user_service.dart';
 
 import '../../../models/user_model.dart';
 

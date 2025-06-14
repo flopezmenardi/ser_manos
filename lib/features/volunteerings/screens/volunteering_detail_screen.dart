@@ -16,7 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../infrastructure/analytics_service.dart';
 import '../../../infrastructure/volunteering_view_tracker.dart';
-import '../../auth/controllers/auth_controller_impl.dart';
+import '../../users/controllers/user_controller_impl.dart';
 import '../controller/volunteerings_controller_impl.dart';
 
 class VolunteeringDetailScreen extends ConsumerWidget {
@@ -231,6 +231,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
           body: RefreshIndicator(
             onRefresh: () async {
               await ref.read(volunteeringDetailProvider(id).notifier).fetchVolunteeringDetail();
+              await ref.read(authNotifierProvider.notifier).refreshUser();
             },
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),

@@ -14,7 +14,7 @@ import '../../../design_system/organisms/headers/header.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/grid.dart';
 import '../../../design_system/tokens/typography.dart';
-import '../controllers/auth_controller_impl.dart';
+import '../controllers/user_controller_impl.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -60,9 +60,9 @@ class ProfileScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           Text('VOLUNTARIO', style: AppTypography.overline.copyWith(color: AppColors.neutral75)),
           const SizedBox(height: 4),
-          Text(user.nombre, style: AppTypography.overline.copyWith(color: AppColors.neutral100)),
+          Text(user.nombre, style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100)),
           const SizedBox(height: 2),
-          Text(user.email, style: AppTypography.body1.copyWith(color: AppColors.secondary100)),
+          Text(user.email, style: AppTypography.body1.copyWith(color: AppColors.secondary200)),
           const SizedBox(height: 24),
           InformationCard(
             title: 'Información personal',

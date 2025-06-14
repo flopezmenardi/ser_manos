@@ -8,7 +8,7 @@ import '../../../design_system/molecules/buttons/cta_button.dart';
 import '../../../design_system/molecules/buttons/text_button.dart';
 import '../../../design_system/organisms/forms/login.dart';
 import '../../../design_system/tokens/colors.dart';
-import '../controllers/auth_controller_impl.dart';
+import '../controllers/user_controller_impl.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});

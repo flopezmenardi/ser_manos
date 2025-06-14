@@ -5,21 +5,21 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ser_manos/features/auth/controllers/auth_controller.dart';
+import 'package:ser_manos/features/users/controllers/user_controller.dart';
 
 import '../../../models/user_model.dart';
-import '../services/auth_service.dart';
-import '../services/auth_service_impl.dart';
+import '../services/user_service.dart';
+import '../services/user_service_impl.dart';
 
-final authControllerProvider = Provider<AuthController>((ref) {
+final userControllerProvider = Provider<UserController>((ref) {
   final userService = ref.read(userServiceProvider);
-  return AuthControllerImpl(userService);
+  return UserControllerImpl(userService);
 });
 
-class AuthControllerImpl implements AuthController {
+class UserControllerImpl implements UserController {
   final UserService _userService;
 
-  AuthControllerImpl(this._userService);
+  UserControllerImpl(this._userService);
 
   @override
   Future<User?> registerUser({
@@ -87,12 +87,12 @@ class AuthControllerImpl implements AuthController {
 }
 
 final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  final authController = ref.read(authControllerProvider);
+  final authController = ref.read(userControllerProvider);
   return AuthNotifier(authController);
 });
 
 class AuthNotifier extends StateNotifier<AuthState> {
-  final AuthController _authController;
+  final UserController _authController;
 
   AuthNotifier(this._authController) : super(AuthState.initial()) {
     _init();

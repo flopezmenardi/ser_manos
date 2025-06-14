@@ -9,7 +9,7 @@ import 'package:ser_manos/models/volunteering_model.dart';
 
 import '../../../models/enums/sort_mode.dart';
 import '../../../models/user_model.dart';
-import '../../auth/controllers/auth_controller_impl.dart';
+import '../../users/controllers/user_controller_impl.dart';
 import '../service/volunteerings_service.dart';
 import '../service/volunteerings_service_impl.dart';
 

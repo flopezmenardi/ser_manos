@@ -7,8 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ser_manos/features/profile/controller/profile_controller.dart';
 
 import '../../../models/user_model.dart';
-import '../../auth/services/auth_service.dart';
-import '../../auth/services/auth_service_impl.dart';
+import '../../users/services/user_service.dart';
+import '../../users/services/user_service_impl.dart';
 
 final profileControllerProvider = Provider<ProfileController>((ref) {
   final userRepository = ref.read(userServiceProvider);
