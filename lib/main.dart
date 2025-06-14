@@ -20,15 +20,16 @@ import 'features/volunteerings/screens/volunteering_detail_screen.dart';
 import 'features/volunteerings/screens/volunteerings_screen.dart';
 import 'firebase_options.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  await initializeRemoteConfig();
-
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+void main() {
   runZonedGuarded(
-    () {
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+
+      await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+      await initializeRemoteConfig();
+
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
       runApp(const ProviderScope(child: MainApp()));
     },
     (error, stack) {

@@ -6,9 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ser_manos/features/profile/controller/profile_controller.dart';
 
-import '../../../infrastructure/user_service.dart';
-import '../../../infrastructure/user_service_impl.dart';
 import '../../../models/user_model.dart';
+import '../../auth/services/auth_service.dart';
+import '../../auth/services/auth_service_impl.dart';
 
 final profileControllerProvider = Provider<ProfileController>((ref) {
   final userRepository = ref.read(userServiceProvider);
@@ -35,21 +35,14 @@ class ProfileControllerImpl implements ProfileController {
   }
 
   Future<void> uploadProfilePicture(String uid, XFile xfile) async {
-    final ref = FirebaseStorage.instance
-        .ref('users/$uid/profile_picture.jpg');
+    final ref = FirebaseStorage.instance.ref('users/$uid/profile_picture.jpg');
 
     UploadTask task;
     if (kIsWeb) {
       final bytes = await xfile.readAsBytes();
-      task = ref.putData(
-        bytes,
-        SettableMetadata(contentType: 'image/jpeg'),
-      );
+      task = ref.putData(bytes, SettableMetadata(contentType: 'image/jpeg'));
     } else {
-      task = ref.putFile(
-        File(xfile.path),
-        SettableMetadata(contentType: 'image/jpeg'),
-      );
+      task = ref.putFile(File(xfile.path), SettableMetadata(contentType: 'image/jpeg'));
     }
 
     // debug logs
