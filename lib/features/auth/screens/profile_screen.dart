@@ -121,7 +121,7 @@ class ProfileScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/icons/profile/Foto_perfil1.png',
+                  'assets/icons/profile/foto_perfil.png',
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,

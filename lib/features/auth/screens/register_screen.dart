@@ -104,13 +104,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         const SizedBox(height: 24),
                         const LogoSquare(size: 150),
                         const SizedBox(height: 32),
+
                         RegisterForms(
                           nameController: _nameController,
                           lastNameController: _lastNameController,
                           emailController: _emailController,
                           passwordController: _passwordController,
                         ),
+
+                        const SizedBox(height: 32),
                         const Spacer(),
+
                         CTAButton(
                           text: state.isLoading ? 'Registrando...' : 'Registrarse',
                           isEnabled: _isFormFilled && !state.isLoading,
