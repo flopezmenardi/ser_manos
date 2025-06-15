@@ -22,31 +22,32 @@ class NewsScreen extends ConsumerWidget {
           AppHeader(selectedIndex: selectedIndex),
           Expanded(
             child: newsState.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => Center(child: CircularProgressIndicator(color: AppColors.secondary100)),
               error: (e, _) => Center(child: Text('Error: $e', overflow: TextOverflow.ellipsis,)),
-              data:
-                  (novedades) => RefreshIndicator(
-                    onRefresh: () async {
-                      await ref.read(newsListNotifierProvider.notifier).fetchNews();
-                    },
-                    child: ListView.separated(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: novedades.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 16),
-                      itemBuilder: (context, index) {
-                        final novedad = novedades[index];
-                        return NewsCard(
-                          imagePath: novedad.imagenURL,
-                          report: novedad.emisor,
-                          title: novedad.titulo,
-                          description: novedad.resumen,
-                          onConfirm: () {
-                            context.push('/news/${novedad.id}');
-                          },
-                        );
+              data: (novedades) => RefreshIndicator(
+                onRefresh: () async {
+                  await ref.read(newsListNotifierProvider.notifier).fetchNews();
+                },
+                color: AppColors.secondary100,
+                backgroundColor: AppColors.secondary25,
+                child: ListView.separated(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: novedades.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 16),
+                  itemBuilder: (context, index) {
+                    final novedad = novedades[index];
+                    return NewsCard(
+                      imagePath: novedad.imagenURL,
+                      report: novedad.emisor,
+                      title: novedad.titulo,
+                      description: novedad.resumen,
+                      onConfirm: () {
+                        context.push('/news/${novedad.id}');
                       },
-                    ),
-                  ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
         ],

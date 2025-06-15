@@ -77,6 +77,8 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
               onRefresh: () async {
                 await volunteeringSearchNotifier.refreshSearch();
               },
+              color: AppColors.secondary100,
+              backgroundColor: AppColors.secondary25,
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 physics: const AlwaysScrollableScrollPhysics(),

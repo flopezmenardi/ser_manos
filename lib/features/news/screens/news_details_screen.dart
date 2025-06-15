@@ -43,6 +43,8 @@ class NewsDetailsScreen extends ConsumerWidget {
                   onRefresh: () async {
                     await ref.read(newsDetailNotifierProvider(newsId).notifier).fetchNewsDetail();
                   },
+                  color: AppColors.secondary100,
+                  backgroundColor: AppColors.secondary25,
                   child: SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),

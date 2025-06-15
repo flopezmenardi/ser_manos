@@ -233,6 +233,8 @@ class VolunteeringDetailScreen extends ConsumerWidget {
               await ref.read(volunteeringDetailProvider(id).notifier).fetchVolunteeringDetail();
               await ref.read(authNotifierProvider.notifier).refreshUser();
             },
+            color: AppColors.secondary100,
+            backgroundColor: AppColors.secondary25,
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
