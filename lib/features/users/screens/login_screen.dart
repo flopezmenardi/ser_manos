@@ -53,61 +53,72 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            return SingleChildScrollView(
+            return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: 96),
-                      const LogoSquare(size: 150),
-                      const SizedBox(height: 32),
-                      Form(
-                        key: _formKey,
-                        child: LoginForms(emailController: emailController, passwordController: passwordController),
-                      ),
-                      const Spacer(),
-                      CTAButton(
-                        text: 'Iniciar Sesión',
-                        isEnabled: _isFormFilled && !authState.isLoading,
-                        onPressed: () async {
-                          final isValid = _formKey.currentState?.validate() ?? false;
-                          if (!isValid) return;
-
-                          final success = await authNotifier.login(email: emailController.text, password: passwordController.text);
-
-                          if (success) {
-                            context.go('/volunteerings');
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (_) => Center(
-                                child: ModalSermanos(
-                                  title: 'Error al iniciar sesión',
-                                  subtitle: 'El email o la contraseña son incorrectos.',
-                                  confimationText: 'Reintentar',
-                                  cancelText: 'Cancelar',
-                                  onCancel: () => Navigator.of(context).pop(),
-                                  onConfirm: () => Navigator.of(context).pop(),
-                                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(height: 24),
+                            const LogoSquare(size: 150),
+                            const SizedBox(height: 32),
+                            Form(
+                              key: _formKey,
+                              child: LoginForms(
+                                emailController: emailController,
+                                passwordController: passwordController,
                               ),
-                            );
-                          }
-                        },
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 16),
-                      TextOnlyButton(
-                        text: 'No tengo cuenta',
-                        onPressed: () async {
-                          context.go('/register');
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                    ],
+                    ),
                   ),
-                ),
+                  CTAButton(
+                    text: 'Iniciar Sesión',
+                    isEnabled: _isFormFilled && !authState.isLoading,
+                    onPressed: () async {
+                      final isValid = _formKey.currentState?.validate() ?? false;
+                      if (!isValid) return;
+
+                      final success = await authNotifier.login(
+                        email: emailController.text,
+                        password: passwordController.text,
+                      );
+
+                      if (success) {
+                        context.go('/volunteerings');
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (_) => Center(
+                            child: ModalSermanos(
+                              title: 'Error al iniciar sesión',
+                              subtitle: 'El email o la contraseña son incorrectos.',
+                              confimationText: 'Reintentar',
+                              cancelText: 'Cancelar',
+                              onCancel: () => Navigator.of(context).pop(),
+                              onConfirm: () => Navigator.of(context).pop(),
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextOnlyButton(
+                    text: 'No tengo cuenta',
+                    onPressed: () async {
+                      context.go('/register');
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                ],
               ),
             );
           },
