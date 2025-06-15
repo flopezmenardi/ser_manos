@@ -4,31 +4,43 @@ import 'package:go_router/go_router.dart';
 
 import 'features/users/controllers/user_controller_impl.dart';
 
-class SplashScreen extends ConsumerWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authNotifierProvider);
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
+}
 
-    if (authState.isInitializing) {
-      return const Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(child: Image(image: AssetImage('assets/logos/logo_square.png'), width: 120, height: 120)),
-      );
+class _SplashScreenState extends ConsumerState<SplashScreen> {
+  bool _navigated = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Run navigation only once after first build
+    if (!_navigated) {
+      _navigated = true;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final authState = ref.read(authNotifierProvider);
+
+        if (authState.currentUser != null) {
+          context.go('/volunteerings');
+        } else {
+          context.go('/initial');
+        }
+      });
     }
+  }
 
-    Future.microtask(() {
-      if (authState.currentUser != null) {
-        context.go('/volunteerings');
-      } else {
-        context.go('/initial');
-      }
-    });
+  @override
+  Widget build(BuildContext context) {
+    final _ = ref.watch(authNotifierProvider);
 
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(child: Image(image: AssetImage('assets/logos/logo_square.png'), width: 120, height: 120)),
+      body: Center(child: Image.asset('assets/logos/logo_square.png', width: 120, height: 120)),
     );
   }
 }

@@ -96,16 +96,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       } else {
                         showDialog(
                           context: context,
-                          builder: (_) => Center(
-                            child: ModalSermanos(
-                              title: 'Error al iniciar sesión',
-                              subtitle: 'El email o la contraseña son incorrectos.',
-                              confimationText: 'Reintentar',
-                              cancelText: 'Cancelar',
-                              onCancel: () => Navigator.of(context).pop(),
-                              onConfirm: () => Navigator.of(context).pop(),
-                            ),
-                          ),
+                          builder:
+                              (_) => Center(
+                                child: ModalSermanos(
+                                  title: 'Error al iniciar sesión',
+                                  subtitle: 'El email o la contraseña son incorrectos.',
+                                  confimationText: 'Reintentar',
+                                  cancelText: 'Cancelar',
+                                  onCancel: () => Navigator.of(context).pop(),
+                                  onConfirm: () => Navigator.of(context).pop(),
+                                ),
+                              ),
                         );
                       }
                     },

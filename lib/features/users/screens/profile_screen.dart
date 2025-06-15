@@ -5,7 +5,6 @@ import 'package:ser_manos/design_system/molecules/buttons/short_button.dart';
 import 'package:ser_manos/design_system/organisms/modal.dart';
 import 'package:ser_manos/models/user_model.dart';
 
-import '../../../design_system/atoms/icons.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
 import '../../../design_system/molecules/buttons/text_button.dart';
 import '../../../design_system/molecules/components/profile_picture.dart';
@@ -58,11 +57,23 @@ class ProfileScreen extends ConsumerWidget {
             size: ProfilePictureSize.large,
           ),
           const SizedBox(height: 8),
-          Text('VOLUNTARIO', style: AppTypography.overline.copyWith(color: AppColors.neutral75), overflow: TextOverflow.ellipsis,),
+          Text(
+            'VOLUNTARIO',
+            style: AppTypography.overline.copyWith(color: AppColors.neutral75),
+            overflow: TextOverflow.ellipsis,
+          ),
           const SizedBox(height: 4),
-          Text(user.nombre, style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
+          Text(
+            user.nombre,
+            style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
+            overflow: TextOverflow.ellipsis,
+          ),
           const SizedBox(height: 2),
-          Text(user.email, style: AppTypography.body1.copyWith(color: AppColors.secondary200), overflow: TextOverflow.ellipsis,),
+          Text(
+            user.email,
+            style: AppTypography.body1.copyWith(color: AppColors.secondary200),
+            overflow: TextOverflow.ellipsis,
+          ),
           const SizedBox(height: 24),
           InformationCard(
             title: 'Información personal',
@@ -81,6 +92,7 @@ class ProfileScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
           CTAButton(text: 'Editar perfil', onPressed: () async => context.push('/profile/edit')),
+
           TextOnlyButton(
             text: 'Cerrar sesión',
             color: AppColors.error100,
@@ -120,16 +132,15 @@ class ProfileScreen extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  'assets/icons/profile/foto_perfil.png',
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
+                Image.asset('assets/icons/profile/foto_perfil.png', width: 100, height: 100, fit: BoxFit.cover),
                 const SizedBox(height: 8),
-                Text('VOLUNTARIO', style: AppTypography.overline.copyWith(color: AppColors.neutral75), overflow: TextOverflow.ellipsis,),
+                Text(
+                  'VOLUNTARIO',
+                  style: AppTypography.overline.copyWith(color: AppColors.neutral75),
+                  overflow: TextOverflow.ellipsis,
+                ),
                 const SizedBox(height: 16),
-                Text(name, style: AppTypography.subtitle1, overflow: TextOverflow.ellipsis,),
+                Text(name, style: AppTypography.subtitle1, overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 16),
                 Text(
                   '¡Completá tu perfil para tener\nacceso a mejores oportunidades!',
@@ -148,20 +159,21 @@ class ProfileScreen extends ConsumerWidget {
             onPressed: () async {
               showDialog(
                 context: context,
-                builder: (_) => Center(
-                  child: ModalSermanos(
-                    title: 'Cerrar sesión',
-                    subtitle: '¿Estás seguro que querés cerrar sesión?',
-                    confimationText: 'Cerrar sesión',
-                    cancelText: 'Cancelar',
-                    onCancel: () => Navigator.of(context).pop(),
-                    onConfirm: () async {
-                      await ref.read(authNotifierProvider.notifier).logout();
-                      Navigator.of(context).pop();
-                      context.go('/login');
-                    },
-                  ),
-                ),
+                builder:
+                    (_) => Center(
+                      child: ModalSermanos(
+                        title: 'Cerrar sesión',
+                        subtitle: '¿Estás seguro que querés cerrar sesión?',
+                        confimationText: 'Cerrar sesión',
+                        cancelText: 'Cancelar',
+                        onCancel: () => Navigator.of(context).pop(),
+                        onConfirm: () async {
+                          await ref.read(authNotifierProvider.notifier).logout();
+                          Navigator.of(context).pop();
+                          context.go('/login');
+                        },
+                      ),
+                    ),
               );
             },
           ),

@@ -13,12 +13,14 @@ class NewsServiceImpl implements NewsService {
 
   NewsServiceImpl([FirebaseFirestore? db]) : _db = db ?? FirebaseFirestore.instance;
 
+  @override
   Future<List<News>> getNewsOrderedByDate() async {
     final snapshot = await _db.collection('novedades').orderBy('fechaCreacion', descending: true).get();
 
     return snapshot.docs.map((doc) => News.fromDocumentSnapshot(doc)).toList();
   }
 
+  @override
   Future<News?> getNewsById(String id) async {
     final doc = await _db.collection('novedades').doc(id).get();
     if (!doc.exists) return null;

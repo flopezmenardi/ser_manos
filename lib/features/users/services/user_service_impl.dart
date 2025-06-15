@@ -17,12 +17,14 @@ class UserServiceImpl implements UserService {
     : _auth = auth ?? fb_auth.FirebaseAuth.instance,
       _db = db ?? FirebaseFirestore.instance;
 
+  @override
   Future<User?> getUserById(String uid) async {
     final doc = await _db.collection('usuarios').doc(uid).get();
     if (!doc.exists) return null;
     return User.fromDocumentSnapshot(doc);
   }
 
+  @override
   Future<User?> registerUser({
     required String nombre,
     required String apellido,
@@ -36,6 +38,7 @@ class UserServiceImpl implements UserService {
     return getUserById(uid);
   }
 
+  @override
   Future<void> createUser(String uid, String nombre, String apellido, String email) async {
     await _db.collection('usuarios').doc(uid).set({
       'nombre': nombre,
@@ -51,19 +54,23 @@ class UserServiceImpl implements UserService {
     });
   }
 
+  @override
   Future<User?> loginUser({required String email, required String password}) async {
     final userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
     final uid = userCredential.user!.uid;
     return getUserById(uid);
   }
 
+  @override
   Future<void> logout() async {
     await _auth.signOut();
   }
 
+  @override
   Future<void> updateUser(String uid, Map<String, dynamic> data) async {
     await _db.collection('usuarios').doc(uid).update(data);
   }
 
+  @override
   fb_auth.User? get currentFirebaseUser => _auth.currentUser;
 }

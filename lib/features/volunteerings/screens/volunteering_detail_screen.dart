@@ -36,7 +36,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
 
     return volunteeringAsync.when(
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (error, _) => Scaffold(body: Center(child: Text('Error: $error', overflow: TextOverflow.ellipsis,))),
+      error: (error, _) => Scaffold(body: Center(child: Text('Error: $error', overflow: TextOverflow.ellipsis))),
       data: (volunteering) {
         final hasVacants = volunteering.vacantes > 0;
         final isSame = user.voluntariado == volunteering.id;
@@ -50,9 +50,17 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         if (isSame && isAccepted) {
           action = Column(
             children: [
-              Text('Estás participando', style: AppTypography.headline2.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
+              Text(
+                'Estás participando',
+                style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
+                overflow: TextOverflow.ellipsis,
+              ),
               const SizedBox(height: 8),
-              Text('La organización confirmó que ya estás participando', style: AppTypography.body1, overflow: TextOverflow.ellipsis,),
+              Text(
+                'La organización confirmó que ya estás participando',
+                style: AppTypography.body1,
+                overflow: TextOverflow.ellipsis,
+              ),
               const SizedBox(height: 8),
               TextOnlyButton(
                 text: 'Abandonar voluntariado',
@@ -87,9 +95,17 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         } else if (isSame && !isAccepted) {
           action = Column(
             children: [
-              Text('Te has postulado', style: AppTypography.headline2.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
+              Text(
+                'Te has postulado',
+                style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
+                overflow: TextOverflow.ellipsis,
+              ),
               const SizedBox(height: 8),
-              Text('Pronto la organización se pondrá en contacto contigo.', style: AppTypography.body1, overflow: TextOverflow.ellipsis,),
+              Text(
+                'Pronto la organización se pondrá en contacto contigo.',
+                style: AppTypography.body1,
+                overflow: TextOverflow.ellipsis,
+              ),
               const SizedBox(height: 8),
               TextOnlyButton(
                 text: 'Retirar postulación',
@@ -124,7 +140,11 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         } else if (hasAny && !isSame) {
           action = Column(
             children: [
-              Text('Ya estás participando en otro voluntariado.', style: AppTypography.body1, overflow: TextOverflow.ellipsis,),
+              Text(
+                'Ya estás participando en otro voluntariado.',
+                style: AppTypography.body1,
+                overflow: TextOverflow.ellipsis,
+              ),
               const SizedBox(height: 8),
               TextOnlyButton(
                 text: 'Abandonar voluntariado actual',
@@ -161,7 +181,11 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         } else if (!hasVacants) {
           action = Column(
             children: [
-              Text('No hay vacantes disponibles para postularse.', style: AppTypography.body1, overflow: TextOverflow.ellipsis,),
+              Text(
+                'No hay vacantes disponibles para postularse.',
+                style: AppTypography.body1,
+                overflow: TextOverflow.ellipsis,
+              ),
               const SizedBox(height: 8),
               CTAButton(text: 'Postularme', isEnabled: false, onPressed: () async {}),
             ],
@@ -172,25 +196,27 @@ class VolunteeringDetailScreen extends ConsumerWidget {
           action = CTAButton(
             text: 'Postularme',
             onPressed: () async {
+              final navigator = Navigator.of(context);
+              final router = GoRouter.of(context);
+
               if (!profileComplete) {
-                final goToProfile =
-                    await showDialog<bool>(
-                      context: context,
-                      builder:
-                          (_) => Center(
-                            child: ModalSermanos(
-                              title: 'Perfil incompleto',
-                              subtitle: 'Necesitás completar tu perfil para postularte.\n¿Deseás completarlo ahora?',
-                              confimationText: 'Completar perfil',
-                              cancelText: 'Cancelar',
-                              onCancel: () => Navigator.of(context).pop(false),
-                              onConfirm: () => Navigator.of(context).pop(true),
-                            ),
-                          ),
-                    ) ??
+                final goToProfile = await showDialog<bool>(
+                  context: navigator.context, // use captured context from navigator
+                  builder: (_) => Center(
+                    child: ModalSermanos(
+                      title: 'Perfil incompleto',
+                      subtitle:
+                      'Necesitás completar tu perfil para postularte.\n¿Deseás completarlo ahora?',
+                      confimationText: 'Completar perfil',
+                      cancelText: 'Cancelar',
+                      onCancel: () => navigator.pop(false),
+                      onConfirm: () => navigator.pop(true),
+                    ),
+                  ),
+                ) ??
                     false;
 
-                if (goToProfile) context.go('/profile/edit?fromVolunteering=$id');
+                if (goToProfile) router.go('/profile/edit?fromVolunteering=$id');
                 return;
               }
 
@@ -285,9 +311,17 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 4),
-                        Text(volunteering.titulo, style: AppTypography.headline1.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
+                        Text(
+                          volunteering.titulo,
+                          style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         const SizedBox(height: 8),
-                        Text(volunteering.resumen, style: AppTypography.body1.copyWith(color: AppColors.secondary200), overflow: TextOverflow.ellipsis,),
+                        Text(
+                          volunteering.resumen,
+                          style: AppTypography.body1.copyWith(color: AppColors.secondary200),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         const SizedBox(height: 4),
                         Text(
                           'Fecha de inicio: ${volunteering.fechaInicio.toDate().day}/${volunteering.fechaInicio.toDate().month}/${volunteering.fechaInicio.toDate().year}',
@@ -309,23 +343,30 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         const SizedBox(height: 24),
                         InkWell(
                           onTap: () async {
+                            final scaffoldMessenger = ScaffoldMessenger.of(context); // capture BEFORE async gap
+
                             final query = Uri.encodeComponent(volunteering.direccion);
                             final url = 'https://www.google.com/maps/search/?api=1&query=$query';
                             final uri = Uri.parse(url);
+
                             if (await canLaunchUrl(uri)) {
                               await launchUrl(uri);
                             } else {
-                              ScaffoldMessenger.of(
-                                context,
-                              ).showSnackBar(const SnackBar(content: Text('No se pudo abrir Google Maps', overflow: TextOverflow.ellipsis,)));
+                              scaffoldMessenger.showSnackBar(
+                                const SnackBar(
+                                  content: Text('No se pudo abrir Google Maps', overflow: TextOverflow.ellipsis),
+                                ),
+                              );
                             }
                           },
-                          child: LocationImageCard(
-                            address: volunteering.direccion,
-                          ),
+                          child: LocationImageCard(address: volunteering.direccion),
                         ),
                         const SizedBox(height: 24),
-                        Text('Requisitos', style: AppTypography.headline2.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
+                        Text(
+                          'Requisitos',
+                          style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         const SizedBox(height: 8),
                         MarkdownBody(
                           data: volunteering.requisitos,

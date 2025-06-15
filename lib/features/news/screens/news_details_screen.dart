@@ -24,10 +24,12 @@ class NewsDetailsScreen extends ConsumerWidget {
 
     return newsAsync.when(
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (e, _) => const Scaffold(body: Center(child: Text('Error al cargar la novedad.', overflow: TextOverflow.ellipsis,))),
+      error:
+          (e, _) =>
+              const Scaffold(body: Center(child: Text('Error al cargar la novedad.', overflow: TextOverflow.ellipsis))),
       data: (novedad) {
         if (novedad == null) {
-          return const Scaffold(body: Center(child: Text('Novedad no encontrada.', overflow: TextOverflow.ellipsis,)));
+          return const Scaffold(body: Center(child: Text('Novedad no encontrada.', overflow: TextOverflow.ellipsis)));
         }
 
         return Scaffold(
@@ -56,7 +58,11 @@ class NewsDetailsScreen extends ConsumerWidget {
                           style: AppTypography.overline.copyWith(color: AppColors.neutral75),
                           overflow: TextOverflow.ellipsis,
                         ),
-                        Text(novedad.titulo, style: AppTypography.headline2.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
+                        Text(
+                          novedad.titulo,
+                          style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         const SizedBox(height: 16),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(6),
@@ -78,7 +84,11 @@ class NewsDetailsScreen extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        Text(novedad.descripcion, style: AppTypography.body1.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
+                        Text(
+                          novedad.descripcion,
+                          style: AppTypography.body1.copyWith(color: AppColors.neutral100),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         const SizedBox(height: 24),
                         Text(
                           "Comparte esta nota",
@@ -89,6 +99,8 @@ class NewsDetailsScreen extends ConsumerWidget {
                         CTAButton(
                           text: "Compartir",
                           onPressed: () async {
+                            final messenger = ScaffoldMessenger.of(context);
+
                             try {
                               final response = await http.get(Uri.parse(novedad.imagenURL));
                               final bytes = response.bodyBytes;
@@ -101,14 +113,16 @@ class NewsDetailsScreen extends ConsumerWidget {
 
                               await Share.shareXFiles(
                                 [XFile(file.path)],
-                                text: novedad.resumen + '\n\n' + url,
+                                text: '${novedad.resumen}\n\n$url',
                                 subject: novedad.titulo,
                               );
                             } catch (e) {
                               debugPrint('Error al compartir la novedad: $e');
-                              ScaffoldMessenger.of(
-                                context,
-                              ).showSnackBar(const SnackBar(content: Text('Error al compartir la novedad.', overflow: TextOverflow.ellipsis,)));
+                              messenger.showSnackBar(
+                                const SnackBar(
+                                  content: Text('Error al compartir la novedad.', overflow: TextOverflow.ellipsis),
+                                ),
+                              );
                             }
                           },
                         ),

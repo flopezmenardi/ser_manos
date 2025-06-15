@@ -34,6 +34,7 @@ dependencies:
   fake_cloud_firestore: ^3.1.0
   mockito: ^5.4.4
   build_runner: ^2.4.8
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:

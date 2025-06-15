@@ -52,11 +52,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   Future<void> _handleRegister() async {
     if (!_formKey.currentState!.validate()) {
-      print('❌ Formulario inválido');
       return;
     }
 
-    print('🟡 Llamando a authStateProvider.register()');
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final router = GoRouter.of(context);
+
     await ref
         .read(authNotifierProvider.notifier)
         .register(
@@ -66,13 +67,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           password: _passwordController.text.trim(),
         );
 
+    if (!mounted) return; // <-- ensure still mounted before using context
+
     final error = ref.read(authNotifierProvider).errorMessage;
     if (error == null) {
-      print('✅ Registro exitoso');
-      context.go('/welcome');
+      router.go('/welcome');
     } else {
-      print('❌ Error en el registro: $error');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error, overflow: TextOverflow.ellipsis,)));
+      scaffoldMessenger.showSnackBar(SnackBar(content: Text(error, overflow: TextOverflow.ellipsis)));
     }
   }
 

@@ -25,6 +25,7 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
 
   VolunteeringsControllerImpl({required this.volunteeringsService, required this.currentUser});
 
+  @override
   Future<void> applyToVolunteering(String volunteeringId) async {
     if (currentUser.telefono.isEmpty || currentUser.genero.isEmpty || currentUser.fechaNacimiento.isEmpty) {
       throw Exception('Tu perfil no está completo');
@@ -42,14 +43,17 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
     await volunteeringsService.applyToVolunteering(currentUser.uuid, volunteeringId);
   }
 
+  @override
   Future<void> abandonVolunteering(String volunteeringId) async {
     await volunteeringsService.abandonVolunteering(currentUser.uuid, volunteeringId);
   }
 
+  @override
   Future<void> withdrawApplication() async {
     await volunteeringsService.withdrawApplication(currentUser.uuid);
   }
 
+  @override
   Future<void> toggleFavorite(String volunteeringId, bool isFavorite) async {
     await volunteeringsService.toggleFavorite(
       uid: currentUser.uuid,
@@ -58,10 +62,12 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
     );
   }
 
+  @override
   Future<int> getFavoritesCount(String volunteeringId) {
     return volunteeringsService.getFavoritesCount(volunteeringId);
   }
 
+  @override
   Future<List<Volunteering>> searchVolunteerings(VolunteeringQueryState queryState) async {
     List<Volunteering> all;
 
@@ -84,7 +90,7 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
     }).toList();
   }
 
-  // Transition this into state notifier!
+  @override
   Future<Volunteering> getVolunteeringById(String id) async {
     final volunteering = await volunteeringsService.getVolunteeringById(id);
     if (volunteering == null) {
@@ -93,10 +99,12 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
     return volunteering;
   }
 
+  @override
   Future<void> logLikedVolunteering(String volunteeringId) async {
     await AnalyticsService.logLikedVolunteering(volunteeringId: volunteeringId);
   }
 
+  @override
   Future<void> logViewedVolunteering(String volunteeringId) async {
     VolunteeringViewTracker.registerView(volunteeringId);
     await AnalyticsService.logViewedVolunteering(volunteeringId);

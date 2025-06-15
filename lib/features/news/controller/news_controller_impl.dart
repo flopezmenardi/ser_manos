@@ -28,10 +28,12 @@ class NewsControllerImpl implements NewsController {
 
   NewsControllerImpl(this._newsService);
 
+  @override
   Future<List<News>> getNewsOrderedByDate() {
     return _newsService.getNewsOrderedByDate();
   }
 
+  @override
   Future<News?> getNewsById(String id) {
     return _newsService.getNewsById(id);
   }

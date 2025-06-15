@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/features/volunteerings/service/volunteerings_service.dart';
 import 'package:ser_manos/infrastructure/analytics_service.dart';
@@ -16,6 +17,7 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
   final FirebaseFirestore _db;
   VolunteeringsServiceImpl([FirebaseFirestore? db]) : _db = db ?? FirebaseFirestore.instance;
 
+  @override
   Future<List<Volunteering>> getAllVolunteeringsSorted({required SortMode sortMode, GeoPoint? userLocation}) async {
     final snapshot = await _db.collection('voluntariados').get();
     final volunteerings = snapshot.docs.map((doc) => Volunteering.fromDocumentSnapshot(doc)).toList();
@@ -39,20 +41,24 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
     return volunteerings;
   }
 
+  @override
   Future<Volunteering?> getVolunteeringById(String id) async {
     final doc = await _db.collection('voluntariados').doc(id).get();
     if (!doc.exists) return null;
     return Volunteering.fromDocumentSnapshot(doc);
   }
 
+  @override
   Future<void> applyToVolunteering(String uid, String volunteeringId) async {
     await _db.collection('usuarios').doc(uid).update({'voluntariado': volunteeringId, 'voluntariadoAceptado': false});
   }
 
+  @override
   Future<void> withdrawApplication(String uid) async {
     await _db.collection('usuarios').doc(uid).update({'voluntariado': null, 'voluntariadoAceptado': false});
   }
 
+  @override
   Future<void> abandonVolunteering(String uid, String volunteeringId) async {
     final volunteeringDoc = await _db.collection('voluntariados').doc(volunteeringId).get();
     final data = volunteeringDoc.data();
@@ -62,11 +68,10 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
       final now = DateTime.now();
       final daysBefore = fechaInicio.difference(now).inDays;
 
-      try{
+      try {
         await AnalyticsService.logWithdrawVolunteering(volunteeringId: volunteeringId, daysBeforeStart: daysBefore);
-      } catch (e) {
-        //Silenciar errores del test
-        print('Error logging withdraw volunteering: $e');
+      } catch (e, stackTrace) {
+        await FirebaseCrashlytics.instance.recordError(e, stackTrace);
       }
     }
 
@@ -75,6 +80,7 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
     await _db.collection('voluntariados').doc(volunteeringId).update({'vacantes': FieldValue.increment(1)});
   }
 
+  @override
   Future<void> toggleFavorite({required String uid, required String volunteeringId, required bool isFavorite}) async {
     final userRef = _db.collection('usuarios').doc(uid);
     final volunteeringRef = _db.collection('voluntariados').doc(volunteeringId);

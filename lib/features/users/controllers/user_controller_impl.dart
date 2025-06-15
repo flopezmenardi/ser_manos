@@ -46,22 +46,16 @@ class UserControllerImpl implements UserController {
     return _userService.updateUser(uid, data);
   }
 
+  @override
   Future<void> uploadProfilePicture(String uid, XFile xfile) async {
-    final ref = FirebaseStorage.instance
-        .ref('users/$uid/profile_picture.jpg');
+    final ref = FirebaseStorage.instance.ref('users/$uid/profile_picture.jpg');
 
     UploadTask task;
     if (kIsWeb) {
       final bytes = await xfile.readAsBytes();
-      task = ref.putData(
-        bytes,
-        SettableMetadata(contentType: 'image/jpeg'),
-      );
+      task = ref.putData(bytes, SettableMetadata(contentType: 'image/jpeg'));
     } else {
-      task = ref.putFile(
-        File(xfile.path),
-        SettableMetadata(contentType: 'image/jpeg'),
-      );
+      task = ref.putFile(File(xfile.path), SettableMetadata(contentType: 'image/jpeg'));
     }
 
     // debug logs

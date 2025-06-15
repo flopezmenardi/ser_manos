@@ -6,6 +6,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/router.dart';
+
 import 'firebase_options.dart';
 
 void main() {
@@ -58,19 +59,11 @@ class MainApp extends StatelessWidget {
 Future<void> initializeRemoteConfig() async {
   final remoteConfig = FirebaseRemoteConfig.instance;
 
-  await remoteConfig.setDefaults({
-    'show_proximity_button': false,
-    'show_like_counter': false,
-    'enable_dark_mode': false,
-  });
+  await remoteConfig.setDefaults({'show_proximity_button': false, 'show_like_counter': false});
 
   await remoteConfig.setConfigSettings(
     RemoteConfigSettings(fetchTimeout: const Duration(seconds: 10), minimumFetchInterval: const Duration(minutes: 1)),
   );
 
   await remoteConfig.fetchAndActivate();
-
-  print('[RemoteConfig Init] enable_dark_mode: ${remoteConfig.getBool('enable_dark_mode')}');
-  print('[RemoteConfig Init] show_proximity_button: ${remoteConfig.getBool('show_proximity_button')}');
-  print('[RemoteConfig Init] show_like_counter: ${remoteConfig.getBool('show_like_counter')}');
 }

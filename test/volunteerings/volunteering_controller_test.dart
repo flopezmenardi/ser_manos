@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:ser_manos/features/volunteerings/controller/volunteerings_controller.dart';
 import 'package:ser_manos/features/volunteerings/controller/volunteerings_controller_impl.dart';
-import 'package:ser_manos/features/volunteerings/service/volunteerings_service.dart';
 import 'package:ser_manos/models/enums/sort_mode.dart';
 import 'package:ser_manos/models/user_model.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
+
 import '../mocks/volunteering_service_mock.mocks.dart';
 
 void main() {
@@ -49,10 +49,7 @@ void main() {
         voluntariadoAceptado: false,
       );
 
-      controller = VolunteeringsControllerImpl(
-        volunteeringsService: mockService,
-        currentUser: user,
-      );
+      controller = VolunteeringsControllerImpl(volunteeringsService: mockService, currentUser: user);
     });
 
     test('applyToVolunteering - success', () async {
@@ -67,20 +64,14 @@ void main() {
 
     test('applyToVolunteering - throws if profile incomplete', () async {
       final incompleteUser = user.copyWith(telefono: '');
-      final c = VolunteeringsControllerImpl(
-        volunteeringsService: mockService,
-        currentUser: incompleteUser,
-      );
+      final c = VolunteeringsControllerImpl(volunteeringsService: mockService, currentUser: incompleteUser);
 
       expect(() => c.applyToVolunteering(volunteering.id), throwsException);
     });
 
     test('applyToVolunteering - throws if already applied', () async {
       final appliedUser = user.copyWith(voluntariado: 'some_id');
-      final c = VolunteeringsControllerImpl(
-        volunteeringsService: mockService,
-        currentUser: appliedUser,
-      );
+      final c = VolunteeringsControllerImpl(volunteeringsService: mockService, currentUser: appliedUser);
 
       expect(() => c.applyToVolunteering(volunteering.id), throwsException);
     });
@@ -105,8 +96,9 @@ void main() {
     });
 
     test('toggleFavorite calls service correctly', () async {
-      when(mockService.toggleFavorite(uid: user.uuid, volunteeringId: 'v1', isFavorite: false))
-          .thenAnswer((_) async {});
+      when(
+        mockService.toggleFavorite(uid: user.uuid, volunteeringId: 'v1', isFavorite: false),
+      ).thenAnswer((_) async {});
       await controller.toggleFavorite('v1', false);
       verify(mockService.toggleFavorite(uid: user.uuid, volunteeringId: 'v1', isFavorite: false)).called(1);
     });

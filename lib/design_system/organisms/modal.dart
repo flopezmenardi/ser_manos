@@ -33,7 +33,7 @@ class ModalSermanos extends StatelessWidget {
         boxShadow: AppShadows.shadow3,
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min, // ← Esto permite altura dinámica
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -44,24 +44,16 @@ class ModalSermanos extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             subtitle,
-            style: AppTypography.headline2.copyWith(
-              color: AppColors.neutral100,
-            ),
+            style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              TextOnlyButton(
-                text: cancelText,
-                onPressed: () async => onCancel(),
-              ),
+              TextOnlyButton(text: cancelText, onPressed: () async => onCancel()),
               const SizedBox(width: 8),
-              TextOnlyButton(
-                text: confimationText,
-                onPressed: () async => onConfirm(),
-              ),
+              TextOnlyButton(text: confimationText, onPressed: () async => onConfirm()),
             ],
           ),
         ],
