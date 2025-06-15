@@ -5,19 +5,16 @@ import '../../tokens/typography.dart';
 
 class LocationImageCard extends StatelessWidget {
   final String address;
-  final String imagePath;
 
   const LocationImageCard({
     super.key,
     required this.address,
-    required this.imagePath,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: AppGrid.screenWidth(context),
-      height: 247, // Stay with 247px fixed height
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
         color: AppColors.neutral10,
@@ -38,20 +35,11 @@ class LocationImageCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             alignment: Alignment.centerLeft,
             child: Text(
-              'Información de perfil',
+              'Ubicación',
               style: AppTypography.subtitle1.copyWith(
                 color: AppColors.neutral100,
               ),
               overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          // Image
-          SizedBox(
-            width: double.infinity,
-            height: 155,
-            child: Image.asset(
-              imagePath,
-              fit: BoxFit.cover,
             ),
           ),
           // Bottom texts (NO vertical padding to avoid overflow)

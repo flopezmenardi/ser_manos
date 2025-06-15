@@ -322,7 +322,6 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                           },
                           child: LocationImageCard(
                             address: volunteering.direccion,
-                            imagePath: 'assets/images/location.png',
                           ),
                         ),
                         const SizedBox(height: 24),
