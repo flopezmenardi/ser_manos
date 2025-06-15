@@ -16,7 +16,7 @@ class PhotoPickerUtil {
           children: [
             ListTile(
               leading: const Icon(Icons.photo_library),
-              title: const Text('Elegir de la galería'),
+              title: const Text('Elegir de la galería', overflow: TextOverflow.ellipsis,),
               onTap: () async {
                 Navigator.of(context).pop(
                   await picker.pickImage(source: ImageSource.gallery),
@@ -25,7 +25,7 @@ class PhotoPickerUtil {
             ),
             ListTile(
               leading: const Icon(Icons.camera_alt),
-              title: const Text('Sacar una foto'),
+              title: const Text('Sacar una foto', overflow: TextOverflow.ellipsis,),
               onTap: () async {
                 // request camera permission
                 final ok = await Permission.camera.request();
@@ -40,7 +40,7 @@ class PhotoPickerUtil {
             ),
             ListTile(
               leading: const Icon(Icons.close),
-              title: const Text('Cancelar'),
+              title: const Text('Cancelar', overflow: TextOverflow.ellipsis,),
               onTap: () => Navigator.of(context).pop(),
             ),
           ],

@@ -34,6 +34,7 @@ class VacantsIndicator extends StatelessWidget {
           Text(
             'Vacantes:',
             style: AppTypography.body2.copyWith(color: AppColors.neutral75),
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(width: 8),
           PersonIcon.get(state: iconState),
@@ -44,6 +45,7 @@ class VacantsIndicator extends StatelessWidget {
               color: textColor,
               fontWeight: FontWeight.bold,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

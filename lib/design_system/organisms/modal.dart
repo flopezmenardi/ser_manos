@@ -39,6 +39,7 @@ class ModalSermanos extends StatelessWidget {
           Text(
             title,
             style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 4),
           Text(
@@ -46,6 +47,7 @@ class ModalSermanos extends StatelessWidget {
             style: AppTypography.headline2.copyWith(
               color: AppColors.neutral100,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 24),
           Row(

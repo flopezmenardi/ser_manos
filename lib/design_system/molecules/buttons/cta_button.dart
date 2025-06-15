@@ -56,6 +56,7 @@ class _CTAButtonState extends State<CTAButton> {
                 style: AppTypography.button.copyWith(
                   color: widget.isEnabled ? AppColors.neutral0 : AppColors.neutral50,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
       ),
     );

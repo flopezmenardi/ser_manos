@@ -48,6 +48,7 @@ class InformationCard extends StatelessWidget {
               style: AppTypography.subtitle1.copyWith(
                 color: AppColors.neutral100,
               ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           // Body (Gray part)
@@ -61,6 +62,7 @@ class InformationCard extends StatelessWidget {
                   style: AppTypography.overline.copyWith(
                     color: AppColors.neutral75,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 2),
                 Text(
@@ -68,6 +70,7 @@ class InformationCard extends StatelessWidget {
                   style: AppTypography.body1.copyWith(
                     color: AppColors.neutral100,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -75,6 +78,7 @@ class InformationCard extends StatelessWidget {
                   style: AppTypography.overline.copyWith(
                     color: AppColors.neutral75,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 2),
                 Text(
@@ -82,6 +86,7 @@ class InformationCard extends StatelessWidget {
                   style: AppTypography.body1.copyWith(
                     color: AppColors.neutral100,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

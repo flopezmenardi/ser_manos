@@ -37,6 +37,7 @@ class ChangeProfilePictureCellule extends StatelessWidget {
                   style: AppTypography.subtitle1.copyWith(
                     color: AppColors.neutral100,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 8),
                 ProfilePictureButton(

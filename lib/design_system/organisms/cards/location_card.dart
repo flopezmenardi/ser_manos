@@ -42,6 +42,7 @@ class LocationCard extends StatelessWidget {
               style: AppTypography.subtitle1.copyWith(
                 color: AppColors.neutral100,
               ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           // Bottom (texts + icon)
@@ -63,6 +64,7 @@ class LocationCard extends StatelessWidget {
                           style: AppTypography.overline.copyWith(
                             color: AppColors.neutral75,
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 2),
                         Text(

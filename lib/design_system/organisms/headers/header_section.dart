@@ -35,6 +35,7 @@ class HeaderSection extends StatelessWidget {
               style: AppTypography.subtitle1.copyWith(
                 color: AppColors.neutral0,
               ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

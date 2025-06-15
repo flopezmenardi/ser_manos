@@ -35,8 +35,8 @@ class CurrentVolunteerCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(category.toUpperCase(), style: AppTypography.overline),
-                Text(name, style: AppTypography.subtitle1),
+                Text(category.toUpperCase(), style: AppTypography.overline, overflow: TextOverflow.ellipsis),
+                Text(name, style: AppTypography.subtitle1, overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
