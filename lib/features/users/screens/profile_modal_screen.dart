@@ -89,7 +89,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 24),
-                      Text('Datos de perfil', style: AppTypography.headline1.copyWith(color: AppColors.neutral100)),
+                      Text('Datos de perfil', style: AppTypography.headline1.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
                       const SizedBox(height: 24),
 
                       // Fecha de nacimiento
@@ -127,7 +127,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                       else
                         UploadProfilePicture(onUploadPressed: _pickPhoto),
                       const SizedBox(height: 24),
-                      Text('Datos de contacto', style: AppTypography.headline1.copyWith(color: AppColors.neutral100)),
+                      Text('Datos de contacto', style: AppTypography.headline1.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
                       const SizedBox(height: 24),
 
                       // Teléfono
@@ -165,7 +165,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                             if (_sexoIndex == null) {
                               ScaffoldMessenger.of(
                                 context,
-                              ).showSnackBar(const SnackBar(content: Text('Seleccioná un género')));
+                              ).showSnackBar(const SnackBar(content: Text('Seleccioná un género', overflow: TextOverflow.ellipsis,)));
                             }
                             return;
                           }

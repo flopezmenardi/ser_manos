@@ -38,6 +38,7 @@ class PostulationConfirmationModal extends StatelessWidget {
                 style: AppTypography.subtitle1.copyWith(
                   color: AppColors.neutral100,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(height: 8),
@@ -48,6 +49,7 @@ class PostulationConfirmationModal extends StatelessWidget {
                 style: AppTypography.headline2.copyWith(
                   color: AppColors.neutral100,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(height: 16),

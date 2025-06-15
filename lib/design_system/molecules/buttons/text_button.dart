@@ -49,7 +49,7 @@ class _TextOnlyButtonState extends State<TextOnlyButton> {
                 strokeWidth: 2,
               ),
             )
-          : Text(widget.text),
+          : Text(widget.text, overflow: TextOverflow.ellipsis),
     );
   }
 }

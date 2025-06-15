@@ -23,7 +23,7 @@ class NewsScreen extends ConsumerWidget {
           Expanded(
             child: newsState.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error: $e')),
+              error: (e, _) => Center(child: Text('Error: $e', overflow: TextOverflow.ellipsis,)),
               data:
                   (novedades) => RefreshIndicator(
                     onRefresh: () async {

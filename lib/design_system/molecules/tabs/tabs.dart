@@ -42,7 +42,7 @@ class AppTab extends StatelessWidget {
           ),
           textStyle: textStyle,
         ),
-        child: Text(label),
+        child: Text(label, overflow: TextOverflow.ellipsis,),
       ),
     );
   }

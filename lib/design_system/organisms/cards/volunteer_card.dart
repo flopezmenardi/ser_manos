@@ -63,6 +63,7 @@ class VolunteeringCard extends StatelessWidget {
                               color: AppColors.neutral50,
                               height: 1.0,
                             ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 8),
                           Text(
@@ -91,6 +92,7 @@ class VolunteeringCard extends StatelessWidget {
                                   child: Text(
                                     '$likeCount',
                                     style: AppTypography.body2.copyWith(color: AppColors.primary100),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               GestureDetector(

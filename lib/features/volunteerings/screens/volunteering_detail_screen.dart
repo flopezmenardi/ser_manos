@@ -36,7 +36,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
 
     return volunteeringAsync.when(
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (error, _) => Scaffold(body: Center(child: Text('Error: $error'))),
+      error: (error, _) => Scaffold(body: Center(child: Text('Error: $error', overflow: TextOverflow.ellipsis,))),
       data: (volunteering) {
         final hasVacants = volunteering.vacantes > 0;
         final isSame = user.voluntariado == volunteering.id;
@@ -50,9 +50,9 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         if (isSame && isAccepted) {
           action = Column(
             children: [
-              Text('Estás participando', style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
+              Text('Estás participando', style: AppTypography.headline2.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
               const SizedBox(height: 8),
-              Text('La organización confirmó que ya estás participando', style: AppTypography.body1),
+              Text('La organización confirmó que ya estás participando', style: AppTypography.body1, overflow: TextOverflow.ellipsis,),
               const SizedBox(height: 8),
               TextOnlyButton(
                 text: 'Abandonar voluntariado',
@@ -87,9 +87,9 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         } else if (isSame && !isAccepted) {
           action = Column(
             children: [
-              Text('Te has postulado', style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
+              Text('Te has postulado', style: AppTypography.headline2.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
               const SizedBox(height: 8),
-              Text('Pronto la organización se pondrá en contacto contigo.', style: AppTypography.body1),
+              Text('Pronto la organización se pondrá en contacto contigo.', style: AppTypography.body1, overflow: TextOverflow.ellipsis,),
               const SizedBox(height: 8),
               TextOnlyButton(
                 text: 'Retirar postulación',
@@ -124,7 +124,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         } else if (hasAny && !isSame) {
           action = Column(
             children: [
-              Text('Ya estás participando en otro voluntariado.', style: AppTypography.body1),
+              Text('Ya estás participando en otro voluntariado.', style: AppTypography.body1, overflow: TextOverflow.ellipsis,),
               const SizedBox(height: 8),
               TextOnlyButton(
                 text: 'Abandonar voluntariado actual',
@@ -161,7 +161,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         } else if (!hasVacants) {
           action = Column(
             children: [
-              Text('No hay vacantes disponibles para postularse.', style: AppTypography.body1),
+              Text('No hay vacantes disponibles para postularse.', style: AppTypography.body1, overflow: TextOverflow.ellipsis,),
               const SizedBox(height: 8),
               CTAButton(text: 'Postularme', isEnabled: false, onPressed: () async {}),
             ],
@@ -280,25 +280,29 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         Text(
                           volunteering.emisor.toUpperCase(),
                           style: AppTypography.overline.copyWith(color: AppColors.neutral75),
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 4),
-                        Text(volunteering.titulo, style: AppTypography.headline1.copyWith(color: AppColors.neutral100)),
+                        Text(volunteering.titulo, style: AppTypography.headline1.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
                         const SizedBox(height: 8),
-                        Text(volunteering.resumen, style: AppTypography.body1.copyWith(color: AppColors.secondary200)),
+                        Text(volunteering.resumen, style: AppTypography.body1.copyWith(color: AppColors.secondary200), overflow: TextOverflow.ellipsis,),
                         const SizedBox(height: 4),
                         Text(
                           'Fecha de inicio: ${volunteering.fechaInicio.toDate().day}/${volunteering.fechaInicio.toDate().month}/${volunteering.fechaInicio.toDate().year}',
                           style: AppTypography.body2.copyWith(color: AppColors.neutral50),
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 24),
                         Text(
                           'Sobre la actividad',
                           style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 8),
                         Text(
                           volunteering.descripcion,
                           style: AppTypography.body1.copyWith(color: AppColors.neutral100),
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 24),
                         InkWell(
@@ -311,7 +315,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                             } else {
                               ScaffoldMessenger.of(
                                 context,
-                              ).showSnackBar(const SnackBar(content: Text('No se pudo abrir Google Maps')));
+                              ).showSnackBar(const SnackBar(content: Text('No se pudo abrir Google Maps', overflow: TextOverflow.ellipsis,)));
                             }
                           },
                           child: LocationImageCard(
@@ -320,7 +324,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        Text('Requisitos', style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
+                        Text('Requisitos', style: AppTypography.headline2.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
                         const SizedBox(height: 8),
                         MarkdownBody(
                           data: volunteering.requisitos,

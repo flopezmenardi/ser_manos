@@ -28,6 +28,7 @@ class UploadProfilePicture extends StatelessWidget {
             style: AppTypography.subtitle1.copyWith(
               color: AppColors.neutral100,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
           ProfilePictureButton(
             text: 'Subir foto',

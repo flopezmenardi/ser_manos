@@ -28,11 +28,13 @@ class WelcomeScreen extends StatelessWidget {
                     '¡Bienvenido!',
                     style: AppTypography.headline1,
                     textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   Text(
                     'Nunca subestimes tu habilidad para mejorar la vida de alguien.',
                     style: AppTypography.subtitle1,
                     textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

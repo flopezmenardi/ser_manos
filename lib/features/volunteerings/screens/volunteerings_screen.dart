@@ -100,6 +100,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                         icon: const Icon(Icons.my_location),
                         label: Text(
                           queryState.sortMode == SortMode.proximity ? "Ordenar por fecha" : "Ordenar por cercanía",
+                          overflow: TextOverflow.ellipsis,
                         ),
                         onPressed: () async {
                           if (queryState.sortMode == SortMode.proximity) {
@@ -126,7 +127,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
 
                   volunteeringListAsync.when(
                     loading: () => const Center(child: CircularProgressIndicator()),
-                    error: (error, _) => Text('Error: $error'),
+                    error: (error, _) => Text('Error: $error', overflow: TextOverflow.ellipsis,),
                     data: (volunteerings) {
                       final hasCurrent =
                           user != null &&
@@ -138,7 +139,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (hasCurrent) ..._buildCurrentVolunteering(volunteerings, user!, controller),
-                          Text("Voluntariados", style: AppTypography.headline1.copyWith(color: AppColors.neutral100)),
+                          Text("Voluntariados", style: AppTypography.headline1.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
                           const SizedBox(height: 16),
                           if (volunteerings.isEmpty)
                             _emptyVolunteeringsMessage(queryState.query.isEmpty)
@@ -162,7 +163,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
   List<Widget> _buildCurrentVolunteering(List volunteerings, user, controller) {
     final current = volunteerings.firstWhere((v) => v.id == user.voluntariado);
     return [
-      Text("Tu actividad", style: AppTypography.headline1.copyWith(color: AppColors.neutral100)),
+      Text("Tu actividad", style: AppTypography.headline1.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
       const SizedBox(height: 16),
       GestureDetector(
         onTap: () {
@@ -242,6 +243,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
         message,
         textAlign: TextAlign.center,
         style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

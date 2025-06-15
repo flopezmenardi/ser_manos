@@ -72,7 +72,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       context.go('/welcome');
     } else {
       print('❌ Error en el registro: $error');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error, overflow: TextOverflow.ellipsis,)));
     }
   }
 

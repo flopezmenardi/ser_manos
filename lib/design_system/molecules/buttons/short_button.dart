@@ -71,6 +71,7 @@ class _ShortButtonState extends State<ShortButton> {
                   Text(
                     widget.text,
                     style: AppTypography.button.copyWith(color: fgColor),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

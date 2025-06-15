@@ -24,6 +24,7 @@ class ContactDataFormSermanos extends StatelessWidget {
           Text(
             'Datos de contacto',
             style: AppTypography.headline1,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 16),
 
@@ -31,6 +32,7 @@ class ContactDataFormSermanos extends StatelessWidget {
           Text(
             'Estos datos serán compartidos con la organización para ponerse en contacto contigo',
             style: AppTypography.subtitle1,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 24),
 

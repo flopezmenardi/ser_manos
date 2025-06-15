@@ -29,6 +29,7 @@ class InputCard extends StatelessWidget {
               child: Text(
                 "Información de perfil",
                 style: AppTypography.subtitle1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             Container(
@@ -63,7 +64,7 @@ class InputCard extends StatelessWidget {
             groupValue: selectedGender,
             onChanged: onGenderChanged,
           ),
-          Text(value, style: AppTypography.body1),
+          Text(value, style: AppTypography.body1, overflow: TextOverflow.ellipsis,),
         ],
       ),
     );
