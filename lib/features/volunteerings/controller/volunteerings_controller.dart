@@ -13,6 +13,7 @@ abstract class VolunteeringsController {
   Future<Volunteering> getVolunteeringById(String id);
   Future<void> logLikedVolunteering(String volunteeringId);
   Future<void> logViewedVolunteering(String volunteeringId);
+  Future<void> logVolunteeringApplication(String volunteeringId);
 }
 
 // This could be transitioned into an implementation detail and simplify the contract into taking

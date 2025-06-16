@@ -7,17 +7,23 @@ import 'package:ser_manos/models/enums/sort_mode.dart';
 import 'package:ser_manos/models/user_model.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
 
+import '../mocks/analytics_service_mock.mocks.dart';
 import '../mocks/volunteering_service_mock.mocks.dart';
+import '../mocks/volunteering_view_tracker_mock.mocks.dart';
 
 void main() {
-  group('VolunteeringsControllerImpl with mocked service', () {
+  group('VolunteeringsControllerImpl with mocked services', () {
     late MockVolunteeringsService mockService;
+    late MockAnalyticsService mockAnalyticsService;
+    late MockViewTracker mockViewTracker;
     late VolunteeringsControllerImpl controller;
     late Volunteering volunteering;
     late User user;
 
     setUp(() {
       mockService = MockVolunteeringsService();
+      mockAnalyticsService = MockAnalyticsService();
+      mockViewTracker = MockViewTracker();
 
       volunteering = Volunteering(
         id: 'v1',
@@ -49,7 +55,12 @@ void main() {
         voluntariadoAceptado: false,
       );
 
-      controller = VolunteeringsControllerImpl(volunteeringsService: mockService, currentUser: user);
+      controller = VolunteeringsControllerImpl(
+        volunteeringsService: mockService,
+        analyticsService: mockAnalyticsService,
+        currentUser: user,
+        viewTracker: mockViewTracker,
+      );
     });
 
     test('applyToVolunteering - success', () async {
@@ -64,14 +75,24 @@ void main() {
 
     test('applyToVolunteering - throws if profile incomplete', () async {
       final incompleteUser = user.copyWith(telefono: '');
-      final c = VolunteeringsControllerImpl(volunteeringsService: mockService, currentUser: incompleteUser);
+      final c = VolunteeringsControllerImpl(
+        volunteeringsService: mockService,
+        analyticsService: mockAnalyticsService,
+        currentUser: incompleteUser,
+        viewTracker: mockViewTracker,
+      );
 
       expect(() => c.applyToVolunteering(volunteering.id), throwsException);
     });
 
     test('applyToVolunteering - throws if already applied', () async {
       final appliedUser = user.copyWith(voluntariado: 'some_id');
-      final c = VolunteeringsControllerImpl(volunteeringsService: mockService, currentUser: appliedUser);
+      final c = VolunteeringsControllerImpl(
+        volunteeringsService: mockService,
+        analyticsService: mockAnalyticsService,
+        currentUser: appliedUser,
+        viewTracker: mockViewTracker,
+      );
 
       expect(() => c.applyToVolunteering(volunteering.id), throwsException);
     });
@@ -126,6 +147,34 @@ void main() {
     test('getVolunteeringById throws if null', () async {
       when(mockService.getVolunteeringById('not_found')).thenAnswer((_) async => null);
       expect(() => controller.getVolunteeringById('not_found'), throwsException);
+    });
+
+    test('logViewedVolunteering calls tracker and analytics', () async {
+      when(mockAnalyticsService.logViewedVolunteering(volunteering.id)).thenAnswer((_) async {});
+
+      await controller.logViewedVolunteering(volunteering.id);
+
+      verify(mockViewTracker.registerView(volunteering.id)).called(1);
+      verify(mockAnalyticsService.logViewedVolunteering(volunteering.id)).called(1);
+    });
+
+    test('logVolunteeringApplication calls analytics with views count and resets tracker', () async {
+      when(
+        mockAnalyticsService.logVolunteeringApplication(
+          volunteeringId: volunteering.id,
+          viewsBeforeApplying: anyNamed('viewsBeforeApplying'),
+        ),
+      ).thenAnswer((_) async {});
+
+      when(mockViewTracker.viewsCount).thenReturn(3);
+
+      await controller.logVolunteeringApplication(volunteering.id);
+
+      verify(
+        mockAnalyticsService.logVolunteeringApplication(volunteeringId: volunteering.id, viewsBeforeApplying: 3),
+      ).called(1);
+
+      verify(mockViewTracker.reset()).called(1);
     });
   });
 }

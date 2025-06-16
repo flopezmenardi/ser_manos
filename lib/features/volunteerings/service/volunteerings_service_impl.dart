@@ -4,18 +4,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/features/volunteerings/service/volunteerings_service.dart';
-import 'package:ser_manos/infrastructure/analytics_service.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
 
+import '../../../infrastructure/analytics_service.dart';
+import '../../../infrastructure/analytics_service_impl.dart';
 import '../../../models/enums/sort_mode.dart';
 
 final volunteeringsServiceProvider = Provider<VolunteeringsService>((ref) {
-  return VolunteeringsServiceImpl();
+  final analyticsService = ref.watch(analyticsServiceProvider);
+  return VolunteeringsServiceImpl(analyticsService: analyticsService);
 });
 
 class VolunteeringsServiceImpl implements VolunteeringsService {
   final FirebaseFirestore _db;
-  VolunteeringsServiceImpl([FirebaseFirestore? db]) : _db = db ?? FirebaseFirestore.instance;
+  final AnalyticsService _analyticsService;
+
+  VolunteeringsServiceImpl({FirebaseFirestore? db, required AnalyticsService analyticsService})
+    : _db = db ?? FirebaseFirestore.instance,
+      _analyticsService = analyticsService;
 
   @override
   Future<List<Volunteering>> getAllVolunteeringsSorted({required SortMode sortMode, GeoPoint? userLocation}) async {
@@ -69,7 +75,7 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
       final daysBefore = fechaInicio.difference(now).inDays;
 
       try {
-        await AnalyticsService.logWithdrawVolunteering(volunteeringId: volunteeringId, daysBeforeStart: daysBefore);
+        await _analyticsService.logWithdrawVolunteering(volunteeringId: volunteeringId, daysBeforeStart: daysBefore);
       } catch (e, stackTrace) {
         await FirebaseCrashlytics.instance.recordError(e, stackTrace);
       }

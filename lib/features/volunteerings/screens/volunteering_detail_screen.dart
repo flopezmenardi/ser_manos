@@ -14,8 +14,6 @@ import 'package:ser_manos/design_system/tokens/grid.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../infrastructure/analytics_service.dart';
-import '../../../infrastructure/volunteering_view_tracker.dart';
 import '../../users/controllers/user_controller_impl.dart';
 import '../controller/volunteerings_controller_impl.dart';
 
@@ -200,20 +198,21 @@ class VolunteeringDetailScreen extends ConsumerWidget {
               final router = GoRouter.of(context);
 
               if (!profileComplete) {
-                final goToProfile = await showDialog<bool>(
-                  context: navigator.context, // use captured context from navigator
-                  builder: (_) => Center(
-                    child: ModalSermanos(
-                      title: 'Perfil incompleto',
-                      subtitle:
-                      'Necesitás completar tu perfil para postularte.\n¿Deseás completarlo ahora?',
-                      confimationText: 'Completar perfil',
-                      cancelText: 'Cancelar',
-                      onCancel: () => navigator.pop(false),
-                      onConfirm: () => navigator.pop(true),
-                    ),
-                  ),
-                ) ??
+                final goToProfile =
+                    await showDialog<bool>(
+                      context: navigator.context, // use captured context from navigator
+                      builder:
+                          (_) => Center(
+                            child: ModalSermanos(
+                              title: 'Perfil incompleto',
+                              subtitle: 'Necesitás completar tu perfil para postularte.\n¿Deseás completarlo ahora?',
+                              confimationText: 'Completar perfil',
+                              cancelText: 'Cancelar',
+                              onCancel: () => navigator.pop(false),
+                              onConfirm: () => navigator.pop(true),
+                            ),
+                          ),
+                    ) ??
                     false;
 
                 if (goToProfile) router.go('/profile/edit?fromVolunteering=$id');
@@ -239,12 +238,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
 
               if (!confirmed) return;
 
-              AnalyticsService.logVolunteeringApplication(
-                volunteeringId: id,
-                viewsBeforeApplying: VolunteeringViewTracker.viewsCount,
-              );
-              VolunteeringViewTracker.reset();
-
+              await controller.logVolunteeringApplication(id);
               await controller.applyToVolunteering(volunteering.id);
               await ref.read(volunteeringDetailProvider(volunteering.id).notifier).fetchVolunteeringDetail();
               await ref.read(authNotifierProvider.notifier).refreshUser();

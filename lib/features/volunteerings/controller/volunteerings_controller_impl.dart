@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/features/volunteerings/controller/volunteerings_controller.dart';
-import 'package:ser_manos/infrastructure/analytics_service.dart';
+import 'package:ser_manos/infrastructure/analytics_service_impl.dart';
 import 'package:ser_manos/infrastructure/volunteering_view_tracker.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
 
+import '../../../infrastructure/analytics_service.dart';
 import '../../../models/enums/sort_mode.dart';
 import '../../../models/user_model.dart';
 import '../../users/controllers/user_controller_impl.dart';
@@ -15,15 +16,29 @@ import '../service/volunteerings_service_impl.dart';
 
 final volunteeringsControllerProvider = Provider<VolunteeringsController>((ref) {
   final volunteeringsService = ref.read(volunteeringsServiceProvider);
+  final analyticsService = ref.read(analyticsServiceProvider);
   final currentUser = ref.watch(authNotifierProvider).currentUser!;
-  return VolunteeringsControllerImpl(volunteeringsService: volunteeringsService, currentUser: currentUser);
+  final viewTracker = ref.read(volunteeringViewTrackerProvider);
+  return VolunteeringsControllerImpl(
+    volunteeringsService: volunteeringsService,
+    analyticsService: analyticsService,
+    currentUser: currentUser,
+    viewTracker: viewTracker,
+  );
 });
 
 class VolunteeringsControllerImpl implements VolunteeringsController {
   final VolunteeringsService volunteeringsService;
+  final AnalyticsService analyticsService;
   final User currentUser;
+  final ViewTracker viewTracker;
 
-  VolunteeringsControllerImpl({required this.volunteeringsService, required this.currentUser});
+  VolunteeringsControllerImpl({
+    required this.volunteeringsService,
+    required this.analyticsService,
+    required this.currentUser,
+    required this.viewTracker,
+  });
 
   @override
   Future<void> applyToVolunteering(String volunteeringId) async {
@@ -101,13 +116,22 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
 
   @override
   Future<void> logLikedVolunteering(String volunteeringId) async {
-    await AnalyticsService.logLikedVolunteering(volunteeringId: volunteeringId);
+    await analyticsService.logLikedVolunteering(volunteeringId: volunteeringId);
   }
 
   @override
   Future<void> logViewedVolunteering(String volunteeringId) async {
-    VolunteeringViewTracker.registerView(volunteeringId);
-    await AnalyticsService.logViewedVolunteering(volunteeringId);
+    viewTracker.registerView(volunteeringId);
+    await analyticsService.logViewedVolunteering(volunteeringId);
+  }
+
+  @override
+  Future<void> logVolunteeringApplication(String volunteeringId) async {
+    await analyticsService.logVolunteeringApplication(
+      volunteeringId: volunteeringId,
+      viewsBeforeApplying: viewTracker.viewsCount,
+    );
+    viewTracker.reset();
   }
 }
 

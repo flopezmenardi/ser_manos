@@ -1,12 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:ser_manos/features/volunteerings/service/volunteerings_service_impl.dart';
+import 'package:ser_manos/infrastructure/analytics_service.dart';
 import 'package:ser_manos/models/enums/sort_mode.dart';
 import 'package:ser_manos/models/volunteering_model.dart';
 
+import '../mocks/analytics_service_mock.mocks.dart';
+
+@GenerateMocks([AnalyticsService])
 void main() {
   late FakeFirebaseFirestore firestore;
+  late MockAnalyticsService mockAnalyticsService;
   late VolunteeringsServiceImpl service;
 
   const uid = 'user-1';
@@ -30,13 +36,14 @@ void main() {
 
   setUp(() async {
     firestore = FakeFirebaseFirestore();
-    service = VolunteeringsServiceImpl(firestore);
+    mockAnalyticsService = MockAnalyticsService();
+    service = VolunteeringsServiceImpl(db: firestore, analyticsService: mockAnalyticsService);
 
     await firestore.collection('voluntariados').doc(volunteeringId).set(volunteering.toMap());
     await firestore.collection('usuarios').doc(uid).set({
       'voluntariado': null,
       'voluntariadoAceptado': false,
-      'favoritos': []
+      'favoritos': [],
     });
   });
 
@@ -87,10 +94,7 @@ void main() {
   });
 
   test('getAllVolunteeringsSorted by date returns correct order', () async {
-    final other = volunteering.copyWith(
-      id: 'v2',
-      fechaCreacion: Timestamp.fromDate(DateTime(2024, 7, 1)),
-    );
+    final other = volunteering.copyWith(id: 'v2', fechaCreacion: Timestamp.fromDate(DateTime(2024, 7, 1)));
     await firestore.collection('voluntariados').doc('v2').set(other.toMap());
 
     final result = await service.getAllVolunteeringsSorted(sortMode: SortMode.date);
@@ -98,10 +102,7 @@ void main() {
   });
 
   test('getAllVolunteeringsSorted by proximity returns nearest first', () async {
-    final other = volunteering.copyWith(
-      id: 'v2',
-      ubicacion: const GeoPoint(-34.60, -58.38), // closer point
-    );
+    final other = volunteering.copyWith(id: 'v2', ubicacion: const GeoPoint(-34.60, -58.38));
     await firestore.collection('voluntariados').doc('v2').set(other.toMap());
 
     final result = await service.getAllVolunteeringsSorted(

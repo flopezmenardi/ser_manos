@@ -1,13 +1,28 @@
-class VolunteeringViewTracker {
-  static final Set<String> _viewedVolunteeringIds = {};
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-  static void registerView(String volunteeringId) {
+abstract class ViewTracker {
+  void registerView(String volunteeringId);
+  int get viewsCount;
+  void reset();
+}
+
+class VolunteeringViewTrackerImpl implements ViewTracker {
+  final Set<String> _viewedVolunteeringIds = {};
+
+  @override
+  void registerView(String volunteeringId) {
     _viewedVolunteeringIds.add(volunteeringId);
   }
 
-  static int get viewsCount => _viewedVolunteeringIds.length;
+  @override
+  int get viewsCount => _viewedVolunteeringIds.length;
 
-  static void reset() {
+  @override
+  void reset() {
     _viewedVolunteeringIds.clear();
   }
 }
+
+final volunteeringViewTrackerProvider = Provider<ViewTracker>((ref) {
+  return VolunteeringViewTrackerImpl();
+});
