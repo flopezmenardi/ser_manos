@@ -12,35 +12,22 @@ class SplashScreen extends ConsumerStatefulWidget {
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
-  bool _navigated = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    // Run navigation only once after first build
-    if (!_navigated) {
-      _navigated = true;
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final authState = ref.read(authNotifierProvider);
-
-        if (authState.currentUser != null) {
-          context.go('/volunteerings');
-        } else {
-          context.go('/initial');
-        }
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final _ = ref.watch(authNotifierProvider);
+    final authState = ref.watch(authNotifierProvider);
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(child: Image.asset('assets/logos/logo_square.png', width: 120, height: 120)),
-    );
+    if (authState.isInitializing) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (authState.currentUser != null) {
+        context.go('/volunteerings');
+      } else {
+        context.go('/initial');
+      }
+    });
+
+    return const SizedBox(); // temporary empty widget
   }
 }
