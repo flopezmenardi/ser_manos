@@ -92,6 +92,7 @@ En base a nuestra visión del futuro de la aplicación y hacia dónde la queremo
 2. Ir a la colección `usuarios`
 3. Buscar el usuario que se desea aceptar
 4. Ir a su campo `voluntariadoAceptado` y poner el booleano en `true`
+5. Luego buscar el voluntariado correspondiente y restar 1 al campo `vacantes`
 
 ## Decisions
 

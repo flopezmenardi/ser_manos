@@ -30,8 +30,8 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   int? _sexoIndex;
 
-  XFile? _newPhoto;            //  ← NEW
-  String? _newPhotoPath;       //  local preview path
+  XFile? _newPhoto; //  ← NEW
+  String? _newPhotoPath; //  local preview path
 
   @override
   void initState() {
@@ -53,13 +53,12 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
   }
 
   Future<void> _pickPhoto() async {
-    final XFile? photo =
-        await PhotoPickerUtil.selectFromCameraOrGallery(context);
+    final XFile? photo = await PhotoPickerUtil.selectFromCameraOrGallery(context);
     if (photo == null) return;
 
     setState(() {
-      _newPhoto     = photo;
-      _newPhotoPath = photo.path; 
+      _newPhoto = photo;
+      _newPhotoPath = photo.path;
     });
   }
 
@@ -89,7 +88,11 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 24),
-                      Text('Datos de perfil', style: AppTypography.headline1.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
+                      Text(
+                        'Datos de perfil',
+                        style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       const SizedBox(height: 24),
 
                       // Fecha de nacimiento
@@ -116,7 +119,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                           });
                         },
                       ),
-                      
+
                       const SizedBox(height: 24),
                       if (user.photoUrl != null || _newPhotoPath != null)
                         ChangeProfilePictureCellule(
@@ -127,7 +130,11 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                       else
                         UploadProfilePicture(onUploadPressed: _pickPhoto),
                       const SizedBox(height: 24),
-                      Text('Datos de contacto', style: AppTypography.headline1.copyWith(color: AppColors.neutral100), overflow: TextOverflow.ellipsis,),
+                      Text(
+                        'Datos de contacto',
+                        style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       const SizedBox(height: 24),
 
                       // Teléfono
@@ -163,9 +170,9 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                           final isValid = _formKey.currentState?.saveAndValidate() ?? false;
                           if (!isValid || _sexoIndex == null) {
                             if (_sexoIndex == null) {
-                              ScaffoldMessenger.of(
-                                context,
-                              ).showSnackBar(const SnackBar(content: Text('Seleccioná un género', overflow: TextOverflow.ellipsis,)));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Seleccioná un género', overflow: TextOverflow.ellipsis)),
+                              );
                             }
                             return;
                           }
@@ -174,14 +181,14 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
 
                           if (_newPhoto != null) {
                             await authController.uploadProfilePicture(user.uuid, _newPhoto!);
-                            _newPhoto = null;           // optional: clear once uploaded
+                            _newPhoto = null;
                           }
 
                           await authController.updateUser(user.uuid, {
                             'fechaNacimiento': values['birthDate'],
                             'telefono': values['phone'],
                             'email': values['email'],
-                            'genero': _indexToGender(_sexoIndex)
+                            'genero': _indexToGender(_sexoIndex),
                           });
 
                           await ref.read(authNotifierProvider.notifier).refreshUser();
