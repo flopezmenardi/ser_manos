@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
@@ -87,14 +88,19 @@ final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref
 
 class AuthNotifier extends StateNotifier<AuthState> {
   final UserController _authController;
+  late final StreamSubscription _authSubscription;
 
   AuthNotifier(this._authController) : super(AuthState.initial()) {
-    _init();
+    _authSubscription = fb_auth.FirebaseAuth.instance.authStateChanges().listen(_authStateChanged);
   }
 
-  Future<void> _init() async {
-    final user = await _authController.getCurrentUser();
-    state = state.copyWith(currentUser: user, isInitializing: false);
+  Future<void> _authStateChanged(fb_auth.User? fbUser) async {
+    if (fbUser == null) {
+      state = state.copyWith(currentUser: null, isInitializing: false);
+    } else {
+      final user = await _authController.getCurrentUser();
+      state = state.copyWith(currentUser: user, isInitializing: false);
+    }
   }
 
   Future<void> register({
@@ -150,6 +156,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
     if (uid == null) return;
     await _authController.updateUser(uid, data);
     await refreshUser();
+  }
+
+  @override
+  void dispose() {
+    _authSubscription.cancel();
+    super.dispose();
   }
 }
 

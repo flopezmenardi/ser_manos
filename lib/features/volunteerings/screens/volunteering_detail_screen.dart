@@ -81,7 +81,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                       false;
 
                   if (!confirmed) return;
-                  await controller.abandonVolunteering(volunteering.id);
+                  await controller.abandonVolunteering(id);
                   await ref.read(volunteeringDetailProvider(id).notifier).fetchVolunteeringDetail();
                   await ref.read(authNotifierProvider.notifier).refreshUser();
                 },
