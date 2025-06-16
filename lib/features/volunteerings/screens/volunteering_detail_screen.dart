@@ -225,8 +225,8 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                     builder:
                         (_) => Center(
                           child: ModalSermanos(
-                            title: 'Confirmar postulación',
-                            subtitle: '¿Estás seguro de que querés postularte a este voluntariado?',
+                            title: 'Te estás por postular a',
+                            subtitle: volunteering.titulo,
                             confimationText: 'Sí, postularme',
                             cancelText: 'Cancelar',
                             onCancel: () => Navigator.of(context).pop(false),

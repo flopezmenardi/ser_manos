@@ -29,7 +29,6 @@ class InitialScreen extends StatelessWidget {
                     '“El esfuerzo desinteresado para llevar alegría a los demás será el comienzo de una vida más feliz para nosotros”',
                     style: AppTypography.subtitle1,
                     textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
