@@ -102,15 +102,14 @@ class ProfileScreen extends ConsumerWidget {
                 builder:
                     (_) => Center(
                       child: ModalSermanos(
-                        title: 'Cerrar sesión',
-                        subtitle: '¿Estás seguro que querés cerrar sesión?',
+                        title: '¿Estás seguro que quieres cerrar sesión?',
                         confimationText: 'Cerrar sesión',
                         cancelText: 'Cancelar',
                         onCancel: () => Navigator.of(context).pop(),
                         onConfirm: () async {
                           await ref.read(authNotifierProvider.notifier).logout();
                           Navigator.of(context).pop();
-                          context.go('/login');
+                          context.go('/initial');
                         },
                       ),
                     ),
@@ -133,7 +132,7 @@ class ProfileScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset('assets/icons/profile/foto_perfil.png', width: 100, height: 100, fit: BoxFit.cover),
-                const SizedBox(height: 8),
+                const SizedBox(height: 24),
                 Text(
                   'VOLUNTARIO',
                   style: AppTypography.overline.copyWith(color: AppColors.neutral75),
@@ -170,7 +169,7 @@ class ProfileScreen extends ConsumerWidget {
                         onConfirm: () async {
                           await ref.read(authNotifierProvider.notifier).logout();
                           Navigator.of(context).pop();
-                          context.go('/login');
+                          context.go('/initial');
                         },
                       ),
                     ),

@@ -30,11 +30,11 @@ class WelcomeScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  const SizedBox(height: 32),
                   Text(
                     'Nunca subestimes tu habilidad para mejorar la vida de alguien.',
                     style: AppTypography.subtitle1,
                     textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

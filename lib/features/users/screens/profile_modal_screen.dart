@@ -135,6 +135,11 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                         style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
                         overflow: TextOverflow.ellipsis,
                       ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Estos datos serán compartidos con la organización para ponerse en contacto contigo',
+                        style: AppTypography.subtitle1,
+                      ),
                       const SizedBox(height: 24),
 
                       // Teléfono
@@ -194,15 +199,17 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                           await ref.read(authNotifierProvider.notifier).refreshUser();
 
                           if (fromVolunteering != null) {
+                            final controller = ref.read(volunteeringsControllerProvider);
+                            final volunteering = await controller.getVolunteeringById(fromVolunteering);
                             final confirm =
                                 await showDialog<bool>(
                                   context: context,
                                   builder:
                                       (_) => Center(
                                         child: ModalSermanos(
-                                          title: 'Confirmar postulación',
-                                          subtitle: '¿Querés postularte al voluntariado?',
-                                          confimationText: 'Sí, postularme',
+                                          title: 'Te estás por postular a',
+                                          subtitle: volunteering.titulo,
+                                          confimationText: 'Confirmar',
                                           cancelText: 'Cancelar',
                                           onCancel: () => Navigator.of(context).pop(false),
                                           onConfirm: () => Navigator.of(context).pop(true),
@@ -212,12 +219,11 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                                 false;
 
                             if (confirm) {
-                              final controller = ref.read(volunteeringsControllerProvider);
                               await controller.applyToVolunteering(fromVolunteering);
                               await ref.read(authNotifierProvider.notifier).refreshUser();
-                              context.go('/volunteering/$fromVolunteering');
-                              return;
                             }
+                            context.go('/volunteering/$fromVolunteering');
+                            return;
                           }
 
                           // Si no vino desde voluntariado, comportamiento normal

@@ -6,7 +6,7 @@ import 'package:ser_manos/design_system/tokens/typography.dart';
 
 class ModalSermanos extends StatelessWidget {
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final String confimationText;
   final String cancelText;
   final VoidCallback onConfirm;
@@ -15,7 +15,7 @@ class ModalSermanos extends StatelessWidget {
   const ModalSermanos({
     super.key,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
     required this.confimationText,
     required this.cancelText,
     required this.onConfirm,
@@ -38,14 +38,24 @@ class ModalSermanos extends StatelessWidget {
         children: [
           Text(
             title,
-            style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100, decoration: TextDecoration.none,),
+            style: AppTypography.subtitle1.copyWith(
+              color: AppColors.neutral100,
+              decoration: TextDecoration.none,
+            ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: AppTypography.headline2.copyWith(color: AppColors.neutral100, decoration: TextDecoration.none,),
-          ),
-          const SizedBox(height: 8),
+          if (subtitle != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              subtitle!,
+              style: AppTypography.headline2.copyWith(
+                color: AppColors.neutral100,
+                decoration: TextDecoration.none,
+              ),
+            ),
+            const SizedBox(height: 8),
+          ] else ...[
+            const SizedBox(height: 8),
+          ],
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

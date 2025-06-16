@@ -27,6 +27,8 @@ class VolunteeringDetailScreen extends ConsumerWidget {
     final volunteeringAsync = ref.watch(volunteeringDetailProvider(id));
     final user = ref.watch(authNotifierProvider).currentUser;
     final controller = ref.read(volunteeringsControllerProvider);
+    ref.read(volunteeringDetailProvider(id).notifier).fetchVolunteeringDetail();
+    ref.read(authNotifierProvider.notifier).refreshUser();
 
     if (user == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -51,13 +53,12 @@ class VolunteeringDetailScreen extends ConsumerWidget {
               Text(
                 'Estás participando',
                 style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
-                overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 8),
               Text(
-                'La organización confirmó que ya estás participando',
+                'La organización confirmó que ya estás participando de este voluntariado',
                 style: AppTypography.body1,
-                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               TextOnlyButton(
@@ -96,13 +97,12 @@ class VolunteeringDetailScreen extends ConsumerWidget {
               Text(
                 'Te has postulado',
                 style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
-                overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 8),
               Text(
-                'Pronto la organización se pondrá en contacto contigo.',
+                'Pronto la organización se pondrá en contacto contigo y te inscribirá como participante.',
                 style: AppTypography.body1,
-                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               TextOnlyButton(
@@ -139,9 +139,9 @@ class VolunteeringDetailScreen extends ConsumerWidget {
           action = Column(
             children: [
               Text(
-                'Ya estás participando en otro voluntariado.',
+                'Ya estás participando en otro voluntariado, debes abandonarlo primero para postularte a este.',
                 style: AppTypography.body1,
-                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               TextOnlyButton(
@@ -183,9 +183,8 @@ class VolunteeringDetailScreen extends ConsumerWidget {
               Text(
                 'No hay vacantes disponibles para postularse.',
                 style: AppTypography.body1,
-                overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               CTAButton(text: 'Postularme', isEnabled: false, onPressed: () async {}),
             ],
           );
@@ -205,9 +204,8 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                       builder:
                           (_) => Center(
                             child: ModalSermanos(
-                              title: 'Perfil incompleto',
-                              subtitle: 'Necesitás completar tu perfil para postularte.\n¿Deseás completarlo ahora?',
-                              confimationText: 'Completar perfil',
+                              title: 'Para postularte debés primero completar tus datos.',
+                              confimationText: 'Completar datos',
                               cancelText: 'Cancelar',
                               onCancel: () => navigator.pop(false),
                               onConfirm: () => navigator.pop(true),
@@ -228,7 +226,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                           child: ModalSermanos(
                             title: 'Te estás por postular a',
                             subtitle: volunteering.titulo,
-                            confimationText: 'Sí, postularme',
+                            confimationText: 'Confirmar',
                             cancelText: 'Cancelar',
                             onCancel: () => Navigator.of(context).pop(false),
                             onConfirm: () => Navigator.of(context).pop(true),
@@ -303,37 +301,31 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         Text(
                           volunteering.emisor.toUpperCase(),
                           style: AppTypography.overline.copyWith(color: AppColors.neutral75),
-                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 4),
                         Text(
                           volunteering.titulo,
                           style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          volunteering.resumen,
-                          style: AppTypography.body1.copyWith(color: AppColors.secondary200),
-                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Fecha de inicio: ${volunteering.fechaInicio.toDate().day}/${volunteering.fechaInicio.toDate().month}/${volunteering.fechaInicio.toDate().year}',
                           style: AppTypography.body2.copyWith(color: AppColors.neutral50),
-                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          volunteering.resumen,
+                          style: AppTypography.body1.copyWith(color: AppColors.secondary200),
                         ),
                         const SizedBox(height: 24),
                         Text(
                           'Sobre la actividad',
                           style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
-                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 8),
                         Text(
                           volunteering.descripcion,
                           style: AppTypography.body1.copyWith(color: AppColors.neutral100),
-                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 24),
                         InkWell(
@@ -360,7 +352,6 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         Text(
                           'Requisitos',
                           style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
-                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 8),
                         MarkdownBody(

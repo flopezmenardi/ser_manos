@@ -34,21 +34,18 @@ class _ShortButtonState extends State<ShortButton> {
 
   @override
   Widget build(BuildContext context) {
-    final height = widget.isLarge ? 48.0 : 40.0;
+    final height = widget.isLarge ? 12.0 : 8.0;
     final bgColor = widget.isEnabled ? AppColors.primary100 : AppColors.neutral25;
     final fgColor = widget.isEnabled ? AppColors.neutral0 : AppColors.neutral50;
 
     return SizedBox(
-      height: height,
-      width: 130,
       child: ElevatedButton(
         onPressed: (widget.isEnabled && !isLoading) ? _handlePress : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: bgColor,
           foregroundColor: fgColor,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: EdgeInsets.fromLTRB(12, height, 12, height),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          minimumSize: Size(130, height),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
         child: isLoading

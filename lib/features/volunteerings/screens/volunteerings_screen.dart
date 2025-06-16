@@ -253,7 +253,6 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
         message,
         textAlign: TextAlign.center,
         style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
-        overflow: TextOverflow.ellipsis,
       ),
     );
   }

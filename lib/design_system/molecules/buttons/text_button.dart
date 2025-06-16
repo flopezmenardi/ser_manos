@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/design_system/tokens/typography.dart';
 
 import '../../tokens/colors.dart';
 
@@ -38,7 +39,9 @@ class _TextOnlyButtonState extends State<TextOnlyButton> {
       style: TextButton.styleFrom(
         foregroundColor: widget.isEnabled ? buttonColor : AppColors.neutral50,
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-        textStyle: const TextStyle(fontSize: 14),
+        textStyle: AppTypography.button.copyWith(
+          color: AppColors.primary100,
+        ),
       ),
       child: isLoading
           ? SizedBox(
