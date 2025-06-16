@@ -83,7 +83,7 @@ En base a nuestra visión del futuro de la aplicación y hacia dónde la queremo
 **Días de gracia en caso de abandono**: esta métrica dictamina cuántos días antes de la fecha de inicio del voluntariado es que un usuario la abandona, esta métrica se enfoca en las organizaciones que publican voluntariados, una parte necesaria y hasta ahora ignorada en nuestro análisis de la aplicación. Entendemos que la situación más dolorosa para una de estas organizaciones es la de los abandonos con poca antelación o la ausencia injustificada, aun más considerando el foco que hay en los cupos de cada uno de estos voluntariados. Con esta métrica buscamos gestionar este patrón de uso e idealmente agregar futuras features para mitigarlo, por ejemplo mandando mails de recordatorio al usuario cuando el evento se aproxima, tal vez incluir algún ranking o métrica de los usuarios que aumente según los voluntariados a los que uno asiste pero que se reduzca en caso de abandonos o ausencia, jugando un poco con la pata de **GAMIFICATION!**.
 
 ## How to Run
-1. Descargar archivo APK de Google Drive (https://drive.google.com/drive/folders/12xucFu4HZSAOvB26NkTOLRpiJMANaS0y?usp=sharing) o buildeando el APK directamente desde directorio raíz del proyecto con el siguiente comando:
+1. Descargar archivo APK de [Google Drive](https://drive.google.com/drive/folders/12xucFu4HZSAOvB26NkTOLRpiJMANaS0y?usp=sharing) o buildeando el APK directamente desde directorio raíz del proyecto con el siguiente comando:
 ```bash
 flutter build apk --release
 ```
