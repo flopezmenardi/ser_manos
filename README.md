@@ -3,40 +3,121 @@
 - Felix Lopez Menardi
 - Joaquin Girod
 - Manuel Dithurbide
+
+## Stack Tecnológico
+Para el desarrollo de la aplicación se eligió un stack tecnológico simple, coherente y eficiente, priorizando un bajo costo de mantenimiento, una curva de aprendizaje accesible y un fuerte soporte de la comunidad. Las decisiones tomadas siguen en gran medida las mejores prácticas y recomendaciones de la comunidad Flutter, así como de los docentes involucrados en el proyecto.
+### Framework principal
+* **Flutter**
+  Framework de desarrollo multiplataforma, permite compartir la mayor parte del código entre iOS y Android, acelerando el ciclo de desarrollo y reduciendo los costos de mantenimiento.
+### Gestión de navegación
+* **go\_router (`^15.1.3`)**
+  Se seleccionó `go_router` por su simplicidad y bajo nivel de complejidad en comparación con otros enrutadores. Su integración directa con Flutter y su soporte oficial lo convierten en una solución robusta y escalable para el manejo de rutas.
+### Arquitectura y manejo de estado
+* **Riverpod (`flutter_riverpod: ^2.5.1`, `hooks_riverpod: ^2.4.0`, `flutter_hooks: ^0.21.2`)**
+  Riverpod fue elegido como gestor de estado por su flexibilidad, su enfoque declarativo y su fuerte integración con los principios de programación reactiva. Además, permite una mayor testabilidad y separación de responsabilidades dentro de la aplicación.
+### Backend & Servicios
+* **Firebase**
+  Se utilizó Firebase como backend-as-a-service (BaaS), lo que permitió acelerar el desarrollo y simplificar la gestión de infraestructura:
+    * `firebase_core: ^3.13.0`
+    * `cloud_firestore: ^5.6.7` (Base de datos NoSQL en tiempo real)
+    * `firebase_auth: ^5.5.3` (Autenticación de usuarios)
+    * `firebase_analytics: ^11.4.6` (Analítica de uso)
+    * `firebase_crashlytics: ^4.3.6` (Reporte de errores)
+    * `firebase_remote_config: ^5.4.5` (Configuración remota)
+    * `firebase_storage: ^12.1.0` (Almacenamiento de archivos)
+### Herramientas complementarias
+* **Geolocalización y mapas:**
+  `geolocator: ^14.0.1` (acceso a la ubicación del dispositivo).
+* **Compatibilidad con URLs y recursos externos:**
+  `url_launcher: ^6.2.4` (apertura de links externos), `share_plus: ^11.0.0` (compartir contenido).
+* **Captura y carga de imágenes:**
+  `image_picker: ^1.1.0` (selección de imágenes de la galería o cámara).
+* **Manejo de permisos:**
+  `permission_handler: ^12.0.0+1` (gestión de permisos en runtime).
+* **Formularios avanzados y validación:**
+  `flutter_form_builder: ^9.1.1`, `form_builder_validators: ^11.1.2`.
+* **Internacionalización:**
+  `intl: ^0.19.0` (todavia no implementamos i18n).
+* **Renderizado de markdown:**
+  `flutter_markdown: ^0.7.7+1`.
+* **HTTP Requests:**
+  `http: ^1.1.0`.
+* **Manejo de almacenamiento local**
+  `path_provider: ^2.1.5`.
+### Testing y desarrollo
+* **Mockito (`^5.4.4`) y Fake Cloud Firestore (`^3.1.0`):**
+  Herramientas utilizadas para la creación de mocks y pruebas unitarias.
+* **build\_runner (`^2.4.8`):**
+  Generación automática de código durante el desarrollo y testing.
+* **flutter\_launcher\_icons (`^0.13.1`):**
+  Generación de íconos de aplicación para múltiples plataformas.
+
+
 ## Metrics & Feature Flagging
-Intentamos mantener estos dos puntos lo mas cercanos posibles y que se retroalimenten, generando una especie de narrativa a partir de la feature y medir que tan correcta es nuestra imaginacion con una metrica (basicamente hipotetizar y verificar). Al mismo tiempo no queriamos que la metrica dependiera unicamente de la feature, o sea que si la feature esta desactivada la metrica recaude informacion de todas maneras, asi que hilamos fino en busca de metricas que fueran globales pero utiles para las nuevas features.
+
+Para la activación de las features se puede ir a la remote config y alterar los valores de las variables `show_like_counter` y `show_proximity_button`.
+Intentamos mantener estos dos puntos lo más cercanos posibles y que se retroalimenten, generando una especie de narrativa a partir de la feature y medir qué tan correcta es nuestra imaginación con una métrica (básicamente hipotetizar y verificar). Al mismo tiempo no queríamos que la métrica dependiera únicamente de la feature, o sea que si la feature está desactivada la métrica recaude información de todas maneras, así que hilamos fino en busca de métricas que fueran globales pero útiles para las nuevas features.
+
 #### Features
-**Sorting Button**: permite elegir entre ordenar por frescura o por geolocalizacion, el default siendo frescura.
-Creemos que la aplicacion probablemente crezca a una red social donde organizacion caritativas buscan obtener traccion y sponsors, perdiendo esa identidad totalmente funcional de oferta y postulacion. Al fin y al cabo queremos que el usuario abra nuestra aplicacion todos los dias, no simplemente cuando se le urge inscribirse en un voluntariado, por esto priorizar y mantener como default la vejez nos parece la decision correcta para mentener el engagement.
-Tampoco nos agradaba la idea de que lo primero que te vea un usuario en su primer registro, al entrar al home de la aplicacion sea un pop up pidiendole permiso para usar la geolocalizacion. Otorgar la libertad de pasar al ordenamiento por cercania nos parecio mas constructivo y no tan invasivo. Como punto al margen, el boton no esta posicionado en un lugar optimo, ocupado demasiado espacio valioso en la primer seccion del feed.
-De todas maneras entendemos esta version como un paso intermedio, recalcando que la aplicacion creceria a tener una pagina dedicada al feed para mantener el engagement y tal vez otra pagina dedicada exclusivamente a la busqueda de un voluntariado.
-**Likes Count**: es una feature bastante trivial pero se alinea con la vision que tenemos para el futuro de la aplicacion, jugando con los modelos sociales de los humanos ver que un voluntariado fue likeado por muchas personas nos inclina a likearlo tambien, y ver que en general la aplicacion tiene mucha interaccion de otros usuarios tambien nos inclina a querer ser parte. Ademas abre la posibilidad de tener un ordenamiento por likes y que los organizadores usen sus otras plataformas para distribuir la nuestra en funcion de conseguir mas likes y por ende mas visibilidad en nuestra aplicacion.
-El ordenamiento por likes es logicamente muy basico y probablemente se requiera una query mas compleja que requiera algun time frame, por ejemplo un ordenamiento segun la tasa de likes por dia.
-#### Metricas
-En base a nuestra vision del futuro de la aplicacion y hacia donde la queremos dirigir planteamos las features previas, pero nuestra imaginacion no sirve de nada si no esta anclada en la realidad, por esto definimos metricas que nos permitan validar nuestros planteos y la efectividad de nuestras features.
-**Detalles Vistos pre postulacion**: esta metrica registra ante el evento de una postulacion cuantos detalles vio el usuario, esta metrica esta relacionada con el boton de sorteo, consideramos que si la feature esta siendo efectiva y el usuario aprovecha las facilidades de ordenamiento va a ser capaz de encontrar un voluntariado que satisfaga sus requisitos con mayor facilidad. Consideramos que a medida que se abra la aplicacion a una version mas social y no tan funcional esta metrica empezara a reflejar la aparicion de un nuevo perfil de usuario con muchas mas interacciones pero menores postulaciones, eventualmente aumentando la metrica.
-**Likes otorgados**: claramente esta metrica esta estrechamente relacionada a la feature del like count, queremos medir si el hecho de ver el numero de cuantos otros humanos les parecio interesante el voluntariado lo obliga subconcientemente a likear mas. Tambien seria interesante analizarla en relacion a otras futuras features mas grandes, por ejemplo ante un revamp de la visual de la aplicacion donde el feed pase a ser mas instragram-ish habilitando una medicion del engagement.
-**Dias de gracia en caso de abandono**: esta metrica dictamina cuantos dias antes de la fecha de inicio del voluntariado es que un usuario la abandona, esta metrica se enfoca en las organizaciones que publican voluntariados, una parte necesaria y hasta ahora ignorada en nuestro analisis de la aplicacion. Entendemos que la situacion mas dolorosa para una de estas organizaciones es la de los abandonos con poca antelacion o la ausencia injustificada, aun mas considerando el foco que hay en los cupos de cada uno de estos voluntariados. Con esta metrica buscamos gestionar este patron de uso e idealmente agregar futuras features para mitigarlo, por ejemplo mandando mails de recordatorio al usuario cuando el evento se aproxima, tal vez incluir algun ranking o metrica de los usuarios que aumente segun los voluntariados a los que uno asiste pero que se reduzca en caso de abandonos o ausencia, jugando un poco con la pata de GAMIFICATION!.
+
+**Sorting Button**: permite elegir entre ordenar por frescura o por geolocalización, el default siendo frescura.
+Creemos que la aplicación probablemente crezca a una red social donde organizaciones caritativas buscan obtener tracción y sponsors, perdiendo esa identidad totalmente funcional de oferta y postulación. Al fin y al cabo queremos que el usuario abra nuestra aplicación todos los días, no simplemente cuando se le urge inscribirse en un voluntariado, por esto priorizar y mantener como default la vejez nos parece la decisión correcta para mantener el engagement.
+Tampoco nos agradaba la idea de que lo primero que vea un usuario en su primer registro, al entrar al home de la aplicación sea un pop up pidiéndole permiso para usar la geolocalización. Otorgar la libertad de pasar al ordenamiento por cercanía nos pareció más constructivo y no tan invasivo. Como punto al margen, el botón no está posicionado en un lugar óptimo, ocupando demasiado espacio valioso en la primer sección del feed.
+De todas maneras entendemos esta versión como un paso intermedio, recalcando que la aplicación crecería a tener una página dedicada al feed para mantener el engagement y tal vez otra página dedicada exclusivamente a la búsqueda de un voluntariado.
+
+![App Screenshot](https://cdn.discordapp.com/attachments/1282874996879790135/1383972239279394906/image.png?ex=6850bc16&is=684f6a96&hm=f879c804ee0e06d23773b5754445a775cf440f9cf2ab84e7989c14ac8ee59005&)
+
+**Likes Count**: es una feature bastante trivial pero se alinea con la visión que tenemos para el futuro de la aplicación, jugando con los modelos sociales de los humanos ver que un voluntariado fue likeado por muchas personas nos inclina a likearlo también, y ver que en general la aplicación tiene mucha interacción de otros usuarios también nos inclina a querer ser parte. Además abre la posibilidad de tener un ordenamiento por likes y que los organizadores usen sus otras plataformas para distribuir la nuestra en función de conseguir más likes y por ende más visibilidad en nuestra aplicación.
+El ordenamiento por likes es lógicamente muy básico y probablemente se requiera una query más compleja que requiera algún time frame, por ejemplo un ordenamiento según la tasa de likes por día.
+
+![App Screenshot](https://cdn.discordapp.com/attachments/1282874996879790135/1383972389913628732/image.png?ex=6850bc3a&is=684f6aba&hm=0d22f92cc54f761227e28ec5e57415cc2af58775e6bad0e6cbcad3b1ec39c01f&)
+
+#### Métricas
+
+En base a nuestra visión del futuro de la aplicación y hacia dónde la queremos dirigir planteamos las features previas, pero nuestra imaginación no sirve de nada si no está anclada en la realidad, por esto definimos métricas que nos permitan validar nuestros planteos y la efectividad de nuestras features.
+
+**Detalles Vistos pre postulación**: esta métrica registra ante el evento de una postulación cuántos detalles vio el usuario, esta métrica está relacionada con el botón de sorteo, consideramos que si la feature está siendo efectiva y el usuario aprovecha las facilidades de ordenamiento va a ser capaz de encontrar un voluntariado que satisfaga sus requisitos con mayor facilidad. Consideramos que a medida que se abra la aplicación a una versión más social y no tan funcional esta métrica empezará a reflejar la aparición de un nuevo perfil de usuario con muchas más interacciones pero menores postulaciones, eventualmente aumentando la métrica.
+
+**Likes otorgados**: claramente esta métrica está estrechamente relacionada a la feature del like count, queremos medir si el hecho de ver el número de cuántos otros humanos les pareció interesante el voluntariado lo obliga subconscientemente a likear más. También sería interesante analizarla en relación a otras futuras features más grandes, por ejemplo ante un revamp de la visual de la aplicación donde el feed pase a ser más instagram-ish habilitando una medición del engagement.
+
+**Días de gracia en caso de abandono**: esta métrica dictamina cuántos días antes de la fecha de inicio del voluntariado es que un usuario la abandona, esta métrica se enfoca en las organizaciones que publican voluntariados, una parte necesaria y hasta ahora ignorada en nuestro análisis de la aplicación. Entendemos que la situación más dolorosa para una de estas organizaciones es la de los abandonos con poca antelación o la ausencia injustificada, aun más considerando el foco que hay en los cupos de cada uno de estos voluntariados. Con esta métrica buscamos gestionar este patrón de uso e idealmente agregar futuras features para mitigarlo, por ejemplo mandando mails de recordatorio al usuario cuando el evento se aproxima, tal vez incluir algún ranking o métrica de los usuarios que aumente según los voluntariados a los que uno asiste pero que se reduzca en caso de abandonos o ausencia, jugando un poco con la pata de **GAMIFICATION!**.
+
 ## How to Run
+
 *TO DO*
+
 ## Accepting a Volunteer
+
 1. Ir a la consola de firebase
-2. Ir a la collecion `usuarios`
+2. Ir a la colección `usuarios`
 3. Buscar el usuario que se desea aceptar
 4. Ir a su campo `voluntariadoAceptado` y poner el booleano en `true`
+
 ## Decisions
+
 #### All my homies hate grouping by features
-Fuimos por un agrupamiento por features, si bien no es una decision critica debido al tamano del proyecto, incluso a esta escala se pueden notar algunos defectos en el modelo. En aplicaciones complejas la interconexion de funcionalidades es alta, o sea que una interaccion en particular provoca efectos en multiples entidades, idealmente estas entidades estan todas encerradas bajo la misma feature pero este no suele ser el caso.
-Un ejemplo que sufre incluso Ser Manos, es el manejo del usuario, multiples metodos en distintas features necesitan acceder a un servicio que otorgue informacion sobre el usuario entonces termina siendo imposible crear un servicio que sea *aislado* por feature. Esto genera que distintos controllers salten el aislamiento por feature rompiendo la idea del modelo.
-Ademas, existen otros servicios como la remote config y analytics que tambien deben ser utilizados sin la condicion de aislamiento y por esto tenemos una carpeta de servicios llamada `infrastructure`.
-Considerando el caso de las entidades que no se pueden recluir a una sola feature, y los servicios que son requeridos por toda la aplicacion nos termina pareciendo un poco inutil usar el modelo de agrupamiento por feature si nos vemos obligado a romperlo. Para peor, estas ocurrencias no son excepcionales ni particulares de nuestra aplicacion que termina siendo bastante simple.
+
+Fuimos por un agrupamiento por features, si bien no es una decisión crítica debido al tamaño del proyecto, incluso a esta escala se pueden notar algunos defectos en el modelo. En aplicaciones complejas la interconexión de funcionalidades es alta, o sea que una interacción en particular provoca efectos en múltiples entidades, idealmente estas entidades están todas encerradas bajo la misma feature pero este no suele ser el caso.
+Un ejemplo que sufre incluso Ser Manos, es el manejo del usuario, múltiples métodos en distintas features necesitan acceder a un servicio que otorgue información sobre el usuario entonces termina siendo imposible crear un servicio que sea *aislado* por feature. Esto genera que distintos controllers salten el aislamiento por feature rompiendo la idea del modelo.
+Además, existen otros servicios como la remote config y analytics que también deben ser utilizados sin la condición de aislamiento y por esto tenemos una carpeta de servicios llamada `infrastructure`.
+Considerando el caso de las entidades que no se pueden recluir a una sola feature, y los servicios que son requeridos por toda la aplicación nos termina pareciendo un poco inútil usar el modelo de agrupamiento por feature si nos vemos obligados a romperlo. Para peor, estas ocurrencias no son excepcionales ni particulares de nuestra aplicación que termina siendo bastante simple.
+
 #### I know the rules so I can break them
-Internamente cada agrupamiento por feature cuenta con 3 carpetas, `screens`, `controllers` y `services` entre estas 3 carpetas se respeta una sub arquitectura de capas donde las screens realizan llamados a los `controllers` que luego hacen llamados a los `services`. Aunque estas denominaciones son abusos de notaciones cuando tenemos en cuenta su contenido, los `controllers` no son simples facades y terminan incluyendo tanto estado como logica de negocios, por otro lado los `services` solo contienen el acceso a la base de datos. Entonces:
-$\text{Controller Nuestro} = \text{Controller Clasico} + \text{Servicio Clasico} + \text{Estado}$
-$\text{Service Nuestro} = \text{DAO Clasico}$
-Esta decision se basa en la reduccion de bloat en la codebase, un gran porcentaje de los metodos de los controllers ya son simple pasamanos a los servicios (porque hay poca logica de negocio), e incluir una nueva capa completa solo hubiera agudizado esta propiedad indeseada.
+
+Internamente cada agrupamiento por feature cuenta con 3 carpetas, `screens`, `controllers` y `services` entre estas 3 carpetas se respeta una subarquitectura de capas donde las screens realizan llamados a los `controllers` que luego hacen llamados a los `services`. Aunque estas denominaciones son abusos de notaciones cuando tenemos en cuenta su contenido, los `controllers` no son simples facades y terminan incluyendo tanto estado como lógica de negocios, por otro lado los `services` solo contienen el acceso a la base de datos. Entonces:
+
+\$\text{Controller Nuestro} = \text{Controller Clásico} + \text{Servicio Clásico} + \text{Estado}\$
+\$\text{Service Nuestro} = \text{DAO Clásico}\$
+
+Esta decisión se basa en la reducción de bloat en la codebase, un gran porcentaje de los métodos de los controllers ya son simple pasamanos a los servicios (porque hay poca lógica de negocio), e incluir una nueva capa completa solo hubiera agudizado esta propiedad indeseada.
+
 #### Functional Providers VS Class-Based Providers
-Esta fue una decision dificil, la granularidad de los Functional Providers donde cada metodo de un controller/servicio es un provider, es muy placentera en cuanto a manejo de memoria e instanciacion, pero termina facilitando incumplimiento de la arquitectura y siendo mas dificil de mantener por momentos. Estas desventajas se podrian mitigar facilmente con algunas herramientas externas pero priorizamos la simplicidad y familiariedad del equipo con estructuras similares a las de Spring.
-Por esto, terminamos eligiendo la estructura de Class-Based Providers, donde se crea una clase con metodos de instancia y luego por medio de un provider se disponibiliza. A este se le suman los StateNotifierProviders que fue nuestra forma predilecta de manejar el estado, donde estos providers inyectaban la instancia del controlador y hacian uso de sus metodos para acceder a la capa de servicios.
+
+Esta fue una decisión difícil, la granularidad de los Functional Providers donde cada método de un controller/servicio es un provider, es muy placentera en cuanto a manejo de memoria e instanciación, pero termina facilitando incumplimiento de la arquitectura y siendo más difícil de mantener por momentos. Estas desventajas se podrían mitigar fácilmente con algunas herramientas externas pero priorizamos la simplicidad y familiaridad del equipo con estructuras similares a las de Spring.
+Por esto, terminamos eligiendo la estructura de Class-Based Providers, donde se crea una clase con métodos de instancia y luego por medio de un provider se disponibiliza. A este se le suman los StateNotifierProviders que fue nuestra forma predilecta de manejar el estado, donde estos providers inyectaban la instancia del controlador y hacían uso de sus métodos para acceder a la capa de servicios.
+
 #### RIP DTOs
-De nuevo, vuelve a la idea de no bloatear el codigo innecesariamente, es un lujo que nos podemos dar debido a que tenemos acceso directo a la DB y las facilidades que otorga firebase para su manejo, ademas de que no hay funcionalidades que requieran una reinterpretacion del modelo de usuario provisto por el backend.
+
+De nuevo, vuelve a la idea de no bloatear el código innecesariamente, es un lujo que nos podemos dar debido a que tenemos acceso directo a la DB y las facilidades que otorga firebase para su manejo, además de que no hay funcionalidades que requieran una reinterpretación del modelo de usuario provisto por el backend.
+
+---
