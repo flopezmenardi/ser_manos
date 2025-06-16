@@ -69,9 +69,9 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         builder:
                             (_) => Center(
                               child: ModalSermanos(
-                                title: 'Confirmar abandono de postulación',
-                                subtitle: '¿Estás seguro de que querés abandonar tu postulación?',
-                                confimationText: 'Sí, abandonar',
+                                title: '¿Estás seguro que querés abandonar tu voluntariado?',
+                                subtitle: volunteering.titulo,
+                                confimationText: 'Confirmar',
                                 cancelText: 'Cancelar',
                                 onCancel: () => Navigator.of(context).pop(false),
                                 onConfirm: () => Navigator.of(context).pop(true),
@@ -114,9 +114,9 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         builder:
                             (_) => Center(
                               child: ModalSermanos(
-                                title: 'Confirmar retiro de postulación',
-                                subtitle: '¿Estás seguro de que querés retirar tu postulación?',
-                                confimationText: 'Sí, retirar',
+                                title: '¿Estás seguro que querés retirar tu postulación?',
+                                subtitle: volunteering.titulo,
+                                confimationText: 'Confirmar',
                                 cancelText: 'Cancelar',
                                 onCancel: () => Navigator.of(context).pop(false),
                                 onConfirm: () => Navigator.of(context).pop(true),
@@ -147,15 +147,16 @@ class VolunteeringDetailScreen extends ConsumerWidget {
               TextOnlyButton(
                 text: 'Abandonar voluntariado actual',
                 onPressed: () async {
+                  final volunteeringToAbandon = await controller.getVolunteeringById(user.voluntariado!);
                   final confirmed =
                       await showDialog<bool>(
                         context: context,
                         builder:
                             (_) => Center(
                               child: ModalSermanos(
-                                title: 'Confirmar abandono de voluntariado',
-                                subtitle: '¿Estás seguro de que querés abandonar tu voluntariado actual?',
-                                confimationText: 'Sí, abandonar',
+                                title: '¿Estás seguro que querés abandonar tu voluntariado?',
+                                subtitle: volunteeringToAbandon.titulo,
+                                confimationText: 'Confirmar',
                                 cancelText: 'Cancelar',
                                 onCancel: () => Navigator.of(context).pop(false),
                                 onConfirm: () => Navigator.of(context).pop(true),

@@ -26,10 +26,10 @@ class ModalSermanos extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 280,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       decoration: BoxDecoration(
         color: AppColors.neutral0,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(4),
         boxShadow: AppShadows.shadow3,
       ),
       child: Column(
@@ -38,14 +38,14 @@ class ModalSermanos extends StatelessWidget {
         children: [
           Text(
             title,
-            style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
+            style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100, decoration: TextDecoration.none,),
           ),
           const SizedBox(height: 4),
           Text(
             subtitle,
-            style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
+            style: AppTypography.headline2.copyWith(color: AppColors.neutral100, decoration: TextDecoration.none,),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
