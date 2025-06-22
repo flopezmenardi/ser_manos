@@ -120,6 +120,7 @@ Considerando el caso de las entidades que no se pueden recluir a una sola featur
 Internamente cada agrupamiento por feature cuenta con 3 carpetas, `screens`, `controllers` y `services` entre estas 3 carpetas se respeta una subarquitectura de capas donde las screens realizan llamados a los `controllers` que luego hacen llamados a los `services`. Aunque estas denominaciones son abusos de notaciones cuando tenemos en cuenta su contenido, los `controllers` no son simples facades y terminan incluyendo tanto estado como lógica de negocios, por otro lado los `services` solo contienen el acceso a la base de datos. Entonces:
 
 \$\text{Controller Nuestro} = \text{Controller Clásico} + \text{Servicio Clásico} + \text{Estado}\$
+
 \$\text{Service Nuestro} = \text{DAO Clásico}\$
 
 Esta decisión se basa en la reducción de bloat en la codebase, un gran porcentaje de los métodos de los controllers ya son simple pasamanos a los servicios (porque hay poca lógica de negocio), e incluir una nueva capa completa solo hubiera agudizado esta propiedad indeseada.
