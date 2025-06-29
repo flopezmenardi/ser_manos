@@ -26,71 +26,76 @@ class NewsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: AppGrid.screenWidth(context) - 2 * AppGrid.horizontalMargin,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.neutral0,
-          borderRadius: BorderRadius.circular(2),
-          boxShadow: AppShadows.shadow2,
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(2),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Image section
-              SizedBox(
-                width: 118,
-                height: 156,
-                child: imagePath.startsWith('assets/')? Image.asset(imagePath, fit: BoxFit.cover) : Image.network(imagePath, fit: BoxFit.cover),
-              ),
-              // Text section
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        report,
-                        style: AppTypography.overline.copyWith(
-                          color: AppColors.neutral75,
+      child: GestureDetector(
+        onTap: onConfirm,
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.neutral0,
+            borderRadius: BorderRadius.circular(2),
+            boxShadow: AppShadows.shadow2,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Image section
+                SizedBox(
+                  width: 118,
+                  height: 156,
+                  child: imagePath.startsWith('assets/')
+                      ? Image.asset(imagePath, fit: BoxFit.cover)
+                      : Image.network(imagePath, fit: BoxFit.cover),
+                ),
+                // Text section
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          report,
+                          style: AppTypography.overline.copyWith(
+                            color: AppColors.neutral75,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        title,
-                        style: AppTypography.subtitle1.copyWith(
-                          color: AppColors.neutral100,
+                        const SizedBox(height: 4),
+                        Text(
+                          title,
+                          style: AppTypography.subtitle1.copyWith(
+                            color: AppColors.neutral100,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        description,
-                        style: AppTypography.body2.copyWith(
-                          color: AppColors.neutral75,
+                        const SizedBox(height: 4),
+                        Text(
+                          description,
+                          style: AppTypography.body2.copyWith(
+                            color: AppColors.neutral75,
+                          ),
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextOnlyButton(
-                          text: 'Leer más',
-                          onPressed: () async {
-                            onConfirm();
-                          },
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextOnlyButton(
+                            text: 'Leer más',
+                            onPressed: () async {
+                              onConfirm();
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -35,6 +35,9 @@ class NewsControllerImpl implements NewsController {
 
   @override
   Future<News?> getNewsById(String id) {
+    if (id.trim().isEmpty) {
+      throw ArgumentError('El ID de la novedad no puede estar vacío.');
+    }
     return _newsService.getNewsById(id);
   }
 }

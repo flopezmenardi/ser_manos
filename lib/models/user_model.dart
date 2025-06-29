@@ -6,7 +6,7 @@ class User {
   final String apellido;
   final String email;
   final String fechaNacimiento;
-  final Timestamp fechaRegistro;
+  final Timestamp? fechaRegistro;
   final String genero;
   final String telefono;
   final String? voluntariado;
@@ -20,7 +20,7 @@ class User {
     required this.apellido,
     required this.email,
     required this.fechaNacimiento,
-    required this.fechaRegistro,
+    this.fechaRegistro,
     required this.genero,
     required this.telefono,
     this.voluntariado,
@@ -37,7 +37,7 @@ class User {
       apellido: data['apellido'] ?? '',
       email: data['email'] ?? '',
       fechaNacimiento: data['fechaNacimiento'] ?? '',
-      fechaRegistro: data['fechaRegistro'] ?? '',
+      fechaRegistro: data['fechaRegistro'],
       genero: data['genero'] ?? '',
       telefono: data['telefono'] ?? '',
       voluntariado: data['voluntariado'] ?? '',

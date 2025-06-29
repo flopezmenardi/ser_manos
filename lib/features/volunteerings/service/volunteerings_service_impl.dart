@@ -30,7 +30,11 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
 
     switch (sortMode) {
       case SortMode.date:
-        volunteerings.sort((a, b) => b.fechaCreacion.compareTo(a.fechaCreacion));
+        volunteerings.sort((a, b) {
+          final fechaA = a.fechaCreacion ?? Timestamp.fromMillisecondsSinceEpoch(0);
+          final fechaB = b.fechaCreacion ?? Timestamp.fromMillisecondsSinceEpoch(0);
+          return fechaB.compareTo(fechaA);
+        });
         break;
       case SortMode.proximity:
         if (userLocation == null) {
@@ -69,13 +73,16 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
     final volunteeringDoc = await _db.collection('voluntariados').doc(volunteeringId).get();
     final data = volunteeringDoc.data();
 
-    if (data != null && data.containsKey('fechaInicio')) {
+    if (data != null && data['fechaInicio'] is Timestamp) {
       final fechaInicio = (data['fechaInicio'] as Timestamp).toDate();
       final now = DateTime.now();
       final daysBefore = fechaInicio.difference(now).inDays;
 
       try {
-        await _analyticsService.logWithdrawVolunteering(volunteeringId: volunteeringId, daysBeforeStart: daysBefore);
+        await _analyticsService.logWithdrawVolunteering(
+          volunteeringId: volunteeringId,
+          daysBeforeStart: daysBefore,
+        );
       } catch (e, stackTrace) {
         await FirebaseCrashlytics.instance.recordError(e, stackTrace);
       }

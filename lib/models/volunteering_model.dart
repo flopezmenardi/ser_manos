@@ -11,9 +11,9 @@ class Volunteering {
   final String direccion;
   final GeoPoint ubicacion;
   final String imagenURL;
-  final Timestamp fechaCreacion;
+  final Timestamp? fechaCreacion;
   final int likes;
-  final Timestamp fechaInicio;
+  final Timestamp? fechaInicio;
 
   Volunteering({
     required this.id,
@@ -44,9 +44,9 @@ class Volunteering {
       direccion: data['direccion'] ?? '',
       ubicacion: data['ubicacion'] ?? '',
       imagenURL: data['imagenURL'] ?? '',
-      fechaCreacion: data['fechaCreacion'] ?? '',
+      fechaCreacion: data['fechaCreacion'],
       likes: data['likes'] ?? 0,
-      fechaInicio: data['fechaInicio'] ?? '',
+      fechaInicio: data['fechaInicio'],
     );
   }
 

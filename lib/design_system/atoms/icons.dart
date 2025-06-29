@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../tokens/colors.dart';
 
-enum IconState { defaultState, enabled, disabled }
+enum IconState { defaultState, enabled, disabled, white }
 
 class AppIcons {
   static Icon getCalendarIcon({required IconState state}) {
@@ -74,6 +74,8 @@ class AppIcons {
         return AppColors.neutral25;
       case IconState.defaultState:
         return AppColors.neutral50;
+      case IconState.white:
+        return AppColors.neutral0;
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/models/news_model.dart';
 
@@ -22,8 +23,13 @@ class NewsServiceImpl implements NewsService {
 
   @override
   Future<News?> getNewsById(String id) async {
-    final doc = await _db.collection('novedades').doc(id).get();
-    if (!doc.exists) return null;
-    return News.fromDocumentSnapshot(doc);
+    try {
+      final doc = await _db.collection('novedades').doc(id).get();
+      if (!doc.exists) return null;
+      return News.fromDocumentSnapshot(doc);
+    } catch (e) {
+      debugPrint('Error al obtener la novedad: $e');
+      return null;
+    }
   }
 }

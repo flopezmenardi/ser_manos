@@ -7,7 +7,7 @@ class News {
   final String emisor;
   final String resumen;
   final String imagenURL;
-  final Timestamp fechaCreacion;
+  final Timestamp? fechaCreacion;
 
   News({
     required this.id,
@@ -28,7 +28,7 @@ class News {
       emisor: data['emisor'] ?? '',
       resumen: data['resumen'] ?? '',
       imagenURL: data['imagenURL'] ?? '',
-      fechaCreacion: data['fechaCreacion'] ?? '',
+      fechaCreacion: data['fechaCreacion'],
     );
   }
 }

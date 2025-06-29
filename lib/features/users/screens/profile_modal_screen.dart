@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -29,8 +30,9 @@ class ProfileModalScreen extends ConsumerStatefulWidget {
 class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   int? _sexoIndex;
+  bool _hasChanges = false;
 
-  XFile? _newPhoto; //  ← NEW
+  XFile? _newPhoto; 
   String? _newPhotoPath; //  local preview path
 
   @override
@@ -60,6 +62,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
       _newPhoto = photo;
       _newPhotoPath = photo.path;
     });
+    _checkForChanges();
   }
 
   @override
@@ -81,6 +84,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
             Expanded(
               child: FormBuilder(
                 key: _formKey,
+                onChanged: _checkForChanges,
                 initialValue: {'birthDate': user.fechaNacimiento, 'email': user.email, 'phone': user.telefono},
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(horizontal: AppGrid.horizontalMargin),
@@ -100,6 +104,10 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                         name: 'birthDate',
                         label: 'Fecha de nacimiento',
                         placeholder: 'DD/MM/YYYY',
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9/]')),
+                        ],
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                           FormBuilderValidators.match(
@@ -117,6 +125,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                           setState(() {
                             _sexoIndex = _genderToIndex(value);
                           });
+                          _checkForChanges();
                         },
                       ),
 
@@ -171,7 +180,8 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                       // Botón guardar
                       CTAButton(
                         text: 'Guardar datos',
-                        onPressed: () async {
+                        isEnabled: _hasChanges,
+                        onPressed: _hasChanges ? () async {
                           final isValid = _formKey.currentState?.saveAndValidate() ?? false;
                           if (!isValid || _sexoIndex == null) {
                             if (_sexoIndex == null) {
@@ -197,6 +207,9 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                           });
 
                           await ref.read(authNotifierProvider.notifier).refreshUser();
+                          setState(() {
+                            _hasChanges = false;
+                          });
 
                           if (fromVolunteering != null) {
                             final controller = ref.read(volunteeringsControllerProvider);
@@ -228,7 +241,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
 
                           // Si no vino desde voluntariado, comportamiento normal
                           context.push('/profile');
-                        },
+                        } : null,
                       ),
                       const SizedBox(height: 24),
                     ],
@@ -240,5 +253,24 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
         ),
       ),
     );
+  }
+
+  void _checkForChanges() {
+    final formValues = _formKey.currentState?.instantValue ?? {};
+    final user = ref.read(authNotifierProvider).currentUser;
+    final genderChanged = _indexToGender(_sexoIndex) != user?.genero;
+
+    final formChanged =
+      formValues['birthDate'] != user?.fechaNacimiento ||
+      formValues['email'] != user?.email ||
+      formValues['phone'] != user?.telefono ||
+      genderChanged ||
+      _newPhoto != null;
+
+    if (formChanged != _hasChanges) {
+      setState(() {
+        _hasChanges = formChanged;
+      });
+    }
   }
 }

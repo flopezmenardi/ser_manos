@@ -60,7 +60,7 @@ class _RegisterFormsState extends State<RegisterForms> {
         const SizedBox(height: 24),
         AppInput(
           label: 'Contraseña',
-          placeholder: 'Ej: ABCD1234',
+          placeholder: 'Ej: Abcd123!',
           controller: widget.passwordController,
           obscureText: !_isPasswordVisible,
           suffixIcon: IconButton(

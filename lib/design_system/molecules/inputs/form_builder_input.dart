@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:ser_manos/design_system/molecules/inputs/inputs.dart';
 
@@ -9,6 +10,7 @@ class FormBuilderAppInput extends StatelessWidget {
   final String? Function(String?)? validator;
   final TextInputType keyboardType;
   final bool obscureText;
+  final List<TextInputFormatter>? inputFormatters;
 
   const FormBuilderAppInput({
     super.key,
@@ -18,6 +20,7 @@ class FormBuilderAppInput extends StatelessWidget {
     this.validator,
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
+    this.inputFormatters,
   });
 
   @override
@@ -39,6 +42,7 @@ class FormBuilderAppInput extends StatelessWidget {
           keyboardType: keyboardType,
           obscureText: obscureText,
           onChanged: field.didChange,
+          inputFormatters: inputFormatters, // nuevo
         );
       },
     );

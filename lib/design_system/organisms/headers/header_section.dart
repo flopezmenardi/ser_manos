@@ -26,7 +26,7 @@ class HeaderSection extends StatelessWidget {
             left: 16,
             child: GestureDetector(
               onTap: onBack,
-              child: AppIcons.getBackIcon(state: IconState.disabled),
+              child: AppIcons.getBackIcon(state: IconState.white),
             ),
           ),
           Center(

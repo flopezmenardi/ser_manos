@@ -33,7 +33,7 @@ class InputCard extends StatelessWidget {
               ),
             ),
             Container(
-              color: Colors.white,
+              color: AppColors.neutral10,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Column(
                 children: [
@@ -50,22 +50,33 @@ class InputCard extends StatelessWidget {
   }
 
   Widget _buildRadioOption(String value) {
-    return RadioTheme(
-      data: RadioThemeData(
-        fillColor: WidgetStateProperty.resolveWith<Color>((states) {
-          return AppColors.primary100;
-        }),
-      ),
-      child: Row(
-        children: [
-          Radio<String>(
-            visualDensity: const VisualDensity(vertical: -2),
-            value: value,
-            groupValue: selectedGender,
-            onChanged: onGenderChanged,
-          ),
-          Text(value, style: AppTypography.body1, overflow: TextOverflow.ellipsis,),
-        ],
+    return SizedBox(
+      height: 32,
+      child: RadioTheme(
+        data: RadioThemeData(
+          fillColor: WidgetStateProperty.all(AppColors.primary100),
+          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Radio<String>(
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+              value: value,
+              groupValue: selectedGender,
+              onChanged: onGenderChanged,
+            ),
+            const SizedBox(width: 4),
+            Expanded(
+              child: Text(
+                value,
+                style: AppTypography.body1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

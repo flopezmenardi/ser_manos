@@ -54,7 +54,7 @@ class NewsDetailsScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Reporte ${novedad.emisor}",
+                          novedad.emisor,
                           style: AppTypography.overline.copyWith(color: AppColors.neutral75),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -78,7 +78,7 @@ class NewsDetailsScreen extends ConsumerWidget {
                           width: double.infinity,
                           child: Text(
                             novedad.resumen,
-                            style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
+                            style: AppTypography.subtitle1.copyWith(color: AppColors.secondary200),
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -87,13 +87,14 @@ class NewsDetailsScreen extends ConsumerWidget {
                         Text(
                           novedad.descripcion,
                           style: AppTypography.body1.copyWith(color: AppColors.neutral100),
-                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 24),
-                        Text(
-                          "Comparte esta nota",
-                          style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
-                          overflow: TextOverflow.ellipsis,
+                        Center(
+                          child: Text(
+                            "Comparte esta nota",
+                            style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                         const SizedBox(height: 16),
                         CTAButton(

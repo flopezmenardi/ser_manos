@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../atoms/error_icon.dart';
 import '../../tokens/colors.dart';
@@ -18,6 +19,7 @@ class AppInput extends StatelessWidget {
   final String? Function(String?)? validator;
   final TextInputType keyboardType;
   final ValueChanged<String>? onChanged;
+  final List<TextInputFormatter>? inputFormatters;
 
   const AppInput({
     super.key,
@@ -34,6 +36,7 @@ class AppInput extends StatelessWidget {
     this.validator,
     this.keyboardType = TextInputType.text, 
     this.onChanged,                         
+    this.inputFormatters,
   });
 
   @override
@@ -58,6 +61,7 @@ class AppInput extends StatelessWidget {
       onChanged: onChanged, 
       keyboardType: keyboardType, 
       autovalidateMode: AutovalidateMode.onUserInteraction,
+      inputFormatters: inputFormatters,
       style: AppTypography.body1.copyWith(
         color: isEnabled ? AppColors.neutral100 : AppColors.neutral50,
       ),
@@ -65,6 +69,7 @@ class AppInput extends StatelessWidget {
         labelText: label,
         hintText: placeholder,
         errorText: hasError ? supportingText : null,
+        errorMaxLines: 2,
         filled: true,
         fillColor: fillColor,
         suffixIcon: effectiveSuffixIcon,
@@ -98,7 +103,10 @@ class AppInput extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
           borderSide: BorderSide(color: AppColors.error100),
         ),
-        errorStyle: AppTypography.caption.copyWith(color: AppColors.error100),
+        errorStyle: AppTypography.caption.copyWith(
+          color: AppColors.error100,
+          overflow: TextOverflow.visible, 
+        ),
       ),
     );
   }
