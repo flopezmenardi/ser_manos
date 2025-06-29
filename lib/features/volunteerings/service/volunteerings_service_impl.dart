@@ -94,24 +94,22 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
   }
 
   @override
-  Future<void> toggleFavorite({required String uid, required String volunteeringId, required bool isFavorite}) async {
-    final userRef = _db.collection('usuarios').doc(uid);
+  Future<void> toggleFavorite({required String userId, required String volunteeringId, required bool isFavorite}) async {
+    final userRef = _db.collection('usuarios').doc(userId);
     final volunteeringRef = _db.collection('voluntariados').doc(volunteeringId);
 
     await _db.runTransaction((transaction) async {
-      //Read from volunteering document
-      final snapshot = await transaction.get(volunteeringRef);
-      final currentLikes = snapshot.get('likes') as int? ?? 0;
-
-      //Compute new like count
-      final newLikes = isFavorite ? currentLikes - 1 : currentLikes + 1;
-
-      //Write to user and volunteering
+      // Update user favorites
       transaction.update(userRef, {
-        'favoritos': isFavorite ? FieldValue.arrayRemove([volunteeringId]) : FieldValue.arrayUnion([volunteeringId]),
+        'favoritos': isFavorite
+            ? FieldValue.arrayRemove([volunteeringId])
+            : FieldValue.arrayUnion([volunteeringId]),
       });
 
-      transaction.update(volunteeringRef, {'likes': newLikes.clamp(0, double.infinity)});
+      // Update volunteering likes
+      transaction.update(volunteeringRef, {
+        'likes': FieldValue.increment(isFavorite ? -1 : 1),
+      });
     });
   }
 

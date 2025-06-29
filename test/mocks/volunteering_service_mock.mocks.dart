@@ -88,13 +88,13 @@ class MockVolunteeringsService extends _i1.Mock
 
   @override
   _i3.Future<void> toggleFavorite({
-    required String? uid,
+    required String? userId,
     required String? volunteeringId,
     required bool? isFavorite,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#toggleFavorite, [], {
-              #uid: uid,
+              #uid: userId,
               #volunteeringId: volunteeringId,
               #isFavorite: isFavorite,
             }),

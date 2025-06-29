@@ -35,6 +35,7 @@ class VolunteeringCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(2),
         ),
         child: Card(
+          color: AppColors.neutral0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
           clipBehavior: Clip.antiAlias,
           margin: EdgeInsets.zero,
@@ -77,6 +78,7 @@ class VolunteeringCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           VacantsIndicator(vacants: vacancies),
+                          const SizedBox(height: 8),
                         ],
                       ),
                       // Right

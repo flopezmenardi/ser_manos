@@ -71,7 +71,7 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
   @override
   Future<void> toggleFavorite(String volunteeringId, bool isFavorite) async {
     await volunteeringsService.toggleFavorite(
-      uid: currentUser.uuid,
+      userId: currentUser.uuid,
       volunteeringId: volunteeringId,
       isFavorite: isFavorite,
     );

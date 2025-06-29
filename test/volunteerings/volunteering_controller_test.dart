@@ -118,10 +118,10 @@ void main() {
 
     test('toggleFavorite calls service correctly', () async {
       when(
-        mockService.toggleFavorite(uid: user.uuid, volunteeringId: 'v1', isFavorite: false),
+        mockService.toggleFavorite(userId: user.uuid, volunteeringId: 'v1', isFavorite: false),
       ).thenAnswer((_) async {});
       await controller.toggleFavorite('v1', false);
-      verify(mockService.toggleFavorite(uid: user.uuid, volunteeringId: 'v1', isFavorite: false)).called(1);
+      verify(mockService.toggleFavorite(userId: user.uuid, volunteeringId: 'v1', isFavorite: false)).called(1);
     });
 
     test('getFavoritesCount returns correct count', () async {

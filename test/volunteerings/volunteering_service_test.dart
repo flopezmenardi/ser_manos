@@ -78,11 +78,11 @@ void main() {
   });
 
   test('toggleFavorite adds and removes correctly', () async {
-    await service.toggleFavorite(uid: uid, volunteeringId: volunteeringId, isFavorite: false);
+    await service.toggleFavorite(userId: uid, volunteeringId: volunteeringId, isFavorite: false);
     var user = await firestore.collection('usuarios').doc(uid).get();
     expect(user['favoritos'], contains(volunteeringId));
 
-    await service.toggleFavorite(uid: uid, volunteeringId: volunteeringId, isFavorite: true);
+    await service.toggleFavorite(userId: uid, volunteeringId: volunteeringId, isFavorite: true);
     user = await firestore.collection('usuarios').doc(uid).get();
     expect(user['favoritos'], isNot(contains(volunteeringId)));
   });
