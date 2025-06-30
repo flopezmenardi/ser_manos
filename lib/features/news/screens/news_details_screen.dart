@@ -84,10 +84,7 @@ class NewsDetailsScreen extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        Text(
-                          novedad.descripcion,
-                          style: AppTypography.body1.copyWith(color: AppColors.neutral100),
-                        ),
+                        Text(novedad.descripcion, style: AppTypography.body1.copyWith(color: AppColors.neutral100)),
                         const SizedBox(height: 24),
                         Center(
                           child: Text(
@@ -112,11 +109,17 @@ class NewsDetailsScreen extends ConsumerWidget {
 
                               final url = 'http://sermanos.app/news/${novedad.id}';
 
-                              await Share.shareXFiles(
-                                [XFile(file.path)],
+                              final params = ShareParams(
                                 text: '${novedad.resumen}\n\n$url',
                                 subject: novedad.titulo,
+                                files: [XFile(file.path)],
                               );
+
+                              final result = await SharePlus.instance.share(params);
+
+                              if (result.status == ShareResultStatus.success) {
+                                debugPrint('¡Gracias por compartir la novedad!');
+                              }
                             } catch (e) {
                               debugPrint('Error al compartir la novedad: $e');
                               messenger.showSnackBar(
