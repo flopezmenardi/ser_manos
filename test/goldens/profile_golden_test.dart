@@ -11,7 +11,7 @@ import 'package:ser_manos/models/user_model.dart';
 // ----------------------------
 
 class FakeAuthNotifier extends StateNotifier<AuthState> implements AuthNotifier {
-  FakeAuthNotifier(AuthState state) : super(state);
+  FakeAuthNotifier(super.state);
 
   @override
   Future<void> logout() async {}
