@@ -5,10 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:ser_manos/constants/app_assets.dart';
 import 'package:ser_manos/features/news/controller/news_controller_impl.dart';
-import 'package:ser_manos/models/news_model.dart';
-import 'package:ser_manos/features/news/service/news_service.dart';
-import 'package:ser_manos/features/news/controller/news_controller.dart';
 import 'package:ser_manos/features/news/screens/news_screen.dart';
+import 'package:ser_manos/models/news_model.dart';
 
 import '../mocks/news_service_mock.mocks.dart';
 
@@ -39,24 +37,18 @@ void main() {
 
     when(mockNewsService.getNewsOrderedByDate()).thenAnswer((_) async => mockNews);
 
-    final container = ProviderContainer(overrides: [
-      newsControllerProvider.overrideWith((ref) => NewsControllerImpl(mockNewsService)),
-    ]);
+    final container = ProviderContainer(
+      overrides: [newsControllerProvider.overrideWith((ref) => NewsControllerImpl(mockNewsService))],
+    );
 
     // Act
     await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: const MaterialApp(home: NewsScreen()),
-      ),
+      UncontrolledProviderScope(container: container, child: const MaterialApp(home: NewsScreen())),
     );
 
     await tester.pumpAndSettle();
 
     // Assert
-    await expectLater(
-      find.byType(NewsScreen),
-      matchesGoldenFile('goldens/news_screen.png'),
-    );
+    await expectLater(find.byType(NewsScreen), matchesGoldenFile('goldens/news_screen.png'));
   });
 }
