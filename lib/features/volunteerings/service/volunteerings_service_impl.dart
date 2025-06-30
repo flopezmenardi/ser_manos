@@ -41,6 +41,7 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
           throw Exception('User location is required for proximity sorting.');
         }
         volunteerings.sort((a, b) {
+          //Calculate distance from user location to each volunteering's location to sort by proximity
           final distA = _distanceBetween(userLocation, a.ubicacion);
           final distB = _distanceBetween(userLocation, b.ubicacion);
           return distA.compareTo(distB);
@@ -120,6 +121,8 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
     return likes is int ? likes : 0;
   }
 
+  /* Calculates the distance in metersbetween two georgraphic coordinates using the Haversine formula 
+    which takes into account the curvature of the Earth */
   double _distanceBetween(GeoPoint a, GeoPoint b) {
     const R = 6371e3;
     final lat1 = a.latitude * (pi / 180);

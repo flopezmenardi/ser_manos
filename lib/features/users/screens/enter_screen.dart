@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/constants/app_routes.dart';
 
 import '../../../design_system/atoms/logos/logo_square.dart'; // <- assuming you have your LogoSquare atom
 import '../../../design_system/molecules/buttons/cta_button.dart'; // <- your green call-to-action button
@@ -37,7 +38,7 @@ class InitialScreen extends StatelessWidget {
                   CTAButton(
                     text: 'Iniciar Sesión',
                     onPressed: () async {
-                      context.go('/login');
+                      context.go(AppRoutes.login);
                       return;
                     },
                   ),
@@ -45,7 +46,7 @@ class InitialScreen extends StatelessWidget {
                   TextOnlyButton(
                     text: 'Registrarse',
                     onPressed: () async {
-                      context.go('/register');
+                      context.go(AppRoutes.register);
                     },
                   ),
                   const SizedBox(height: 24),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:ser_manos/constants/app_assets.dart';
 import 'package:ser_manos/features/news/controller/news_controller_impl.dart';
 import 'package:ser_manos/models/news_model.dart';
 import 'package:ser_manos/features/news/service/news_service.dart';
@@ -22,7 +23,7 @@ void main() {
         descripcion: 'Descripción de prueba 1',
         resumen: 'Resumen de prueba 1',
         emisor: 'Emisor 1',
-        imagenURL: 'assets/images/novedades_2.jpg',
+        imagenURL: AppAssets.novedades2,
         fechaCreacion: Timestamp.fromDate(DateTime(2024, 1, 1)),
       ),
       News(
@@ -31,7 +32,7 @@ void main() {
         descripcion: 'Descripción de prueba 2',
         resumen: 'Resumen de prueba 2',
         emisor: 'Emisor 2',
-        imagenURL: 'assets/images/novedades_3.jpg',
+        imagenURL: AppAssets.novedades3,
         fechaCreacion: Timestamp.fromDate(DateTime(2024, 1, 2)),
       ),
     ];

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/constants/app_assets.dart';
+import 'package:ser_manos/constants/app_routes.dart';
 import 'package:ser_manos/design_system/tokens/colors.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
 
@@ -11,13 +13,13 @@ class AppHeader extends StatelessWidget {
   void _onTabSelected(BuildContext context, int index) {
     switch (index) {
       case 0:
-        context.go('/volunteerings');
+        context.go(AppRoutes.volunteerings);
         break;
       case 1:
-        context.go('/profile');
+        context.go(AppRoutes.profile);
         break;
       case 2:
-        context.go('/news');
+        context.go(AppRoutes.news);
         break;
     }
   }
@@ -34,7 +36,7 @@ class AppHeader extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                Image.asset('assets/logos/logo_rectangular.png', height: 25),
+                Image.asset(AppAssets.logoRectangular, height: 25),
               ],
             ),
           ),

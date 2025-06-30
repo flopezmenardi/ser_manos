@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/constants/app_routes.dart';
 import 'package:ser_manos/design_system/organisms/modal.dart';
 
 import '../../../design_system/atoms/logos/logo_square.dart';
@@ -92,7 +93,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       );
 
                       if (success) {
-                        context.go('/volunteerings');
+                        context.go(AppRoutes.volunteerings);
                       } else {
                         showDialog(
                           context: context,
@@ -115,7 +116,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   TextOnlyButton(
                     text: 'No tengo cuenta',
                     onPressed: () async {
-                      context.go('/register');
+                      context.go(AppRoutes.register);
                     },
                   ),
                   const SizedBox(height: 24),

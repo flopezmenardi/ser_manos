@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/constants/app_assets.dart';
 
 class LogoRectangle extends StatelessWidget {
   final double? height;
@@ -9,7 +10,7 @@ class LogoRectangle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      'assets/logos/logo_rectangle.png',
+      AppAssets.logoRectangle,
       height: height,
       width: width,
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/constants/app_assets.dart';
 
 class LogoSquare extends StatelessWidget {
   final double size;
@@ -8,7 +9,7 @@ class LogoSquare extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      'assets/logos/logo_square.png',
+      AppAssets.logoSquare,
       height: size,
       width: size,
     );

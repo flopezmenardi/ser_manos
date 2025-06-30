@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/constants/app_routes.dart';
 
 import '../../../design_system/organisms/cards/news_card.dart';
 import '../../../design_system/organisms/headers/header.dart';
@@ -42,7 +43,7 @@ class NewsScreen extends ConsumerWidget {
                       title: novedad.titulo,
                       description: novedad.resumen,
                       onConfirm: () {
-                        context.push('/news/${novedad.id}');
+                        context.push(AppRoutes.newsDetail(novedad.id));
                       },
                     );
                   },

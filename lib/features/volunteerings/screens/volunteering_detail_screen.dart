@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/constants/app_routes.dart';
 import 'package:ser_manos/design_system/atoms/icons.dart';
 import 'package:ser_manos/design_system/molecules/buttons/cta_button.dart';
 import 'package:ser_manos/design_system/molecules/buttons/text_button.dart';
@@ -287,7 +288,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         left: 8,
                         child: IconButton(
                           icon: AppIcons.getBackIcon(state: IconState.defaultState),
-                          onPressed: () => context.go('/volunteerings'),
+                          onPressed: () => context.go(AppRoutes.volunteerings),
                         ),
                       ),
                     ],

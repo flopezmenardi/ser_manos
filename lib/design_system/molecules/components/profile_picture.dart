@@ -2,6 +2,7 @@
 import 'dart:io' show File;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:ser_manos/constants/app_assets.dart';
 
 enum ProfilePictureSize { small, large }
 
@@ -34,7 +35,7 @@ class ProfilePicture extends StatelessWidget {
           width: _diameter, height: _diameter, fit: BoxFit.cover);
     } else {
       img = Image.asset(
-        fallbackAsset ?? 'assets/images/profile_picture_placeholder.png',
+        fallbackAsset ?? AppAssets.profilePlaceholder,
         width: _diameter,
         height: _diameter,
         fit: BoxFit.cover,

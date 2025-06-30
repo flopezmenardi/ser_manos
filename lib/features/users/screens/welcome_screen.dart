@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/constants/app_routes.dart';
 
 import '../../../design_system/atoms/logos/logo_square.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
@@ -43,7 +44,7 @@ class WelcomeScreen extends StatelessWidget {
                   CTAButton(
                     text: 'Comenzar',
                     onPressed: () async {
-                      context.go('/volunteerings');
+                      context.go(AppRoutes.volunteerings);
                     },
                   ),
                   const SizedBox(height: 84),

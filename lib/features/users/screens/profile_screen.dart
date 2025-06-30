@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/constants/app_assets.dart';
+import 'package:ser_manos/constants/app_routes.dart';
 import 'package:ser_manos/design_system/molecules/buttons/short_button.dart';
 import 'package:ser_manos/design_system/organisms/modal.dart';
 import 'package:ser_manos/models/user_model.dart';
@@ -53,7 +55,7 @@ class ProfileScreen extends ConsumerWidget {
         children: [
           const SizedBox(height: 24),
           ProfilePicture(
-            imagePath: user.photoUrl != null ? user.photoUrl! : '/assets/icons/foto_perfil.png',
+            imagePath: user.photoUrl != null ? user.photoUrl! : AppAssets.fotoPerfil,
             size: ProfilePictureSize.large,
           ),
           const SizedBox(height: 8),
@@ -91,7 +93,7 @@ class ProfileScreen extends ConsumerWidget {
             secondContent: user.email,
           ),
           const SizedBox(height: 24),
-          CTAButton(text: 'Editar perfil', onPressed: () async => context.push('/profile/edit')),
+          CTAButton(text: 'Editar perfil', onPressed: () async => context.push(AppRoutes.profileEdit)),
 
           TextOnlyButton(
             text: 'Cerrar sesión',
@@ -109,7 +111,7 @@ class ProfileScreen extends ConsumerWidget {
                         onConfirm: () async {
                           await ref.read(authNotifierProvider.notifier).logout();
                           Navigator.of(context).pop();
-                          context.go('/initial');
+                          context.go(AppRoutes.initial);
                         },
                       ),
                     ),
@@ -131,7 +133,7 @@ class ProfileScreen extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('assets/icons/profile/foto_perfil.png', width: 100, height: 100, fit: BoxFit.cover),
+                Image.asset(AppAssets.fotoPerfil, width: 100, height: 100, fit: BoxFit.cover),
                 const SizedBox(height: 24),
                 Text(
                   'VOLUNTARIO',
@@ -150,7 +152,7 @@ class ProfileScreen extends ConsumerWidget {
               ],
             ),
           ),
-          ShortButton(text: 'Completar', icon: Icons.add, onPressed: () => context.push('/profile/edit')),
+          ShortButton(text: 'Completar', icon: Icons.add, onPressed: () => context.push(AppRoutes.profileEdit)),
           const SizedBox(height: 16),
           TextOnlyButton(
             text: 'Cerrar sesión',
@@ -169,7 +171,7 @@ class ProfileScreen extends ConsumerWidget {
                         onConfirm: () async {
                           await ref.read(authNotifierProvider.notifier).logout();
                           Navigator.of(context).pop();
-                          context.go('/initial');
+                          context.go(AppRoutes.initial);
                         },
                       ),
                     ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/constants/app_routes.dart';
 import 'package:ser_manos/design_system/organisms/forms/register.dart';
 
 import '../../../design_system/atoms/logos/logo_square.dart';
@@ -125,7 +126,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         TextOnlyButton(
                           text: 'Ya tengo cuenta',
                           onPressed: () async {
-                            context.go('/login');
+                            context.go(AppRoutes.login);
                           },
                         ),
                         const SizedBox(height: 24),

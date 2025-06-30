@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ser_manos/constants/app_routes.dart';
 import 'package:ser_manos/design_system/molecules/inputs/form_builder_input.dart';
 import 'package:ser_manos/design_system/organisms/cards/change_profile_picture.dart';
 import 'package:ser_manos/design_system/organisms/cards/upload_profile_picture.dart';
@@ -235,12 +236,12 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                               await controller.applyToVolunteering(fromVolunteering);
                               await ref.read(authNotifierProvider.notifier).refreshUser();
                             }
-                            context.go('/volunteering/$fromVolunteering');
+                            context.go(AppRoutes.volunteeringDetail(fromVolunteering));
                             return;
                           }
 
                           // Si no vino desde voluntariado, comportamiento normal
-                          context.push('/profile');
+                          context.push(AppRoutes.profile);
                         } : null,
                       ),
                       const SizedBox(height: 24),

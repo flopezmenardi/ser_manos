@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/constants/app_routes.dart';
 import 'package:ser_manos/features/users/screens/enter_screen.dart';
 import 'package:ser_manos/features/users/screens/login_screen.dart';
 import 'package:ser_manos/features/users/screens/profile_modal_screen.dart';
@@ -13,25 +14,25 @@ import 'package:ser_manos/splash_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   routes: [
-    GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
-    GoRoute(path: '/welcome', builder: (context, state) => const WelcomeScreen()),
-    GoRoute(path: '/initial', builder: (context, state) => const InitialScreen()),
-    GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
-    GoRoute(path: '/register', builder: (context, state) => const RegisterScreen()),
-    GoRoute(path: '/volunteerings', builder: (context, state) => const VolunteeringListPage()),
-    GoRoute(path: '/news', builder: (context, state) => const NewsScreen()),
+    GoRoute(path: AppRoutes.splash, builder: (context, state) => const SplashScreen()),
+    GoRoute(path: AppRoutes.welcome, builder: (context, state) => const WelcomeScreen()),
+    GoRoute(path: AppRoutes.initial, builder: (context, state) => const InitialScreen()),
+    GoRoute(path: AppRoutes.login, builder: (context, state) => const LoginScreen()),
+    GoRoute(path: AppRoutes.register, builder: (context, state) => const RegisterScreen()),
+    GoRoute(path: AppRoutes.volunteerings, builder: (context, state) => const VolunteeringListPage()),
+    GoRoute(path: AppRoutes.news, builder: (context, state) => const NewsScreen()),
     GoRoute(
-      path: '/news/:id',
+      path: '${AppRoutes.news}/:id',
       builder: (context, state) {
         final id = state.pathParameters['id']!;
         return NewsDetailsScreen(newsId: id);
       },
       name: 'news',
     ),
-    GoRoute(path: '/profile', builder: (context, state) => const ProfileScreen()),
-    GoRoute(path: '/profile/edit', builder: (context, state) => const ProfileModalScreen()),
+    GoRoute(path: AppRoutes.profile, builder: (context, state) => const ProfileScreen()),
+    GoRoute(path: AppRoutes.profileEdit, builder: (context, state) => const ProfileModalScreen()),
     GoRoute(
-      path: '/volunteering/:id',
+      path: '${AppRoutes.volunteeringBase}/:id',
       builder: (context, state) {
         final id = state.pathParameters['id']!;
         return VolunteeringDetailScreen(id: id);

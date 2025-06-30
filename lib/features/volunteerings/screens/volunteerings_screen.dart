@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/constants/app_routes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../design_system/molecules/inputs/search_input.dart';
@@ -178,7 +179,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
       GestureDetector(
         onTap: () {
           controller.logViewedVolunteering(current.id);
-          context.go('/volunteering/${current.id}');
+          context.go(AppRoutes.volunteeringDetail(current.id));
         },
         child: CurrentVolunteerCard(
           category: current.emisor,
@@ -204,7 +205,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
           behavior: HitTestBehavior.translucent,
           onTap: () {
             controller.logViewedVolunteering(item.id);
-            context.go('/volunteering/${item.id}');
+            context.go(AppRoutes.volunteeringDetail(item.id));
           },
           child: FutureBuilder<int>(
             future: showLikeCounter ? controller.getFavoritesCount(item.id) : Future.value(0),

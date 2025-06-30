@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/constants/app_routes.dart';
 
 import 'features/users/controllers/user_controller_impl.dart';
 
@@ -22,9 +23,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (authState.currentUser != null) {
-        context.go('/volunteerings');
+        context.go(AppRoutes.volunteerings);
       } else {
-        context.go('/initial');
+        context.go(AppRoutes.initial);
       }
     });
 
