@@ -20,17 +20,17 @@ void main() {
 
   final volunteering = Volunteering(
     id: volunteeringId,
-    titulo: 'Recolección de alimentos',
-    descripcion: 'Ayuda a recolectar alimentos',
-    resumen: 'Breve resumen',
-    emisor: 'ONG Esperanza',
-    vacantes: 3,
-    requisitos: 'Mayor de edad',
-    direccion: 'Calle Falsa 123',
-    ubicacion: const GeoPoint(-34.6037, -58.3816),
-    imagenURL: 'https://imagen.com',
-    fechaCreacion: Timestamp.fromDate(DateTime(2024, 6, 1)),
-    fechaInicio: Timestamp.fromDate(DateTime(2024, 6, 15)),
+    title: 'Recolección de alimentos',
+    description: 'Ayuda a recolectar alimentos',
+    summary: 'Breve resumen',
+    creator: 'ONG Esperanza',
+    vacants: 3,
+    requirements: 'Mayor de edad',
+    address: 'Calle Falsa 123',
+    location: const GeoPoint(-34.6037, -58.3816),
+    imageURL: 'https://imagen.com',
+    creationDate: Timestamp.fromDate(DateTime(2024, 6, 1)),
+    startDate: Timestamp.fromDate(DateTime(2024, 6, 15)),
     likes: 5,
   );
 
@@ -50,7 +50,7 @@ void main() {
   test('getVolunteeringById returns volunteering', () async {
     final result = await service.getVolunteeringById(volunteeringId);
     expect(result, isNotNull);
-    expect(result!.titulo, volunteering.titulo);
+    expect(result!.title, volunteering.title);
   });
 
   test('applyToVolunteering sets user fields correctly', () async {
@@ -74,7 +74,7 @@ void main() {
     final vol = await firestore.collection('voluntariados').doc(volunteeringId).get();
 
     expect(user['voluntariado'], null);
-    expect(vol['vacantes'], volunteering.vacantes + 1);
+    expect(vol['vacantes'], volunteering.vacants + 1);
   });
 
   test('toggleFavorite adds and removes correctly', () async {
@@ -94,7 +94,7 @@ void main() {
   });
 
   test('getAllVolunteeringsSorted by date returns correct order', () async {
-    final other = volunteering.copyWith(id: 'v2', fechaCreacion: Timestamp.fromDate(DateTime(2024, 7, 1)));
+    final other = volunteering.copyWith(id: 'v2', creationDate: Timestamp.fromDate(DateTime(2024, 7, 1)));
     await firestore.collection('voluntariados').doc('v2').set(other.toMap());
 
     final result = await service.getAllVolunteeringsSorted(sortMode: SortMode.date);
@@ -102,7 +102,7 @@ void main() {
   });
 
   test('getAllVolunteeringsSorted by proximity returns nearest first', () async {
-    final other = volunteering.copyWith(id: 'v2', ubicacion: const GeoPoint(-34.60, -58.38));
+    final other = volunteering.copyWith(id: 'v2', location: const GeoPoint(-34.60, -58.38));
     await firestore.collection('voluntariados').doc('v2').set(other.toMap());
 
     final result = await service.getAllVolunteeringsSorted(

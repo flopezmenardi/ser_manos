@@ -13,18 +13,18 @@ void main() {
 
   const userId = 'test-uid';
   final testUser = User(
-    uuid: userId,
-    nombre: 'Juan',
-    apellido: 'Pérez',
+    id: userId,
+    name: 'Juan',
+    surname: 'Pérez',
     email: 'juan@example.com',
-    fechaNacimiento: '2000-01-01',
-    fechaRegistro: Timestamp.fromDate(DateTime.now()),
-    genero: 'Masculino',
-    telefono: '123456789',
-    voluntariado: null,
+    birthDate: '2000-01-01',
+    registerDate: Timestamp.fromDate(DateTime.now()),
+    gender: 'Masculino',
+    phoneNumber: '123456789',
+    volunteering: null,
     photoUrl: null,
-    voluntariadoAceptado: false,
-    favoritos: [],
+    acceptedVolunteering: false,
+    favorites: [],
   );
 
   setUp(() {

@@ -27,8 +27,8 @@ class NewsDetailsScreen extends ConsumerWidget {
       error:
           (e, _) =>
               const Scaffold(body: Center(child: Text('Error al cargar la novedad.', overflow: TextOverflow.ellipsis))),
-      data: (novedad) {
-        if (novedad == null) {
+      data: (news) {
+        if (news == null) {
           return const Scaffold(body: Center(child: Text('Novedad no encontrada.', overflow: TextOverflow.ellipsis)));
         }
 
@@ -54,12 +54,12 @@ class NewsDetailsScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          novedad.emisor,
+                          news.creator,
                           style: AppTypography.overline.copyWith(color: AppColors.neutral75),
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          novedad.titulo,
+                          news.title,
                           style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -67,7 +67,7 @@ class NewsDetailsScreen extends ConsumerWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(6),
                           child: Image.network(
-                            novedad.imagenURL,
+                            news.imageURL,
                             width: double.infinity,
                             height: 160,
                             fit: BoxFit.cover,
@@ -77,14 +77,14 @@ class NewsDetailsScreen extends ConsumerWidget {
                         SizedBox(
                           width: double.infinity,
                           child: Text(
-                            novedad.resumen,
+                            news.summary,
                             style: AppTypography.subtitle1.copyWith(color: AppColors.secondary200),
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         const SizedBox(height: 16),
-                        Text(novedad.descripcion, style: AppTypography.body1.copyWith(color: AppColors.neutral100)),
+                        Text(news.description, style: AppTypography.body1.copyWith(color: AppColors.neutral100)),
                         const SizedBox(height: 24),
                         Center(
                           child: Text(
@@ -100,18 +100,18 @@ class NewsDetailsScreen extends ConsumerWidget {
                             final messenger = ScaffoldMessenger.of(context);
 
                             try {
-                              final response = await http.get(Uri.parse(novedad.imagenURL));
+                              final response = await http.get(Uri.parse(news.imageURL));
                               final bytes = response.bodyBytes;
 
                               final tempDir = await getTemporaryDirectory();
                               final file = File('${tempDir.path}/shared_news.jpg');
                               await file.writeAsBytes(bytes);
 
-                              final url = 'http://sermanos.app/news/${novedad.id}';
+                              final url = 'http://sermanos.app/news/${news.id}';
 
                               final params = ShareParams(
-                                text: '${novedad.resumen}\n\n$url',
-                                subject: novedad.titulo,
+                                text: '${news.summary}\n\n$url',
+                                subject: news.title,
                                 files: [XFile(file.path)],
                               );
 

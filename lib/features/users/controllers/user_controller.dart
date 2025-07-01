@@ -15,9 +15,9 @@ abstract class UserController {
 
   Future<void> logout();
 
-  Future<void> updateUser(String uid, Map<String, dynamic> data);
+  Future<void> updateUser(String userId, Map<String, dynamic> data);
 
-  Future<void> uploadProfilePicture(String uid, XFile xfile);
+  Future<void> uploadProfilePicture(String userId, XFile xfile);
 
   Future<User?> getCurrentUser();
 

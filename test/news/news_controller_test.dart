@@ -13,12 +13,12 @@ void main() {
 
   final mockNews = News(
     id: '1',
-    titulo: 'Título de prueba',
-    descripcion: 'Descripción de prueba',
-    resumen: 'Resumen de prueba',
-    emisor: 'Emisor',
-    imagenURL: 'https://example.com/image.jpg',
-    fechaCreacion: Timestamp.fromDate(DateTime(2024, 1, 1)),
+    title: 'Título de prueba',
+    description: 'Descripción de prueba',
+    summary: 'Resumen de prueba',
+    creator: 'Emisor',
+    imageURL: 'https://example.com/image.jpg',
+    creationDate: Timestamp.fromDate(DateTime(2024, 1, 1)),
   );
 
   setUp(() {
@@ -43,7 +43,7 @@ void main() {
       final result = await controller.getNewsById('1');
 
       expect(result, isA<News>());
-      expect(result?.titulo, mockNews.titulo);
+      expect(result?.title, mockNews.title);
     });
 
     test('getNewsById returns null when not found', () async {
@@ -79,7 +79,7 @@ void main() {
       final notifier = NewsDetailNotifier(controller, '1');
       await Future.delayed(Duration.zero);
 
-      expect(notifier.state.value?.titulo, 'Título de prueba');
+      expect(notifier.state.value?.title, 'Título de prueba');
     });
 
     test('fetchNewsDetail sets state to null if not found', () async {

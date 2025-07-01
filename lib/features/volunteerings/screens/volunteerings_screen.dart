@@ -134,9 +134,9 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                     data: (volunteerings) {
                       final hasCurrent =
                           user != null &&
-                          user.voluntariado != null &&
-                          user.voluntariado != '' &&
-                          volunteerings.any((v) => v.id == user.voluntariado);
+                          user.volunteering != null &&
+                          user.volunteering != '' &&
+                          volunteerings.any((v) => v.id == user.volunteering);
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,7 +168,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
   }
 
   List<Widget> _buildCurrentVolunteering(List volunteerings, user, controller) {
-    final current = volunteerings.firstWhere((v) => v.id == user.voluntariado);
+    final current = volunteerings.firstWhere((v) => v.id == user.volunteering);
     return [
       Text(
         "Tu actividad",
@@ -182,11 +182,11 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
           context.go(AppRoutes.volunteeringDetail(current.id));
         },
         child: CurrentVolunteerCard(
-          category: current.emisor,
-          name: current.titulo,
+          category: current.creator,
+          name: current.title,
           onLocationPressed: () {
-            final lat = current.ubicacion.latitude;
-            final lng = current.ubicacion.longitude;
+            final lat = current.location.latitude;
+            final lng = current.location.longitude;
             final uri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng");
             launchUrl(uri);
           },
@@ -197,7 +197,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
   }
 
   Widget _buildVolunteeringCard(item, user, controller, showLikeCounter) {
-    final isFavorite = user?.favoritos.contains(item.id) ?? false;
+    final isFavorite = user?.favorites.contains(item.id) ?? false;
 
     return Column(
       children: [
@@ -211,10 +211,10 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
             future: showLikeCounter ? controller.getFavoritesCount(item.id) : Future.value(0),
             builder: (context, snapshot) {
               return VolunteeringCard(
-                imagePath: item.imagenURL,
-                category: item.emisor,
-                title: item.titulo,
-                vacancies: item.vacantes,
+                imagePath: item.imageURL,
+                category: item.creator,
+                title: item.title,
+                vacancies: item.vacants,
                 isFavorite: isFavorite,
                 onFavoritePressed: () async {
                   if (user == null) return;
@@ -227,8 +227,8 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                 },
                 likeCount: showLikeCounter ? item.likes : 0,
                 onLocationPressed: () {
-                  final lat = item.ubicacion.latitude;
-                  final lng = item.ubicacion.longitude;
+                  final lat = item.location.latitude;
+                  final lng = item.locationlongitude;
                   final uri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng");
                   launchUrl(uri);
                 },

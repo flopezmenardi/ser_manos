@@ -39,11 +39,11 @@ class VolunteeringDetailScreen extends ConsumerWidget {
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (error, _) => Scaffold(body: Center(child: Text('Error: $error', overflow: TextOverflow.ellipsis))),
       data: (volunteering) {
-        final hasVacants = volunteering.vacantes > 0;
-        final isSame = user.voluntariado == volunteering.id;
-        final hasAny = user.voluntariado != null && user.voluntariado != '';
-        final isAccepted = user.voluntariadoAceptado;
-        final profileComplete = user.telefono.isNotEmpty && user.genero.isNotEmpty && user.fechaNacimiento.isNotEmpty;
+        final hasVacants = volunteering.vacants > 0;
+        final isSame = user.volunteering == volunteering.id;
+        final hasAny = user.volunteering != null && user.volunteering != '';
+        final isAccepted = user.acceptedVolunteering;
+        final profileComplete = user.phoneNumber.isNotEmpty && user.gender.isNotEmpty && user.birthDate.isNotEmpty;
 
         Widget action;
 
@@ -72,7 +72,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                             (_) => Center(
                               child: ModalSermanos(
                                 title: '¿Estás seguro que querés abandonar tu voluntariado?',
-                                subtitle: volunteering.titulo,
+                                subtitle: volunteering.title,
                                 confimationText: 'Confirmar',
                                 cancelText: 'Cancelar',
                                 onCancel: () => Navigator.of(context).pop(false),
@@ -116,7 +116,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                             (_) => Center(
                               child: ModalSermanos(
                                 title: '¿Estás seguro que querés retirar tu postulación?',
-                                subtitle: volunteering.titulo,
+                                subtitle: volunteering.title,
                                 confimationText: 'Confirmar',
                                 cancelText: 'Cancelar',
                                 onCancel: () => Navigator.of(context).pop(false),
@@ -148,7 +148,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
               TextOnlyButton(
                 text: 'Abandonar voluntariado actual',
                 onPressed: () async {
-                  final volunteeringToAbandon = await controller.getVolunteeringById(user.voluntariado!);
+                  final volunteeringToAbandon = await controller.getVolunteeringById(user.volunteering!);
                   final confirmed =
                       await showDialog<bool>(
                         context: context,
@@ -156,7 +156,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                             (_) => Center(
                               child: ModalSermanos(
                                 title: '¿Estás seguro que querés abandonar tu voluntariado?',
-                                subtitle: volunteeringToAbandon.titulo,
+                                subtitle: volunteeringToAbandon.title,
                                 confimationText: 'Confirmar',
                                 cancelText: 'Cancelar',
                                 onCancel: () => Navigator.of(context).pop(false),
@@ -226,7 +226,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         (_) => Center(
                           child: ModalSermanos(
                             title: 'Te estás por postular a',
-                            subtitle: volunteering.titulo,
+                            subtitle: volunteering.title,
                             confimationText: 'Confirmar',
                             cancelText: 'Cancelar',
                             onCancel: () => Navigator.of(context).pop(false),
@@ -266,7 +266,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                       SizedBox(
                         width: AppGrid.screenWidth(context),
                         height: 200,
-                        child: Image.network(volunteering.imagenURL, fit: BoxFit.fill),
+                        child: Image.network(volunteering.imageURL, fit: BoxFit.fill),
                       ),
                       Positioned(
                         top: 0,
@@ -300,24 +300,24 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          volunteering.emisor.toUpperCase(),
+                          volunteering.creator.toUpperCase(),
                           style: AppTypography.overline.copyWith(color: AppColors.neutral75),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          volunteering.titulo,
+                          volunteering.title,
                           style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          volunteering.fechaInicio != null
-                              ? 'Fecha de inicio: ${volunteering.fechaInicio!.toDate().day}/${volunteering.fechaInicio!.toDate().month}/${volunteering.fechaInicio!.toDate().year}'
+                          volunteering.startDate != null
+                              ? 'Fecha de inicio: ${volunteering.startDate!.toDate().day}/${volunteering.startDate!.toDate().month}/${volunteering.startDate!.toDate().year}'
                               : 'Fecha de inicio no disponible',
                           style: AppTypography.body2.copyWith(color: AppColors.neutral50),
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          volunteering.resumen,
+                          volunteering.summary,
                           style: AppTypography.body1.copyWith(color: AppColors.secondary200),
                         ),
                         const SizedBox(height: 24),
@@ -327,7 +327,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          volunteering.descripcion,
+                          volunteering.description,
                           style: AppTypography.body1.copyWith(color: AppColors.neutral100),
                         ),
                         const SizedBox(height: 24),
@@ -335,7 +335,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                           onTap: () async {
                             final scaffoldMessenger = ScaffoldMessenger.of(context); // capture BEFORE async gap
 
-                            final query = Uri.encodeComponent(volunteering.direccion);
+                            final query = Uri.encodeComponent(volunteering.address);
                             final url = 'https://www.google.com/maps/search/?api=1&query=$query';
                             final uri = Uri.parse(url);
 
@@ -349,7 +349,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                               );
                             }
                           },
-                          child: LocationImageCard(address: volunteering.direccion),
+                          child: LocationImageCard(address: volunteering.address),
                         ),
                         const SizedBox(height: 24),
                         Text(
@@ -358,11 +358,11 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 8),
                         MarkdownBody(
-                          data: volunteering.requisitos,
+                          data: volunteering.requirements,
                           styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
                         ),
                         const SizedBox(height: 16),
-                        VacantsIndicator(vacants: volunteering.vacantes),
+                        VacantsIndicator(vacants: volunteering.vacants),
                         const SizedBox(height: 24),
                         Center(child: action),
                         const SizedBox(height: 24),

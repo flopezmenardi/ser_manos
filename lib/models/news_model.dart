@@ -2,33 +2,33 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class News {
   final String id;
-  final String titulo;
-  final String descripcion;
-  final String emisor;
-  final String resumen;
-  final String imagenURL;
-  final Timestamp? fechaCreacion;
+  final String title;
+  final String description;
+  final String creator;
+  final String summary;
+  final String imageURL;
+  final Timestamp? creationDate;
 
   News({
     required this.id,
-    required this.titulo,
-    required this.descripcion,
-    required this.emisor,
-    required this.resumen,
-    required this.imagenURL,
-    required this.fechaCreacion,
+    required this.title,
+    required this.description,
+    required this.creator,
+    required this.summary,
+    required this.imageURL,
+    required this.creationDate,
   });
 
   factory News.fromDocumentSnapshot(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return News(
       id: doc.id,
-      titulo: data['titulo'] ?? '',
-      descripcion: data['descripcion'] ?? '',
-      emisor: data['emisor'] ?? '',
-      resumen: data['resumen'] ?? '',
-      imagenURL: data['imagenURL'] ?? '',
-      fechaCreacion: data['fechaCreacion'],
+      title: data['titulo'] ?? '',
+      description: data['descripcion'] ?? '',
+      creator: data['emisor'] ?? '',
+      summary: data['resumen'] ?? '',
+      imageURL: data['imagenURL'] ?? '',
+      creationDate: data['fechaCreacion'],
     );
   }
 }
@@ -36,13 +36,12 @@ class News {
 extension NewsToMap on News {
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'titulo': titulo,
-      'descripcion': descripcion,
-      'resumen': resumen,
-      'emisor': emisor,
-      'imagenURL': imagenURL,
-      'fechaCreacion': fechaCreacion,
+      'titulo': title,                
+      'descripcion': description,
+      'resumen': summary,
+      'emisor': creator,
+      'imagenURL': imageURL,
+      'fechaCreacion': creationDate,
     };
   }
 }

@@ -2,100 +2,100 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Volunteering {
   final String id;
-  final String titulo;
-  final String descripcion;
-  final String resumen;
-  final String emisor;
-  final int vacantes;
-  final String requisitos;
-  final String direccion;
-  final GeoPoint ubicacion;
-  final String imagenURL;
-  final Timestamp? fechaCreacion;
+  final String title;
+  final String description;
+  final String summary;
+  final String creator;
+  final int vacants;
+  final String requirements;
+  final String address;
+  final GeoPoint location;
+  final String imageURL;
+  final Timestamp? creationDate;
   final int likes;
-  final Timestamp? fechaInicio;
+  final Timestamp? startDate;
 
   Volunteering({
     required this.id,
-    required this.titulo,
-    required this.descripcion,
-    required this.resumen,
-    required this.emisor,
-    required this.vacantes,
-    required this.requisitos,
-    required this.direccion,
-    required this.ubicacion,
-    required this.imagenURL,
-    required this.fechaCreacion,
+    required this.title,
+    required this.description,
+    required this.summary,
+    required this.creator,
+    required this.vacants,
+    required this.requirements,
+    required this.address,
+    required this.location,
+    required this.imageURL,
+    required this.creationDate,
     required this.likes,
-    required this.fechaInicio,
+    required this.startDate,
   });
 
   factory Volunteering.fromDocumentSnapshot(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return Volunteering(
       id: doc.id,
-      titulo: data['titulo'] ?? '',
-      descripcion: data['descripcion'] ?? '',
-      resumen: data['resumen'] ?? '',
-      emisor: data['emisor'] ?? '',
-      vacantes: data['vacantes'] ?? 0,
-      requisitos: data['requisitos'] ?? '',
-      direccion: data['direccion'] ?? '',
-      ubicacion: data['ubicacion'] ?? '',
-      imagenURL: data['imagenURL'] ?? '',
-      fechaCreacion: data['fechaCreacion'],
+      title: data['titulo'] ?? '',
+      description: data['descripcion'] ?? '',
+      summary: data['resumen'] ?? '',
+      creator: data['emisor'] ?? '',
+      vacants: data['vacantes'] ?? 0,
+      requirements: data['requisitos'] ?? '',
+      address: data['direccion'] ?? '',
+      location: data['ubicacion'] ?? '',
+      imageURL: data['imagenURL'] ?? '',
+      creationDate: data['fechaCreacion'],
       likes: data['likes'] ?? 0,
-      fechaInicio: data['fechaInicio'],
+      startDate: data['fechaInicio'],
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'titulo': titulo,
-      'descripcion': descripcion,
-      'resumen': resumen,
-      'emisor': emisor,
-      'vacantes': vacantes,
-      'requisitos': requisitos,
-      'direccion': direccion,
-      'ubicacion': ubicacion,
-      'imagenURL': imagenURL,
-      'fechaCreacion': fechaCreacion,
+      'titulo': title,
+      'descripcion': description,
+      'resumen': summary,
+      'emisor': creator,
+      'vacantes': vacants,
+      'requisitos': requirements,
+      'direccion': address,
+      'ubicacion': location,
+      'imagenURL': imageURL,
+      'fechaCreacion': creationDate,
       'likes': likes,
-      'fechaInicio': fechaInicio,
+      'fechaInicio': startDate,
     };
   }
 
   Volunteering copyWith({
     String? id,
-    String? titulo,
-    String? descripcion,
-    String? resumen,
-    String? emisor,
-    int? vacantes,
-    String? requisitos,
-    String? direccion,
-    GeoPoint? ubicacion,
-    String? imagenURL,
-    Timestamp? fechaCreacion,
+    String? title,
+    String? description,
+    String? summary,
+    String? creator,
+    int? vacants,
+    String? requirements,
+    String? address,
+    GeoPoint? location,
+    String? imageURL,
+    Timestamp? creationDate,
     int? likes,
-    Timestamp? fechaInicio,
+    Timestamp? startDate,
   }) {
     return Volunteering(
       id: id ?? this.id,
-      titulo: titulo ?? this.titulo,
-      descripcion: descripcion ?? this.descripcion,
-      resumen: resumen ?? this.resumen,
-      emisor: emisor ?? this.emisor,
-      vacantes: vacantes ?? this.vacantes,
-      requisitos: requisitos ?? this.requisitos,
-      direccion: direccion ?? this.direccion,
-      ubicacion: ubicacion ?? this.ubicacion,
-      imagenURL: imagenURL ?? this.imagenURL,
-      fechaCreacion: fechaCreacion ?? this.fechaCreacion,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      summary: summary ?? this.summary,
+      creator: creator ?? this.creator,
+      vacants: vacants ?? this.vacants,
+      requirements: requirements ?? this.requirements,
+      address: address ?? this.address,
+      location: location ?? this.location,
+      imageURL: imageURL ?? this.imageURL,
+      creationDate: creationDate ?? this.creationDate,
       likes: likes ?? this.likes,
-      fechaInicio: fechaInicio ?? this.fechaInicio,
+      startDate: startDate ?? this.startDate,
     );
   }
 }

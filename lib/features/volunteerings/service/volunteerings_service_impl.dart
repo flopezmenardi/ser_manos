@@ -31,9 +31,9 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
     switch (sortMode) {
       case SortMode.date:
         volunteerings.sort((a, b) {
-          final fechaA = a.fechaCreacion ?? Timestamp.fromMillisecondsSinceEpoch(0);
-          final fechaB = b.fechaCreacion ?? Timestamp.fromMillisecondsSinceEpoch(0);
-          return fechaB.compareTo(fechaA);
+          final dateA = a.creationDate ?? Timestamp.fromMillisecondsSinceEpoch(0);
+          final dateB = b.creationDate ?? Timestamp.fromMillisecondsSinceEpoch(0);
+          return dateB.compareTo(dateA);
         });
         break;
       case SortMode.proximity:
@@ -42,8 +42,8 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
         }
         volunteerings.sort((a, b) {
           //Calculate distance from user location to each volunteering's location to sort by proximity
-          final distA = _distanceBetween(userLocation, a.ubicacion);
-          final distB = _distanceBetween(userLocation, b.ubicacion);
+          final distA = _distanceBetween(userLocation, a.location);
+          final distB = _distanceBetween(userLocation, b.location);
           return distA.compareTo(distB);
         });
         break;
@@ -60,24 +60,24 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
   }
 
   @override
-  Future<void> applyToVolunteering(String uid, String volunteeringId) async {
-    await _db.collection('usuarios').doc(uid).update({'voluntariado': volunteeringId, 'voluntariadoAceptado': false});
+  Future<void> applyToVolunteering(String userId, String volunteeringId) async {
+    await _db.collection('usuarios').doc(userId).update({'voluntariado': volunteeringId, 'voluntariadoAceptado': false});
   }
 
   @override
-  Future<void> withdrawApplication(String uid) async {
-    await _db.collection('usuarios').doc(uid).update({'voluntariado': null, 'voluntariadoAceptado': false});
+  Future<void> withdrawApplication(String userId) async {
+    await _db.collection('usuarios').doc(userId).update({'voluntariado': null, 'voluntariadoAceptado': false});
   }
 
   @override
-  Future<void> abandonVolunteering(String uid, String volunteeringId) async {
+  Future<void> abandonVolunteering(String userId, String volunteeringId) async {
     final volunteeringDoc = await _db.collection('voluntariados').doc(volunteeringId).get();
     final data = volunteeringDoc.data();
 
     if (data != null && data['fechaInicio'] is Timestamp) {
-      final fechaInicio = (data['fechaInicio'] as Timestamp).toDate();
+      final startDate = (data['fechaInicio'] as Timestamp).toDate();
       final now = DateTime.now();
-      final daysBefore = fechaInicio.difference(now).inDays;
+      final daysBefore = startDate.difference(now).inDays;
 
       try {
         await _analyticsService.logWithdrawVolunteering(
@@ -89,7 +89,7 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
       }
     }
 
-    await _db.collection('usuarios').doc(uid).update({'voluntariado': null, 'voluntariadoAceptado': false});
+    await _db.collection('usuarios').doc(userId).update({'voluntariado': null, 'voluntariadoAceptado': false});
 
     await _db.collection('voluntariados').doc(volunteeringId).update({'vacantes': FieldValue.increment(1)});
   }

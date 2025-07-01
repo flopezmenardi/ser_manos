@@ -42,36 +42,36 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
 
   @override
   Future<void> applyToVolunteering(String volunteeringId) async {
-    if (currentUser.telefono.isEmpty || currentUser.genero.isEmpty || currentUser.fechaNacimiento.isEmpty) {
+    if (currentUser.phoneNumber.isEmpty || currentUser.gender.isEmpty || currentUser.birthDate.isEmpty) {
       throw Exception('Tu perfil no está completo');
     }
 
-    if (currentUser.voluntariado != null && currentUser.voluntariado != '') {
+    if (currentUser.volunteering != null && currentUser.volunteering != '') {
       throw Exception('Ya estás postulado a un voluntariado');
     }
 
     final volunteering = await volunteeringsService.getVolunteeringById(volunteeringId);
-    if (volunteering == null || volunteering.vacantes <= 0) {
+    if (volunteering == null || volunteering.vacants <= 0) {
       throw Exception('No hay vacantes disponibles');
     }
 
-    await volunteeringsService.applyToVolunteering(currentUser.uuid, volunteeringId);
+    await volunteeringsService.applyToVolunteering(currentUser.id, volunteeringId);
   }
 
   @override
   Future<void> abandonVolunteering(String volunteeringId) async {
-    await volunteeringsService.abandonVolunteering(currentUser.uuid, volunteeringId);
+    await volunteeringsService.abandonVolunteering(currentUser.id, volunteeringId);
   }
 
   @override
   Future<void> withdrawApplication() async {
-    await volunteeringsService.withdrawApplication(currentUser.uuid);
+    await volunteeringsService.withdrawApplication(currentUser.id);
   }
 
   @override
   Future<void> toggleFavorite(String volunteeringId, bool isFavorite) async {
     await volunteeringsService.toggleFavorite(
-      userId: currentUser.uuid,
+      userId: currentUser.id,
       volunteeringId: volunteeringId,
       isFavorite: isFavorite,
     );
@@ -99,9 +99,9 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
 
     final lowered = queryState.query.toLowerCase();
     return all.where((v) {
-      return v.titulo.toLowerCase().contains(lowered) ||
-          v.descripcion.toLowerCase().contains(lowered) ||
-          v.resumen.toLowerCase().contains(lowered);
+      return v.title.toLowerCase().contains(lowered) ||
+          v.description.toLowerCase().contains(lowered) ||
+          v.summary.toLowerCase().contains(lowered);
     }).toList();
   }
 

@@ -25,7 +25,7 @@ class NewsScreen extends ConsumerWidget {
             child: newsState.when(
               loading: () => Center(child: CircularProgressIndicator(color: AppColors.secondary100)),
               error: (e, _) => Center(child: Text('Error: $e', overflow: TextOverflow.ellipsis,)),
-              data: (novedades) => RefreshIndicator(
+              data: (news) => RefreshIndicator(
                 onRefresh: () async {
                   await ref.read(newsListNotifierProvider.notifier).fetchNews();
                 },
@@ -33,17 +33,17 @@ class NewsScreen extends ConsumerWidget {
                 backgroundColor: AppColors.secondary25,
                 child: ListView.separated(
                   padding: const EdgeInsets.all(16),
-                  itemCount: novedades.length,
+                  itemCount: news.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 16),
                   itemBuilder: (context, index) {
-                    final novedad = novedades[index];
+                    final currentNews = news[index];
                     return NewsCard(
-                      imagePath: novedad.imagenURL,
-                      report: novedad.emisor,
-                      title: novedad.titulo,
-                      description: novedad.resumen,
+                      imagePath: currentNews.imageURL,
+                      report: currentNews.creator,
+                      title: currentNews.title,
+                      description: currentNews.summary,
                       onConfirm: () {
-                        context.push(AppRoutes.newsDetail(novedad.id));
+                        context.push(AppRoutes.newsDetail(currentNews.id));
                       },
                     );
                   },
