@@ -19,6 +19,7 @@ class RegisterScreen extends ConsumerStatefulWidget {
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
+  String? _emailError;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -32,7 +33,24 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     _lastNameController.addListener(_onFormChanged);
     _emailController.addListener(_onFormChanged);
     _passwordController.addListener(_onFormChanged);
+
+    _emailController.addListener(() {
+      if (_emailError != null) {
+        setState(() => _emailError = null);
+        // Removed `ref.read(authNotifierProvider.notifier).clearError();` here
+        // as it will be cleared when _handleRegister is called or by the listener
+        // in the build method upon successful registration.
+      }
+    });
   }
+
+  // Remove didChangeDependencies entirely
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   // ref.listen here caused the error
+  // }
+
 
   @override
   void dispose() {
@@ -52,12 +70,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   Future<void> _handleRegister() async {
+    setState(() { _emailError = null; });
+    ref.read(authNotifierProvider.notifier).clearError(); // Clear error in provider's state
+
     if (!_formKey.currentState!.validate()) {
       return;
     }
-
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    final router = GoRouter.of(context);
 
     await ref
         .read(authNotifierProvider.notifier)
@@ -67,27 +85,34 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
-
-    if (!mounted) return; // <-- ensure still mounted before using context
-
-    final error = ref.read(authNotifierProvider).errorMessage;
-    if (error == null) {
-      router.go('/welcome');
-    } else {
-      scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text(error, overflow: TextOverflow.ellipsis)),
-      );
-    }
   }
-
-  bool get _isFormFilled =>
-      _nameController.text.isNotEmpty &&
-      _lastNameController.text.isNotEmpty &&
-      _emailController.text.isNotEmpty &&
-      _passwordController.text.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
+    // Moved ref.listen here, at the beginning of the build method
+    ref.listen<AuthState>(authNotifierProvider, (previous, current) {
+      // Only react when loading has finished
+      if (previous?.isLoading == true && !current.isLoading) {
+        if (current.currentUser != null) {
+          // Registration successful
+          // Ensure _emailError is null to prevent displaying old errors
+          if (_emailError != null) {
+            // No need for setState here if this is the only change and we're navigating
+            // but keep it if _emailError can affect other parts of the build
+            setState(() { _emailError = null; });
+          }
+          if (mounted) { // Important for navigation after async ops
+            GoRouter.of(context).go(AppRoutes.welcome);
+          }
+        } else if (current.errorMessage != null) {
+          // Registration failed with an error
+          setState(() {
+            _emailError = current.errorMessage;
+          });
+        }
+      }
+    });
+
     final state = ref.watch(authNotifierProvider);
 
     return Scaffold(
@@ -102,6 +127,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 child: IntrinsicHeight(
                   child: Form(
                     key: _formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -114,17 +140,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           lastNameController: _lastNameController,
                           emailController: _emailController,
                           passwordController: _passwordController,
+                          emailError: _emailError,
                         ),
 
                         const SizedBox(height: 32),
                         const Spacer(),
 
                         CTAButton(
-                          text:
-                              state.isLoading
-                                  ? 'Registrando...'
-                                  : 'Registrarse',
-                          isEnabled: _isFormFilled && !state.isLoading,
+                          text: state.isLoading ? 'Registrando...' : 'Registrarse',
+                          isEnabled: (_formKey.currentState?.validate() ?? false) && !state.isLoading,
                           onPressed: _handleRegister,
                         ),
                         const SizedBox(height: 16),

@@ -6,6 +6,7 @@ class RegisterForms extends StatefulWidget {
   final TextEditingController lastNameController;
   final TextEditingController emailController;
   final TextEditingController passwordController;
+  final String? emailError;
 
   const RegisterForms({
     super.key,
@@ -13,6 +14,7 @@ class RegisterForms extends StatefulWidget {
     required this.lastNameController,
     required this.emailController,
     required this.passwordController,
+    this.emailError,
   });
 
   @override
@@ -51,6 +53,8 @@ class _RegisterFormsState extends State<RegisterForms> {
           label: 'Email',
           placeholder: 'Ej: juan@mail.com',
           controller: widget.emailController,
+          supportingText: widget.emailError,
+          hasError: widget.emailError != null,
           validator: (value) {
             if (value == null || value.isEmpty) return 'Email requerido';
             if (!value.contains('@')) return 'Email inválido';
@@ -74,7 +78,7 @@ class _RegisterFormsState extends State<RegisterForms> {
             },
           ),
           validator: (value) {
-            if (value == null || value.isEmpty) return 'Contraseña requerido';
+            if (value == null || value.isEmpty) return 'Contraseña requerida';
             if (value.length < 8) return 'Contraseña debe contener al menos 8 caracteres';
             if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)').hasMatch(value)) {
               return 'Contraseña debe contener al menos una letra mayúscula, una minúscula y un número';

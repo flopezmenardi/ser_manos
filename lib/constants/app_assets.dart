@@ -4,6 +4,7 @@ class AppAssets {
   static const logoRectangular = 'assets/logos/logo_rectangular.png';
   static const logoRectangle = 'assets/logos/logo_rectangle.png';
   static const logoSquare = 'assets/logos/logo_square.png';
+  static const appIcon = 'assets/logos/app_icon.png';
 
   // Images
   static const novedades2 = 'assets/images/novedades_2.jpg';

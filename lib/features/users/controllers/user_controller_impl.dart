@@ -124,16 +124,30 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String password,
   }) async {
     try {
-      state = state.copyWith(isLoading: true, errorMessage: null);
+      state = state.copyWith(isLoading: true, errorMessage: null); // Clear error at the start of new attempt
       final user = await _authController.registerUser(
         nombre: nombre,
         apellido: apellido,
         email: email,
         password: password,
       );
-      state = state.copyWith(currentUser: user, isLoading: false);
+      // On success, explicitly set errorMessage to null
+      state = state.copyWith(currentUser: user, errorMessage: null, isLoading: false);
+    } on fb_auth.FirebaseAuthException catch (e) {
+      String message;
+      if (e.code == 'email-already-in-use') {
+        message = 'La dirección de email ya está en uso por otra cuenta.';
+      } else if (e.code == 'invalid-email') {
+        message = 'La dirección de email no es válida.';
+      } else {
+        message = 'Ocurrió un error al registrar. Intentá nuevamente.';
+      }
+      state = state.copyWith(errorMessage: message, isLoading: false);
     } catch (e) {
-      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
+      state = state.copyWith(
+        errorMessage: 'Error inesperado. Intentá nuevamente.',
+        isLoading: false,
+      );
     }
   }
 
@@ -176,6 +190,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
     if (userId == null) return;
     await _authController.updateUser(userId, data);
     await refreshUser();
+  }
+
+  void clearError() {
+    state = state.copyWith(errorMessage: null);
   }
 
   @override

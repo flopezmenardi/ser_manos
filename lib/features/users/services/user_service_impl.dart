@@ -31,14 +31,23 @@ class UserServiceImpl implements UserService {
     required String email,
     required String password,
   }) async {
-    final userCredential = await _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    final userId = userCredential.user!.uid;
+    try {
+      final userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-    await createUser(userId, nombre, apellido, email);
-    return getUserById(userId);
+      final userId = userCredential.user!.uid;
+
+      await createUser(userId, nombre, apellido, email);
+      return getUserById(userId);
+    } on fb_auth.FirebaseAuthException catch (e) {
+      final currentUser = _auth.currentUser;
+      if (currentUser != null) {
+        await currentUser.delete();
+      }
+      rethrow;
+    }
   }
 
   @override

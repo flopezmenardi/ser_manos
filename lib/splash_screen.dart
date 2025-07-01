@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/constants/app_assets.dart';
 import 'package:ser_manos/constants/app_routes.dart';
 
 import 'features/users/controllers/user_controller_impl.dart';
 
-class SplashScreen extends ConsumerStatefulWidget {
+class SplashScreen extends ConsumerWidget {
   const SplashScreen({super.key});
 
   @override
-  ConsumerState<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends ConsumerState<SplashScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authNotifierProvider);
 
     if (authState.isInitializing) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Image(
+            image: AssetImage(AppAssets.logoSquare),
+            width: 150,
+            height: 150,
+          ),
+        ),
+      );
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -29,6 +34,16 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       }
     });
 
-    return const SizedBox(); // temporary empty widget
+    // Temporary placeholder while redirection triggers
+    return const Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Image(
+            image: AssetImage(AppAssets.logoSquare),
+            width: 150,
+            height: 150,
+          ),
+        ),
+    );
   }
 }
