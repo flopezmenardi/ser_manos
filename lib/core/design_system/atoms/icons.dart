@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../tokens/colors.dart';
 
 enum IconState { defaultState, enabled, disabled, white }
@@ -48,7 +49,6 @@ class AppIcons {
     return Icon(Icons.location_on, color: _getColor(state));
   }
 
-
   // EXCEPTIONS
 
   static Icon getPersonIcon(Color color) {
@@ -62,7 +62,6 @@ class AppIcons {
   static Icon getAccountIcon({required Color color, double? size}) {
     return Icon(Icons.account_circle, color: color, size: size);
   }
-
 
   // PRIVATE
 

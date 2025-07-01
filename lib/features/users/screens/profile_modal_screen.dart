@@ -52,16 +52,18 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
 
   String? _indexToGender(int? index) {
     const options = ['Hombre', 'Mujer', 'No binario'];
-    return (index != null && index >= 0 && index < options.length)
-        ? options[index]
-        : null;
+    return (index != null && index >= 0 && index < options.length) ? options[index] : null;
   }
 
   Future<void> _pickPhoto() async {
-    final XFile? photo = await PhotoPickerUtil.selectFromCameraOrGallery(
-      context,
-    );
-    if (photo == null) return;
+    final XFile? photo = await PhotoPickerUtil.selectFromCameraOrGallery(context);
+    if (photo == null) {
+      setState(() {
+        _newPhoto = null;
+        _newPhotoPath = null;
+      });
+      return;
+    };
 
     setState(() {
       _newPhoto = photo;
@@ -72,8 +74,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final fromVolunteering =
-        GoRouterState.of(context).uri.queryParameters['fromVolunteering'];
+    final fromVolunteering = GoRouterState.of(context).uri.queryParameters['fromVolunteering'];
     final user = ref.watch(authNotifierProvider).currentUser;
     final authController = ref.read(userControllerProvider);
 
@@ -83,32 +84,24 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.neutral0,
-      body: SafeArea(
-        child: Column(
-          children: [
-            HeaderModal(onClose: () => context.pop()),
-            Expanded(
+      body: Column(
+        children: [
+          HeaderModal(onClose: () => context.pop()),
+          Expanded(
+            child: SafeArea(
               child: FormBuilder(
                 key: _formKey,
                 onChanged: _checkForChanges,
-                initialValue: {
-                  'birthDate': user.birthDate,
-                  'email': user.email,
-                  'phone': user.phoneNumber,
-                },
+                initialValue: {'birthDate': user.birthDate, 'email': user.email, 'phone': user.phoneNumber},
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppGrid.horizontalMargin,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: AppGrid.horizontalMargin),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 24),
                       Text(
                         'Datos de perfil',
-                        style: AppTypography.headline1.copyWith(
-                          color: AppColors.neutral100,
-                        ),
+                        style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 24),
@@ -119,9 +112,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                         label: 'Fecha de nacimiento',
                         placeholder: 'DD/MM/YYYY',
                         keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9/]')),
-                        ],
+                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9/]'))],
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                           FormBuilderValidators.match(
@@ -155,9 +146,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                       const SizedBox(height: 24),
                       Text(
                         'Datos de contacto',
-                        style: AppTypography.headline1.copyWith(
-                          color: AppColors.neutral100,
-                        ),
+                        style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 16),
@@ -175,10 +164,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                         keyboardType: TextInputType.phone,
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
-                          FormBuilderValidators.match(
-                            RegExp(r'^\d{7,15}$'),
-                            errorText: 'Teléfono inválido',
-                          ),
+                          FormBuilderValidators.match(RegExp(r'^\d{7,15}$'), errorText: 'Teléfono inválido'),
                         ]),
                       ),
                       const SizedBox(height: 24),
@@ -191,9 +177,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                         keyboardType: TextInputType.emailAddress,
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
-                          FormBuilderValidators.email(
-                            errorText: 'Email inválido',
-                          ),
+                          FormBuilderValidators.email(errorText: 'Email inválido'),
                         ]),
                       ),
                       const SizedBox(height: 32),
@@ -204,27 +188,18 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                         onPressed:
                             _hasChanges
                                 ? () async {
-                                  final isValid =
-                                      _formKey.currentState
-                                          ?.saveAndValidate() ??
-                                      false;
+                                  final isValid = _formKey.currentState?.saveAndValidate() ?? false;
                                   if (!isValid || _sexoIndex == null) {
                                     if (_sexoIndex == null) {
                                       // Capture ScaffoldMessenger before any async operations
-                                      final scaffoldMessenger =
-                                          ScaffoldMessenger.of(context);
-                                      WidgetsBinding.instance
-                                          .addPostFrameCallback((_) {
-                                            scaffoldMessenger.showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                  'Seleccioná un género',
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            );
-                                          });
+                                      final scaffoldMessenger = ScaffoldMessenger.of(context);
+                                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                                        scaffoldMessenger.showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Seleccioná un género', overflow: TextOverflow.ellipsis),
+                                          ),
+                                        );
+                                      });
                                     }
                                     return;
                                   }
@@ -236,10 +211,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                                   final values = _formKey.currentState!.value;
 
                                   if (_newPhoto != null) {
-                                    await authController.uploadProfilePicture(
-                                      user.id,
-                                      _newPhoto!,
-                                    );
+                                    await authController.uploadProfilePicture(user.id, _newPhoto!);
                                     _newPhoto = null;
                                   }
 
@@ -250,9 +222,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                                     'genero': _indexToGender(_sexoIndex),
                                   });
 
-                                  await ref
-                                      .read(authNotifierProvider.notifier)
-                                      .refreshUser();
+                                  await ref.read(authNotifierProvider.notifier).refreshUser();
 
                                   if (!mounted) return;
 
@@ -261,11 +231,8 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                                   });
 
                                   if (fromVolunteering != null) {
-                                    final controller = ref.read(
-                                      volunteeringsControllerProvider,
-                                    );
-                                    final volunteering = await controller
-                                        .getVolunteeringById(fromVolunteering);
+                                    final controller = ref.read(volunteeringsControllerProvider);
+                                    final volunteering = await controller.getVolunteeringById(fromVolunteering);
 
                                     if (!mounted) return;
 
@@ -276,55 +243,37 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                                           builder:
                                               (dialogContext) => Center(
                                                 child: ModalSermanos(
-                                                  title:
-                                                      'Te estás por postular a',
+                                                  title: 'Te estás por postular a',
                                                   subtitle: volunteering.title,
                                                   confimationText: 'Confirmar',
                                                   cancelText: 'Cancelar',
-                                                  onCancel:
-                                                      () => Navigator.of(
-                                                        dialogContext,
-                                                      ).pop(false),
-                                                  onConfirm:
-                                                      () => Navigator.of(
-                                                        dialogContext,
-                                                      ).pop(true),
+                                                  onCancel: () => Navigator.of(dialogContext).pop(false),
+                                                  onConfirm: () => Navigator.of(dialogContext).pop(true),
                                                 ),
                                               ),
                                         ) ??
                                         false;
 
                                     if (confirm) {
-                                      await controller.applyToVolunteering(
-                                        fromVolunteering,
-                                      );
-                                      await ref
-                                          .read(authNotifierProvider.notifier)
-                                          .refreshUser();
+                                      await controller.applyToVolunteering(fromVolunteering);
+                                      await ref.read(authNotifierProvider.notifier).refreshUser();
 
                                       if (!mounted) return;
                                     }
 
                                     // Use captured goRouter instead of context
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) {
-                                          if (mounted) {
-                                            goRouter.go(
-                                              AppRoutes.volunteeringDetail(
-                                                fromVolunteering,
-                                              ),
-                                            );
-                                          }
-                                        });
+                                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                                      if (mounted) {
+                                        goRouter.go(AppRoutes.volunteeringDetail(fromVolunteering));
+                                      }
+                                    });
 
                                     return;
                                   }
 
                                   // Si no vino desde voluntariado, comportamiento normal
                                   // Use captured goRouter instead of context
-                                  WidgetsBinding.instance.addPostFrameCallback((
-                                    _,
-                                  ) {
+                                  WidgetsBinding.instance.addPostFrameCallback((_) {
                                     if (mounted) {
                                       goRouter.push(AppRoutes.profile);
                                     }
@@ -338,8 +287,8 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

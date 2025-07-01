@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ser_manos/constants/app_assets.dart';
 import 'package:ser_manos/constants/app_routes.dart';
 
+import '../../molecules/status_bar/status_bar.dart';
 import '../../tokens/colors.dart';
 import '../../tokens/typography.dart';
 
@@ -32,7 +33,7 @@ class AppHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 41),
+          StatusBar(variant: StatusBarVariant.main),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(children: [Image.asset(AppAssets.logoRectangular, height: 25)]),
@@ -66,7 +67,10 @@ class AppHeader extends StatelessWidget {
           alignment: Alignment.center,
           child: Text(
             label,
-            style: AppTypography.button.copyWith(color: AppColors.neutral25),
+            style:
+                isSelected
+                    ? AppTypography.button.copyWith(color: AppColors.neutral0)
+                    : AppTypography.button.copyWith(color: AppColors.neutral25),
             overflow: TextOverflow.ellipsis,
           ),
         ),

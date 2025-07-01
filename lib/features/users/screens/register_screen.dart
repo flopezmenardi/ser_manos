@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ser_manos/constants/app_routes.dart';
-import 'package:ser_manos/core/design_system/organisms/forms/register.dart';
 
+import '../../../constants/app_routes.dart';
 import '../../../core/design_system/atoms/logos/logo_square.dart';
 import '../../../core/design_system/molecules/buttons/cta_button.dart';
 import '../../../core/design_system/molecules/buttons/text_button.dart';
+import '../../../core/design_system/molecules/status_bar/status_bar.dart';
+import '../../../core/design_system/organisms/forms/register.dart';
 import '../../../core/design_system/tokens/colors.dart';
 import '../controllers/user_controller_impl.dart';
 
@@ -87,87 +88,86 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // Moved ref.listen here, at the beginning of the build method
-    ref.listen<AuthState>(authNotifierProvider, (previous, current) {
-      // Only react when loading has finished
-      if (previous?.isLoading == true && !current.isLoading) {
-        if (current.currentUser != null) {
-          // Registration successful
-          // Ensure _emailError is null to prevent displaying old errors
-          if (_emailError != null) {
-            // No need for setState here if this is the only change and we're navigating
-            // but keep it if _emailError can affect other parts of the build
-            setState(() { _emailError = null; });
-          }
-          if (mounted) { // Important for navigation after async ops
-            GoRouter.of(context).go(AppRoutes.welcome);
-          }
-        } else if (current.errorMessage != null) {
-          // Registration failed with an error
+@override
+Widget build(BuildContext context) {
+  ref.listen<AuthState>(authNotifierProvider, (previous, current) {
+    if (previous?.isLoading == true && !current.isLoading) {
+      if (current.currentUser != null) {
+        if (_emailError != null) {
           setState(() {
-            _emailError = current.errorMessage;
+            _emailError = null;
           });
         }
+        if (mounted) {
+          GoRouter.of(context).go(AppRoutes.welcome);
+        }
+      } else if (current.errorMessage != null) {
+        setState(() {
+          _emailError = current.errorMessage;
+        });
       }
-    });
+    }
+  });
 
-    final state = ref.watch(authNotifierProvider);
+  final state = ref.watch(authNotifierProvider);
 
-    return Scaffold(
-      backgroundColor: AppColors.neutral0,
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: Form(
-                    key: _formKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const SizedBox(height: 24),
-                        const LogoSquare(size: 150),
-                        const SizedBox(height: 32),
-
-                        RegisterForms(
-                          nameController: _nameController,
-                          lastNameController: _lastNameController,
-                          emailController: _emailController,
-                          passwordController: _passwordController,
-                          emailError: _emailError,
+  return Scaffold(
+    backgroundColor: AppColors.neutral0,
+    body: Column(
+      children: [
+        const StatusBar(variant: StatusBarVariant.form),
+        Expanded(
+          child: SafeArea(
+            top: false,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    child: IntrinsicHeight(
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            const SizedBox(height: 24),
+                            const LogoSquare(size: 150),
+                            const SizedBox(height: 32),
+                            RegisterForms(
+                              nameController: _nameController,
+                              lastNameController: _lastNameController,
+                              emailController: _emailController,
+                              passwordController: _passwordController,
+                              emailError: _emailError,
+                            ),
+                            const SizedBox(height: 32),
+                            const Spacer(),
+                            CTAButton(
+                              text: state.isLoading ? 'Registrando...' : 'Registrarse',
+                              isEnabled: (_formKey.currentState?.validate() ?? false) && !state.isLoading,
+                              onPressed: _handleRegister,
+                            ),
+                            const SizedBox(height: 16),
+                            TextOnlyButton(
+                              text: 'Ya tengo cuenta',
+                              onPressed: () async {
+                                context.go(AppRoutes.login);
+                              },
+                            ),
+                            const SizedBox(height: 24),
+                          ],
                         ),
-
-                        const SizedBox(height: 32),
-                        const Spacer(),
-
-                        CTAButton(
-                          text: state.isLoading ? 'Registrando...' : 'Registrarse',
-                          isEnabled: (_formKey.currentState?.validate() ?? false) && !state.isLoading,
-                          onPressed: _handleRegister,
-                        ),
-                        const SizedBox(height: 16),
-                        TextOnlyButton(
-                          text: 'Ya tengo cuenta',
-                          onPressed: () async {
-                            context.go(AppRoutes.login);
-                          },
-                        ),
-                        const SizedBox(height: 24),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ),
-            );
-          },
+                );
+              },
+            ),
+          ),
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
 }
