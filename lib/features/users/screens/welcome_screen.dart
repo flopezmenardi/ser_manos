@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/constants/app_routes.dart';
 
-import '../../../design_system/atoms/logos/logo_square.dart';
-import '../../../design_system/molecules/buttons/cta_button.dart';
-import '../../../design_system/tokens/colors.dart';
-import '../../../design_system/tokens/typography.dart';
+import '../../../core/design_system/atoms/logos/logo_square.dart';
+import '../../../core/design_system/molecules/buttons/cta_button.dart';
+import '../../../core/design_system/tokens/colors.dart';
+import '../../../core/design_system/tokens/typography.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});

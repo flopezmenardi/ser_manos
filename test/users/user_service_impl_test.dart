@@ -3,7 +3,7 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:ser_manos/features/users/services/user_service_impl.dart';
-import 'package:ser_manos/models/user_model.dart';
+import 'package:ser_manos/core/models/user_model.dart';
 
 import '../mocks/firebase_auth_mocks.mocks.dart';
 
@@ -40,7 +40,12 @@ void main() {
 
   group('createUser & getUserById', () {
     test('should create and retrieve user correctly', () async {
-      await userService.createUser(userId, testUser.name, testUser.surname, testUser.email);
+      await userService.createUser(
+        userId,
+        testUser.name,
+        testUser.surname,
+        testUser.email,
+      );
 
       final result = await userService.getUserById(userId);
 
@@ -57,7 +62,10 @@ void main() {
       final mockFirebaseUser = MockUser();
 
       when(
-        mockFirebaseAuth.createUserWithEmailAndPassword(email: email, password: password),
+        mockFirebaseAuth.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        ),
       ).thenAnswer((_) async => mockUserCredential);
 
       when(mockUserCredential.user).thenReturn(mockFirebaseUser);
@@ -70,7 +78,8 @@ void main() {
         password: password,
       );
 
-      final storedUser = await fakeFirestore.collection('usuarios').doc(userId).get();
+      final storedUser =
+          await fakeFirestore.collection('usuarios').doc(userId).get();
       expect(storedUser.exists, isTrue);
       expect(storedUser.data()!['nombre'], testUser.name);
     });
@@ -78,19 +87,30 @@ void main() {
 
   group('loginUser', () {
     test('should login and return user', () async {
-      await userService.createUser(userId, testUser.name, testUser.surname, testUser.email);
+      await userService.createUser(
+        userId,
+        testUser.name,
+        testUser.surname,
+        testUser.email,
+      );
 
       final mockUserCredential = MockUserCredential();
       final mockFirebaseUser = MockUser();
 
       when(
-        mockFirebaseAuth.signInWithEmailAndPassword(email: email, password: password),
+        mockFirebaseAuth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        ),
       ).thenAnswer((_) async => mockUserCredential);
 
       when(mockUserCredential.user).thenReturn(mockFirebaseUser);
       when(mockFirebaseUser.uid).thenReturn(userId);
 
-      final user = await userService.loginUser(email: email, password: password);
+      final user = await userService.loginUser(
+        email: email,
+        password: password,
+      );
 
       expect(user, isNotNull);
       expect(user!.id, userId);
@@ -100,7 +120,12 @@ void main() {
 
   group('updateUser', () {
     test('should update user fields', () async {
-      await userService.createUser(userId, testUser.name, testUser.surname, testUser.email);
+      await userService.createUser(
+        userId,
+        testUser.name,
+        testUser.surname,
+        testUser.email,
+      );
 
       await userService.updateUser(userId, {'telefono': '999999999'});
 

@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ser_manos/features/users/controllers/user_controller.dart';
 
-import '../../../models/user_model.dart';
+import '../../../core/models/user_model.dart';
 import '../services/user_service.dart';
 import '../services/user_service_impl.dart';
 
@@ -29,7 +29,12 @@ class UserControllerImpl implements UserController {
     required String email,
     required String password,
   }) {
-    return _userService.registerUser(nombre: nombre, apellido: apellido, email: email, password: password);
+    return _userService.registerUser(
+      nombre: nombre,
+      apellido: apellido,
+      email: email,
+      password: password,
+    );
   }
 
   @override
@@ -49,14 +54,19 @@ class UserControllerImpl implements UserController {
 
   @override
   Future<void> uploadProfilePicture(String userId, XFile xfile) async {
-    final ref = FirebaseStorage.instance.ref('users/$userId/profile_picture.jpg');
+    final ref = FirebaseStorage.instance.ref(
+      'users/$userId/profile_picture.jpg',
+    );
 
     UploadTask task;
     if (kIsWeb) {
       final bytes = await xfile.readAsBytes();
       task = ref.putData(bytes, SettableMetadata(contentType: 'image/jpeg'));
     } else {
-      task = ref.putFile(File(xfile.path), SettableMetadata(contentType: 'image/jpeg'));
+      task = ref.putFile(
+        File(xfile.path),
+        SettableMetadata(contentType: 'image/jpeg'),
+      );
     }
 
     // debug logs
@@ -81,7 +91,9 @@ class UserControllerImpl implements UserController {
   fb_auth.User? get currentFirebaseUser => _userService.currentFirebaseUser;
 }
 
-final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
+final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>((
+  ref,
+) {
   final authController = ref.read(userControllerProvider);
   return AuthNotifier(authController);
 });
@@ -91,7 +103,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
   late final StreamSubscription _authSubscription;
 
   AuthNotifier(this._authController) : super(AuthState.initial()) {
-    _authSubscription = fb_auth.FirebaseAuth.instance.authStateChanges().listen(_authStateChanged);
+    _authSubscription = fb_auth.FirebaseAuth.instance.authStateChanges().listen(
+      _authStateChanged,
+    );
   }
 
   Future<void> _authStateChanged(fb_auth.User? fbUser) async {
@@ -126,10 +140,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<bool> login({required String email, required String password}) async {
     try {
       state = state.copyWith(isLoading: true, errorMessage: null);
-      final user = await _authController.loginUser(email: email, password: password);
+      final user = await _authController.loginUser(
+        email: email,
+        password: password,
+      );
 
       if (user == null) {
-        state = state.copyWith(isLoading: false, errorMessage: 'Usuario no encontrado');
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: 'Usuario no encontrado',
+        );
         return false;
       }
 
@@ -171,11 +191,22 @@ class AuthState {
   final String? errorMessage;
   final User? currentUser;
 
-  AuthState({required this.isInitializing, required this.isLoading, this.errorMessage, this.currentUser});
+  AuthState({
+    required this.isInitializing,
+    required this.isLoading,
+    this.errorMessage,
+    this.currentUser,
+  });
 
-  factory AuthState.initial() => AuthState(isInitializing: true, isLoading: false, currentUser: null);
+  factory AuthState.initial() =>
+      AuthState(isInitializing: true, isLoading: false, currentUser: null);
 
-  AuthState copyWith({bool? isInitializing, bool? isLoading, String? errorMessage, User? currentUser}) {
+  AuthState copyWith({
+    bool? isInitializing,
+    bool? isLoading,
+    String? errorMessage,
+    User? currentUser,
+  }) {
     return AuthState(
       isInitializing: isInitializing ?? this.isInitializing,
       isLoading: isLoading ?? this.isLoading,

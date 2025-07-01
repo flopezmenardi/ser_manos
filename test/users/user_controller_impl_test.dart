@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:ser_manos/features/users/controllers/user_controller_impl.dart';
-import 'package:ser_manos/models/user_model.dart';
+import 'package:ser_manos/core/models/user_model.dart';
 
 import '../mocks/user_service_mock.mocks.dart';
 
@@ -65,13 +65,24 @@ void main() {
   group('loginUser', () {
     test('should call userService.loginUser and return User', () async {
       when(
-        mockUserService.loginUser(email: anyNamed('email'), password: anyNamed('password')),
+        mockUserService.loginUser(
+          email: anyNamed('email'),
+          password: anyNamed('password'),
+        ),
       ).thenAnswer((_) async => testUser);
 
-      final result = await userController.loginUser(email: 'juan@example.com', password: 'password123');
+      final result = await userController.loginUser(
+        email: 'juan@example.com',
+        password: 'password123',
+      );
 
       expect(result, testUser);
-      verify(mockUserService.loginUser(email: 'juan@example.com', password: 'password123')).called(1);
+      verify(
+        mockUserService.loginUser(
+          email: 'juan@example.com',
+          password: 'password123',
+        ),
+      ).called(1);
     });
   });
 
@@ -89,7 +100,9 @@ void main() {
     test('should call userService.updateUser with correct params', () async {
       final updateData = {'nombre': 'NuevoNombre'};
 
-      when(mockUserService.updateUser(userId, updateData)).thenAnswer((_) async {});
+      when(
+        mockUserService.updateUser(userId, updateData),
+      ).thenAnswer((_) async {});
 
       await userController.updateUser(userId, updateData);
 
@@ -99,8 +112,12 @@ void main() {
 
   group('getCurrentUser', () {
     test('should return current user if firebase user exists', () async {
-      when(mockUserService.currentFirebaseUser).thenReturn(MockFirebaseUser(userId));
-      when(mockUserService.getUserById(userId)).thenAnswer((_) async => testUser);
+      when(
+        mockUserService.currentFirebaseUser,
+      ).thenReturn(MockFirebaseUser(userId));
+      when(
+        mockUserService.getUserById(userId),
+      ).thenAnswer((_) async => testUser);
 
       final result = await userController.getCurrentUser();
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ser_manos/design_system/tokens/colors.dart';
 
+import '../../tokens/colors.dart';
 import '../../tokens/grid.dart';
 
 enum StatusBarVariant { main, form, detail }
@@ -23,10 +23,6 @@ class StatusBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: AppGrid.screenWidth(context),
-      height: 52,
-      color: _backgroundColor,
-    );
+    return Container(width: AppGrid.screenWidth(context), height: 52, color: _backgroundColor);
   }
 }

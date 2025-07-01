@@ -4,17 +4,17 @@ import 'package:go_router/go_router.dart';
 
 import '../../../constants/app_assets.dart';
 import '../../../constants/app_routes.dart';
-import '../../../design_system/molecules/buttons/cta_button.dart';
-import '../../../design_system/molecules/buttons/short_button.dart';
-import '../../../design_system/molecules/buttons/text_button.dart';
-import '../../../design_system/molecules/components/profile_picture.dart';
-import '../../../design_system/organisms/cards/information_card.dart';
-import '../../../design_system/organisms/headers/header.dart';
-import '../../../design_system/organisms/modal.dart';
-import '../../../design_system/tokens/colors.dart';
-import '../../../design_system/tokens/grid.dart';
-import '../../../design_system/tokens/typography.dart';
-import '../../../models/user_model.dart';
+import '../../../core/design_system/molecules/buttons/cta_button.dart';
+import '../../../core/design_system/molecules/buttons/short_button.dart';
+import '../../../core/design_system/molecules/buttons/text_button.dart';
+import '../../../core/design_system/molecules/components/profile_picture.dart';
+import '../../../core/design_system/organisms/cards/information_card.dart';
+import '../../../core/design_system/organisms/headers/header.dart';
+import '../../../core/design_system/organisms/modal.dart';
+import '../../../core/design_system/tokens/colors.dart';
+import '../../../core/design_system/tokens/grid.dart';
+import '../../../core/design_system/tokens/typography.dart';
+import '../../../core/models/user_model.dart';
 import '../controllers/user_controller_impl.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -42,9 +42,14 @@ class ProfileScreen extends ConsumerWidget {
 
   Widget _buildProfileContent(BuildContext context, WidgetRef ref, User user) {
     final hasFullProfile =
-        user.name.isNotEmpty && user.email.isNotEmpty && user.gender.isNotEmpty && user.phoneNumber.isNotEmpty;
+        user.name.isNotEmpty &&
+        user.email.isNotEmpty &&
+        user.gender.isNotEmpty &&
+        user.phoneNumber.isNotEmpty;
 
-    return hasFullProfile ? _buildFilledProfile(context, ref, user) : _buildEmptyProfile(context, ref, user.name);
+    return hasFullProfile
+        ? _buildFilledProfile(context, ref, user)
+        : _buildEmptyProfile(context, ref, user.name);
   }
 
   Widget _buildFilledProfile(BuildContext context, WidgetRef ref, User user) {
@@ -55,7 +60,8 @@ class ProfileScreen extends ConsumerWidget {
         children: [
           const SizedBox(height: 24),
           ProfilePicture(
-            imagePath: user.photoUrl != null ? user.photoUrl! : AppAssets.fotoPerfil,
+            imagePath:
+                user.photoUrl != null ? user.photoUrl! : AppAssets.fotoPerfil,
             size: ProfilePictureSize.large,
           ),
           const SizedBox(height: 8),
@@ -67,7 +73,9 @@ class ProfileScreen extends ConsumerWidget {
           const SizedBox(height: 4),
           Text(
             user.name,
-            style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
+            style: AppTypography.subtitle1.copyWith(
+              color: AppColors.neutral100,
+            ),
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 2),
@@ -93,7 +101,10 @@ class ProfileScreen extends ConsumerWidget {
             secondContent: user.email,
           ),
           const SizedBox(height: 24),
-          CTAButton(text: 'Editar perfil', onPressed: () async => context.push(AppRoutes.profileEdit)),
+          CTAButton(
+            text: 'Editar perfil',
+            onPressed: () async => context.push(AppRoutes.profileEdit),
+          ),
 
           TextOnlyButton(
             text: 'Cerrar sesión',
@@ -113,7 +124,9 @@ class ProfileScreen extends ConsumerWidget {
                         cancelText: 'Cancelar',
                         onCancel: () => Navigator.of(dialogContext).pop(),
                         onConfirm: () async {
-                          await ref.read(authNotifierProvider.notifier).logout();
+                          await ref
+                              .read(authNotifierProvider.notifier)
+                              .logout();
                           // Use captured navigator and goRouter instead of context
                           navigator.pop();
                           goRouter.go(AppRoutes.initial);
@@ -138,26 +151,43 @@ class ProfileScreen extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(AppAssets.fotoPerfil, width: 100, height: 100, fit: BoxFit.cover),
+                Image.asset(
+                  AppAssets.fotoPerfil,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
                 const SizedBox(height: 24),
                 Text(
                   'VOLUNTARIO',
-                  style: AppTypography.overline.copyWith(color: AppColors.neutral75),
+                  style: AppTypography.overline.copyWith(
+                    color: AppColors.neutral75,
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 16),
-                Text(name, style: AppTypography.subtitle1, overflow: TextOverflow.ellipsis),
+                Text(
+                  name,
+                  style: AppTypography.subtitle1,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 const SizedBox(height: 16),
                 Text(
                   '¡Completá tu perfil para tener\nacceso a mejores oportunidades!',
                   textAlign: TextAlign.center,
-                  style: AppTypography.body1.copyWith(color: AppColors.neutral75),
+                  style: AppTypography.body1.copyWith(
+                    color: AppColors.neutral75,
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-          ShortButton(text: 'Completar', icon: Icons.add, onPressed: () => context.push(AppRoutes.profileEdit)),
+          ShortButton(
+            text: 'Completar',
+            icon: Icons.add,
+            onPressed: () => context.push(AppRoutes.profileEdit),
+          ),
           const SizedBox(height: 16),
           TextOnlyButton(
             text: 'Cerrar sesión',
@@ -178,7 +208,9 @@ class ProfileScreen extends ConsumerWidget {
                         cancelText: 'Cancelar',
                         onCancel: () => Navigator.of(dialogContext).pop(),
                         onConfirm: () async {
-                          await ref.read(authNotifierProvider.notifier).logout();
+                          await ref
+                              .read(authNotifierProvider.notifier)
+                              .logout();
                           // Use captured navigator and goRouter instead of context
                           navigator.pop();
                           goRouter.go(AppRoutes.initial);

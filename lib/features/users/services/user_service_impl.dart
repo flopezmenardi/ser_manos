@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/features/users/services/user_service.dart';
 
-import '../../../models/user_model.dart';
+import '../../../core/models/user_model.dart';
 
 final userServiceProvider = Provider<UserService>((ref) {
   return UserServiceImpl();
@@ -31,7 +31,10 @@ class UserServiceImpl implements UserService {
     required String email,
     required String password,
   }) async {
-    final userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+    final userCredential = await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
     final userId = userCredential.user!.uid;
 
     await createUser(userId, nombre, apellido, email);
@@ -39,7 +42,12 @@ class UserServiceImpl implements UserService {
   }
 
   @override
-  Future<void> createUser(String userId, String name, String surname, String email) async {
+  Future<void> createUser(
+    String userId,
+    String name,
+    String surname,
+    String email,
+  ) async {
     await _db.collection('usuarios').doc(userId).set({
       'nombre': name,
       'apellido': surname,
@@ -55,8 +63,14 @@ class UserServiceImpl implements UserService {
   }
 
   @override
-  Future<User?> loginUser({required String email, required String password}) async {
-    final userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+  Future<User?> loginUser({
+    required String email,
+    required String password,
+  }) async {
+    final userCredential = await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
     final userId = userCredential.user!.uid;
     return getUserById(userId);
   }

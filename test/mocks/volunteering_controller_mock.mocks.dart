@@ -8,7 +8,7 @@ import 'dart:async' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:ser_manos/features/volunteerings/controller/volunteerings_controller.dart'
     as _i3;
-import 'package:ser_manos/models/volunteering_model.dart' as _i2;
+import 'package:ser_manos/core/models/volunteering_model.dart' as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values

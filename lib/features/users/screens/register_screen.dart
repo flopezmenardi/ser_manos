@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/constants/app_routes.dart';
-import 'package:ser_manos/design_system/organisms/forms/register.dart';
+import 'package:ser_manos/core/design_system/organisms/forms/register.dart';
 
-import '../../../design_system/atoms/logos/logo_square.dart';
-import '../../../design_system/molecules/buttons/cta_button.dart';
-import '../../../design_system/molecules/buttons/text_button.dart';
-import '../../../design_system/tokens/colors.dart';
+import '../../../core/design_system/atoms/logos/logo_square.dart';
+import '../../../core/design_system/molecules/buttons/cta_button.dart';
+import '../../../core/design_system/molecules/buttons/text_button.dart';
+import '../../../core/design_system/tokens/colors.dart';
 import '../controllers/user_controller_impl.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -74,7 +74,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     if (error == null) {
       router.go('/welcome');
     } else {
-      scaffoldMessenger.showSnackBar(SnackBar(content: Text(error, overflow: TextOverflow.ellipsis)));
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text(error, overflow: TextOverflow.ellipsis)),
+      );
     }
   }
 
@@ -118,7 +120,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         const Spacer(),
 
                         CTAButton(
-                          text: state.isLoading ? 'Registrando...' : 'Registrarse',
+                          text:
+                              state.isLoading
+                                  ? 'Registrando...'
+                                  : 'Registrarse',
                           isEnabled: _isFormFilled && !state.isLoading,
                           onPressed: _handleRegister,
                         ),

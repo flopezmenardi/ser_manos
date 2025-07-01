@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:image_picker/image_picker.dart';
 
-import '../../../models/user_model.dart';
+import '../../../core/models/user_model.dart';
 
 abstract class UserController {
   Future<User?> registerUser({

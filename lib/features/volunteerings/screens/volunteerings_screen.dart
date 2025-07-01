@@ -7,14 +7,14 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/app_routes.dart';
-import '../../../design_system/molecules/inputs/search_input.dart';
-import '../../../design_system/organisms/cards/current_volunteer_card.dart';
-import '../../../design_system/organisms/cards/volunteer_card.dart';
-import '../../../design_system/organisms/headers/header.dart';
-import '../../../design_system/tokens/colors.dart';
-import '../../../design_system/tokens/typography.dart';
-import '../../../infrastructure/remote_config_provider.dart';
-import '../../../models/enums/sort_mode.dart';
+import '../../../core/design_system/molecules/inputs/search_input.dart';
+import '../../../core/design_system/organisms/cards/current_volunteer_card.dart';
+import '../../../core/design_system/organisms/cards/volunteer_card.dart';
+import '../../../core/design_system/organisms/headers/header.dart';
+import '../../../core/design_system/tokens/colors.dart';
+import '../../../core/design_system/tokens/typography.dart';
+import '../../../core/infrastructure/remote_config_provider.dart';
+import '../../../core/models/enums/sort_mode.dart';
 import '../../users/controllers/user_controller_impl.dart';
 import '../controller/volunteerings_controller_impl.dart';
 
@@ -22,7 +22,8 @@ class VolunteeringListPage extends ConsumerStatefulWidget {
   const VolunteeringListPage({super.key});
 
   @override
-  ConsumerState<VolunteeringListPage> createState() => _VolunteeringListPageState();
+  ConsumerState<VolunteeringListPage> createState() =>
+      _VolunteeringListPageState();
 }
 
 class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
@@ -48,7 +49,8 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
       permission = await Geolocator.requestPermission();
     }
 
-    if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
       try {
         final position = await Geolocator.getCurrentPosition();
         notifier.setLocation(GeoPoint(position.latitude, position.longitude));
@@ -73,7 +75,9 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
 
     final controller = ref.read(volunteeringsControllerProvider);
     final volunteeringListAsync = ref.watch(volunteeringSearchProvider);
-    final volunteeringSearchNotifier = ref.read(volunteeringSearchProvider.notifier);
+    final volunteeringSearchNotifier = ref.read(
+      volunteeringSearchProvider.notifier,
+    );
     final queryNotifier = ref.read(volunteeringQueryProvider.notifier);
     final queryState = ref.watch(volunteeringQueryProvider);
     final user = ref.watch(authNotifierProvider).currentUser;
@@ -116,26 +120,33 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                         ),
                         icon: const Icon(Icons.my_location),
                         label: Text(
-                          queryState.sortMode == SortMode.proximity ? "Ordenar por fecha" : "Ordenar por cercanía",
+                          queryState.sortMode == SortMode.proximity
+                              ? "Ordenar por fecha"
+                              : "Ordenar por cercanía",
                           overflow: TextOverflow.ellipsis,
                         ),
                         onPressed: () async {
                           if (queryState.sortMode == SortMode.proximity) {
                             queryNotifier.updateSortMode(SortMode.date);
                           } else {
-                            LocationPermission permission = await Geolocator.checkPermission();
+                            LocationPermission permission =
+                                await Geolocator.checkPermission();
                             if (permission == LocationPermission.denied) {
                               permission = await Geolocator.requestPermission();
                               if (permission == LocationPermission.denied) {
                                 return;
                               }
                             }
-                            if (permission == LocationPermission.deniedForever) {
+                            if (permission ==
+                                LocationPermission.deniedForever) {
                               return;
                             }
 
-                            final position = await Geolocator.getCurrentPosition();
-                            queryNotifier.setLocation(GeoPoint(position.latitude, position.longitude));
+                            final position =
+                                await Geolocator.getCurrentPosition();
+                            queryNotifier.setLocation(
+                              GeoPoint(position.latitude, position.longitude),
+                            );
                             queryNotifier.updateSortMode(SortMode.proximity);
                           }
                         },
@@ -143,8 +154,13 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                     ),
 
                   volunteeringListAsync.when(
-                    loading: () => const Center(child: CircularProgressIndicator()),
-                    error: (error, _) => Text('Error: $error', overflow: TextOverflow.ellipsis),
+                    loading:
+                        () => const Center(child: CircularProgressIndicator()),
+                    error:
+                        (error, _) => Text(
+                          'Error: $error',
+                          overflow: TextOverflow.ellipsis,
+                        ),
                     data: (volunteerings) {
                       final hasCurrent =
                           user != null &&
@@ -155,10 +171,17 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (hasCurrent) ..._buildCurrentVolunteering(volunteerings, user, controller),
+                          if (hasCurrent)
+                            ..._buildCurrentVolunteering(
+                              volunteerings,
+                              user,
+                              controller,
+                            ),
                           Text(
                             "Voluntariados",
-                            style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
+                            style: AppTypography.headline1.copyWith(
+                              color: AppColors.neutral100,
+                            ),
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 16),
@@ -166,7 +189,12 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                             _emptyVolunteeringsMessage(queryState.query.isEmpty)
                           else
                             ...volunteerings.map(
-                              (item) => _buildVolunteeringCard(item, user, controller, showLikeCounter),
+                              (item) => _buildVolunteeringCard(
+                                item,
+                                user,
+                                controller,
+                                showLikeCounter,
+                              ),
                             ),
                         ],
                       );
@@ -201,7 +229,9 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
           onLocationPressed: () {
             final lat = current.location.latitude;
             final lng = current.location.longitude;
-            final uri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng");
+            final uri = Uri.parse(
+              "https://www.google.com/maps/search/?api=1&query=$lat,$lng",
+            );
             launchUrl(uri);
           },
         ),
@@ -222,7 +252,10 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
             context.go(AppRoutes.volunteeringDetail(item.id));
           },
           child: FutureBuilder<int>(
-            future: showLikeCounter ? controller.getFavoritesCount(item.id) : Future.value(0),
+            future:
+                showLikeCounter
+                    ? controller.getFavoritesCount(item.id)
+                    : Future.value(0),
             builder: (context, snapshot) {
               return VolunteeringCard(
                 imagePath: item.imageURL,
@@ -243,7 +276,9 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                 onLocationPressed: () {
                   final lat = item.location.latitude;
                   final lng = item.locationlongitude;
-                  final uri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng");
+                  final uri = Uri.parse(
+                    "https://www.google.com/maps/search/?api=1&query=$lat,$lng",
+                  );
                   launchUrl(uri);
                 },
               );
@@ -263,7 +298,10 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
     return Container(
       padding: const EdgeInsets.all(32),
       alignment: Alignment.center,
-      decoration: BoxDecoration(color: AppColors.neutral0, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(
+        color: AppColors.neutral0,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Text(
         message,
         textAlign: TextAlign.center,

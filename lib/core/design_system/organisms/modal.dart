@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ser_manos/design_system/molecules/buttons/text_button.dart';
-import 'package:ser_manos/design_system/tokens/colors.dart';
-import 'package:ser_manos/design_system/tokens/shadow.dart';
-import 'package:ser_manos/design_system/tokens/typography.dart';
+import 'package:ser_manos/core/design_system/tokens/shadow.dart';
+import 'package:ser_manos/core/design_system/tokens/typography.dart';
+
+import '../molecules/buttons/text_button.dart';
+import '../tokens/colors.dart';
 
 class ModalSermanos extends StatelessWidget {
   final String title;
@@ -38,19 +39,13 @@ class ModalSermanos extends StatelessWidget {
         children: [
           Text(
             title,
-            style: AppTypography.subtitle1.copyWith(
-              color: AppColors.neutral100,
-              decoration: TextDecoration.none,
-            ),
+            style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100, decoration: TextDecoration.none),
           ),
           if (subtitle != null) ...[
             const SizedBox(height: 4),
             Text(
               subtitle!,
-              style: AppTypography.headline2.copyWith(
-                color: AppColors.neutral100,
-                decoration: TextDecoration.none,
-              ),
+              style: AppTypography.headline2.copyWith(color: AppColors.neutral100, decoration: TextDecoration.none),
             ),
             const SizedBox(height: 8),
           ] else ...[

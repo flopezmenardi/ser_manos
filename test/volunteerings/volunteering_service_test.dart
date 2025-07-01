@@ -3,9 +3,9 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:ser_manos/features/volunteerings/service/volunteerings_service_impl.dart';
-import 'package:ser_manos/infrastructure/analytics_service.dart';
-import 'package:ser_manos/models/enums/sort_mode.dart';
-import 'package:ser_manos/models/volunteering_model.dart';
+import 'package:ser_manos/core/infrastructure/analytics_service.dart';
+import 'package:ser_manos/core/models/enums/sort_mode.dart';
+import 'package:ser_manos/core/models/volunteering_model.dart';
 
 import '../mocks/analytics_service_mock.mocks.dart';
 
@@ -37,9 +37,15 @@ void main() {
   setUp(() async {
     firestore = FakeFirebaseFirestore();
     mockAnalyticsService = MockAnalyticsService();
-    service = VolunteeringsServiceImpl(db: firestore, analyticsService: mockAnalyticsService);
+    service = VolunteeringsServiceImpl(
+      db: firestore,
+      analyticsService: mockAnalyticsService,
+    );
 
-    await firestore.collection('voluntariados').doc(volunteeringId).set(volunteering.toMap());
+    await firestore
+        .collection('voluntariados')
+        .doc(volunteeringId)
+        .set(volunteering.toMap());
     await firestore.collection('usuarios').doc(uid).set({
       'voluntariado': null,
       'voluntariadoAceptado': false,
@@ -71,44 +77,66 @@ void main() {
     await service.abandonVolunteering(uid, volunteeringId);
 
     final user = await firestore.collection('usuarios').doc(uid).get();
-    final vol = await firestore.collection('voluntariados').doc(volunteeringId).get();
+    final vol =
+        await firestore.collection('voluntariados').doc(volunteeringId).get();
 
     expect(user['voluntariado'], null);
     expect(vol['vacantes'], volunteering.vacants + 1);
   });
 
   test('toggleFavorite adds and removes correctly', () async {
-    await service.toggleFavorite(userId: uid, volunteeringId: volunteeringId, isFavorite: false);
+    await service.toggleFavorite(
+      userId: uid,
+      volunteeringId: volunteeringId,
+      isFavorite: false,
+    );
     var user = await firestore.collection('usuarios').doc(uid).get();
     expect(user['favoritos'], contains(volunteeringId));
 
-    await service.toggleFavorite(userId: uid, volunteeringId: volunteeringId, isFavorite: true);
+    await service.toggleFavorite(
+      userId: uid,
+      volunteeringId: volunteeringId,
+      isFavorite: true,
+    );
     user = await firestore.collection('usuarios').doc(uid).get();
     expect(user['favoritos'], isNot(contains(volunteeringId)));
   });
 
   test('getFavoritesCount returns correct number', () async {
-    await firestore.collection('voluntariados').doc(volunteeringId).update({'likes': 8});
+    await firestore.collection('voluntariados').doc(volunteeringId).update({
+      'likes': 8,
+    });
     final count = await service.getFavoritesCount(volunteeringId);
     expect(count, 8);
   });
 
   test('getAllVolunteeringsSorted by date returns correct order', () async {
-    final other = volunteering.copyWith(id: 'v2', creationDate: Timestamp.fromDate(DateTime(2024, 7, 1)));
-    await firestore.collection('voluntariados').doc('v2').set(other.toMap());
-
-    final result = await service.getAllVolunteeringsSorted(sortMode: SortMode.date);
-    expect(result.first.id, 'v2');
-  });
-
-  test('getAllVolunteeringsSorted by proximity returns nearest first', () async {
-    final other = volunteering.copyWith(id: 'v2', location: const GeoPoint(-34.60, -58.38));
+    final other = volunteering.copyWith(
+      id: 'v2',
+      creationDate: Timestamp.fromDate(DateTime(2024, 7, 1)),
+    );
     await firestore.collection('voluntariados').doc('v2').set(other.toMap());
 
     final result = await service.getAllVolunteeringsSorted(
-      sortMode: SortMode.proximity,
-      userLocation: const GeoPoint(-34.60, -58.38),
+      sortMode: SortMode.date,
     );
     expect(result.first.id, 'v2');
   });
+
+  test(
+    'getAllVolunteeringsSorted by proximity returns nearest first',
+    () async {
+      final other = volunteering.copyWith(
+        id: 'v2',
+        location: const GeoPoint(-34.60, -58.38),
+      );
+      await firestore.collection('voluntariados').doc('v2').set(other.toMap());
+
+      final result = await service.getAllVolunteeringsSorted(
+        sortMode: SortMode.proximity,
+        userLocation: const GeoPoint(-34.60, -58.38),
+      );
+      expect(result.first.id, 'v2');
+    },
+  );
 }

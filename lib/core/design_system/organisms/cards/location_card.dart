@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ser_manos/design_system/molecules/buttons/floating_button.dart';
 
+import '../../molecules/buttons/floating_button.dart';
 import '../../tokens/colors.dart';
 import '../../tokens/typography.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:ser_manos/features/news/controller/news_controller_impl.dart';
 import 'package:ser_manos/features/news/controller/news_controller.dart';
-import 'package:ser_manos/models/news_model.dart';
+import 'package:ser_manos/core/models/news_model.dart';
 
 import '../mocks/news_service_mock.mocks.dart';
 
@@ -28,7 +28,9 @@ void main() {
 
   group('NewsController', () {
     test('getNewsOrderedByDate returns list of News', () async {
-      when(mockService.getNewsOrderedByDate()).thenAnswer((_) async => [mockNews]);
+      when(
+        mockService.getNewsOrderedByDate(),
+      ).thenAnswer((_) async => [mockNews]);
 
       final result = await controller.getNewsOrderedByDate();
 
@@ -47,7 +49,9 @@ void main() {
     });
 
     test('getNewsById returns null when not found', () async {
-      when(mockService.getNewsById('nonexistent')).thenAnswer((_) async => null);
+      when(
+        mockService.getNewsById('nonexistent'),
+      ).thenAnswer((_) async => null);
 
       final result = await controller.getNewsById('nonexistent');
 
@@ -55,16 +59,20 @@ void main() {
     });
   });
 
-    group('NewsListNotifier', () {
+  group('NewsListNotifier', () {
     test('fetchNews sets state with list of news', () async {
       final mockService = MockNewsService();
       final controller = NewsControllerImpl(mockService);
 
-      when(mockService.getNewsOrderedByDate()).thenAnswer((_) async => [mockNews]);
+      when(
+        mockService.getNewsOrderedByDate(),
+      ).thenAnswer((_) async => [mockNews]);
 
       final notifier = NewsListNotifier(controller);
 
-      await Future.delayed(Duration.zero); // Esperamos al fetchNews del constructor
+      await Future.delayed(
+        Duration.zero,
+      ); // Esperamos al fetchNews del constructor
       expect(notifier.state.value?.length, 1);
     });
   });

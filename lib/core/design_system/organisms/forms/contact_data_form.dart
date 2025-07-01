@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:ser_manos/design_system/molecules/inputs/inputs.dart';
-import 'package:ser_manos/design_system/tokens/typography.dart'; 
+
+import '../../molecules/inputs/inputs.dart';
+import '../../tokens/typography.dart';
 
 class ContactDataFormSermanos extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController telephoneController;
 
-  const ContactDataFormSermanos({
-    super.key,
-    required this.emailController,
-    required this.telephoneController,
-  });
+  const ContactDataFormSermanos({super.key, required this.emailController, required this.telephoneController});
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +18,7 @@ class ContactDataFormSermanos extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Title
-          Text(
-            'Datos de contacto',
-            style: AppTypography.headline1,
-            overflow: TextOverflow.ellipsis,
-          ),
+          Text('Datos de contacto', style: AppTypography.headline1, overflow: TextOverflow.ellipsis),
           const SizedBox(height: 16),
 
           // Description

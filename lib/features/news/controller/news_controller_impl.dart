@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/features/news/controller/news_controller.dart';
-import 'package:ser_manos/models/news_model.dart';
+import 'package:ser_manos/core/models/news_model.dart';
 
 import '../service/news_service.dart';
 import '../service/news_service_impl.dart';
@@ -10,18 +10,19 @@ final newsControllerProvider = Provider<NewsController>((ref) {
   return NewsControllerImpl(newsService);
 });
 
-final newsListNotifierProvider = StateNotifierProvider<NewsListNotifier, AsyncValue<List<News>>>((ref) {
-  final controller = ref.read(newsControllerProvider);
-  return NewsListNotifier(controller);
-});
+final newsListNotifierProvider =
+    StateNotifierProvider<NewsListNotifier, AsyncValue<List<News>>>((ref) {
+      final controller = ref.read(newsControllerProvider);
+      return NewsListNotifier(controller);
+    });
 
-final newsDetailNotifierProvider = StateNotifierProvider.family<NewsDetailNotifier, AsyncValue<News?>, String>((
-  ref,
-  newsId,
-) {
-  final controller = ref.read(newsControllerProvider);
-  return NewsDetailNotifier(controller, newsId);
-});
+final newsDetailNotifierProvider =
+    StateNotifierProvider.family<NewsDetailNotifier, AsyncValue<News?>, String>(
+      (ref, newsId) {
+        final controller = ref.read(newsControllerProvider);
+        return NewsDetailNotifier(controller, newsId);
+      },
+    );
 
 class NewsControllerImpl implements NewsController {
   final NewsService _newsService;
@@ -34,11 +35,11 @@ class NewsControllerImpl implements NewsController {
   }
 
   @override
-  Future<News?> getNewsById(String id) {
-    if (id.trim().isEmpty) {
+  Future<News?> getNewsById(String newsId) {
+    if (newsId.trim().isEmpty) {
       throw ArgumentError('El ID de la novedad no puede estar vacío.');
     }
-    return _newsService.getNewsById(id);
+    return _newsService.getNewsById(newsId);
   }
 }
 
@@ -60,7 +61,8 @@ class NewsListNotifier extends StateNotifier<AsyncValue<List<News>>> {
 }
 
 class NewsDetailNotifier extends StateNotifier<AsyncValue<News?>> {
-  NewsDetailNotifier(this._controller, this.newsId) : super(const AsyncValue.loading()) {
+  NewsDetailNotifier(this._controller, this.newsId)
+    : super(const AsyncValue.loading()) {
     fetchNewsDetail();
   }
 

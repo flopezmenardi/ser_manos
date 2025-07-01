@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ser_manos/design_system/molecules/buttons/text_button.dart';
-import 'package:ser_manos/design_system/tokens/shadow.dart';
 
+import '../../molecules/buttons/text_button.dart';
 import '../../tokens/colors.dart';
 import '../../tokens/grid.dart';
+import '../../tokens/shadow.dart';
 import '../../tokens/typography.dart';
 
 class NewsCard extends StatelessWidget {
@@ -44,9 +44,10 @@ class NewsCard extends StatelessWidget {
                 SizedBox(
                   width: 118,
                   height: 156,
-                  child: imagePath.startsWith('assets/')
-                      ? Image.asset(imagePath, fit: BoxFit.cover)
-                      : Image.network(imagePath, fit: BoxFit.cover),
+                  child:
+                      imagePath.startsWith('assets/')
+                          ? Image.asset(imagePath, fit: BoxFit.cover)
+                          : Image.network(imagePath, fit: BoxFit.cover),
                 ),
                 // Text section
                 Expanded(
@@ -57,27 +58,21 @@ class NewsCard extends StatelessWidget {
                       children: [
                         Text(
                           report,
-                          style: AppTypography.overline.copyWith(
-                            color: AppColors.neutral75,
-                          ),
+                          style: AppTypography.overline.copyWith(color: AppColors.neutral75),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 4),
                         Text(
                           title,
-                          style: AppTypography.subtitle1.copyWith(
-                            color: AppColors.neutral100,
-                          ),
+                          style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 4),
                         Text(
                           description,
-                          style: AppTypography.body2.copyWith(
-                            color: AppColors.neutral75,
-                          ),
+                          style: AppTypography.body2.copyWith(color: AppColors.neutral75),
                           maxLines: 4,
                           overflow: TextOverflow.ellipsis,
                         ),

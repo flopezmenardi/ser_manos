@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/constants/app_assets.dart';
 import 'package:ser_manos/constants/app_routes.dart';
-import 'package:ser_manos/design_system/tokens/colors.dart';
-import 'package:ser_manos/design_system/tokens/typography.dart';
+
+import '../../tokens/colors.dart';
+import '../../tokens/typography.dart';
 
 class AppHeader extends StatelessWidget {
   final int selectedIndex;
@@ -34,11 +35,7 @@ class AppHeader extends StatelessWidget {
           const SizedBox(height: 41),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Image.asset(AppAssets.logoRectangular, height: 25),
-              ],
-            ),
+            child: Row(children: [Image.asset(AppAssets.logoRectangular, height: 25)]),
           ),
           const SizedBox(height: 16),
           Row(
@@ -64,12 +61,7 @@ class AppHeader extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             color: isSelected ? AppColors.secondary200 : AppColors.secondary100,
-            border:
-                isSelected
-                    ? const Border(
-                      bottom: BorderSide(color: AppColors.neutral25, width: 3),
-                    )
-                    : null,
+            border: isSelected ? const Border(bottom: BorderSide(color: AppColors.neutral25, width: 3)) : null,
           ),
           alignment: Alignment.center,
           child: Text(

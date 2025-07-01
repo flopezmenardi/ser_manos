@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/constants/app_routes.dart';
-import 'package:ser_manos/design_system/tokens/typography.dart';
+import 'package:ser_manos/core/design_system/tokens/typography.dart';
 
-import '../../../design_system/atoms/logos/logo_square.dart';
-import '../../../design_system/molecules/buttons/cta_button.dart';
-import '../../../design_system/molecules/buttons/text_button.dart';
-import '../../../design_system/organisms/forms/login.dart';
-import '../../../design_system/tokens/colors.dart';
+import '../../../core/design_system/atoms/logos/logo_square.dart';
+import '../../../core/design_system/molecules/buttons/cta_button.dart';
+import '../../../core/design_system/molecules/buttons/text_button.dart';
+import '../../../core/design_system/organisms/forms/login.dart';
+import '../../../core/design_system/tokens/colors.dart';
 import '../controllers/user_controller_impl.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -25,7 +25,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
-  bool get _isFormFilled => emailController.text.isNotEmpty && passwordController.text.isNotEmpty;
+  bool get _isFormFilled =>
+      emailController.text.isNotEmpty && passwordController.text.isNotEmpty;
 
   @override
   void initState() {
@@ -80,7 +81,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               const SizedBox(height: 16),
                               Text(
                                 _authError,
-                                style: AppTypography.caption.copyWith(color: AppColors.error100),
+                                style: AppTypography.caption.copyWith(
+                                  color: AppColors.error100,
+                                ),
                                 textAlign: TextAlign.center,
                               ),
                             ],
@@ -93,7 +96,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     text: 'Iniciar Sesión',
                     isEnabled: _isFormFilled && !authState.isLoading,
                     onPressed: () async {
-                      final isValid = _formKey.currentState?.validate() ?? false;
+                      final isValid =
+                          _formKey.currentState?.validate() ?? false;
                       if (!isValid) return;
 
                       final success = await authNotifier.login(
@@ -104,7 +108,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       if (!mounted) return;
 
                       setState(() {
-                        _authError = success ? '' : 'Email o contraseña incorrectos';
+                        _authError =
+                            success ? '' : 'Email o contraseña incorrectos';
                       });
 
                       if (success) {

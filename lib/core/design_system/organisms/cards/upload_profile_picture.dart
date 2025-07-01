@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:ser_manos/design_system/organisms/cards/profile_picture_button.dart';
+import 'package:ser_manos/core/design_system/organisms/cards/profile_picture_button.dart';
 import '../../tokens/colors.dart';
 import '../../tokens/typography.dart';
 
 class UploadProfilePicture extends StatelessWidget {
   final VoidCallback onUploadPressed;
 
-  const UploadProfilePicture({
-    super.key,
-    required this.onUploadPressed,
-  });
+  const UploadProfilePicture({super.key, required this.onUploadPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +29,8 @@ class UploadProfilePicture extends StatelessWidget {
           ),
           ProfilePictureButton(
             text: 'Subir foto',
-            onPressed: () async => onUploadPressed(),      // forward to _pickPhoto()
+            onPressed: () async => onUploadPressed(), // forward to _pickPhoto()
           ),
-
         ],
       ),
     );

@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:ser_manos/features/volunteerings/controller/volunteerings_controller.dart';
 import 'package:ser_manos/features/volunteerings/controller/volunteerings_controller_impl.dart';
-import 'package:ser_manos/models/enums/sort_mode.dart';
-import 'package:ser_manos/models/user_model.dart';
-import 'package:ser_manos/models/volunteering_model.dart';
+import 'package:ser_manos/core/models/enums/sort_mode.dart';
+import 'package:ser_manos/core/models/user_model.dart';
+import 'package:ser_manos/core/models/volunteering_model.dart';
 
 import '../mocks/analytics_service_mock.mocks.dart';
 import '../mocks/volunteering_service_mock.mocks.dart';
@@ -64,13 +64,19 @@ void main() {
     });
 
     test('applyToVolunteering - success', () async {
-      when(mockService.getVolunteeringById(volunteering.id)).thenAnswer((_) async => volunteering);
-      when(mockService.applyToVolunteering(user.id, volunteering.id)).thenAnswer((_) async {});
+      when(
+        mockService.getVolunteeringById(volunteering.id),
+      ).thenAnswer((_) async => volunteering);
+      when(
+        mockService.applyToVolunteering(user.id, volunteering.id),
+      ).thenAnswer((_) async {});
 
       await controller.applyToVolunteering(volunteering.id);
 
       verify(mockService.getVolunteeringById(volunteering.id)).called(1);
-      verify(mockService.applyToVolunteering(user.id, volunteering.id)).called(1);
+      verify(
+        mockService.applyToVolunteering(user.id, volunteering.id),
+      ).called(1);
     });
 
     test('applyToVolunteering - throws if profile incomplete', () async {
@@ -99,13 +105,20 @@ void main() {
 
     test('applyToVolunteering - throws if no vacancies', () async {
       final noVacancies = volunteering.copyWith(vacants: 0);
-      when(mockService.getVolunteeringById(volunteering.id)).thenAnswer((_) async => noVacancies);
+      when(
+        mockService.getVolunteeringById(volunteering.id),
+      ).thenAnswer((_) async => noVacancies);
 
-      expect(() => controller.applyToVolunteering(volunteering.id), throwsException);
+      expect(
+        () => controller.applyToVolunteering(volunteering.id),
+        throwsException,
+      );
     });
 
     test('abandonVolunteering calls service', () async {
-      when(mockService.abandonVolunteering(user.id, 'v1')).thenAnswer((_) async {});
+      when(
+        mockService.abandonVolunteering(user.id, 'v1'),
+      ).thenAnswer((_) async {});
       await controller.abandonVolunteering('v1');
       verify(mockService.abandonVolunteering(user.id, 'v1')).called(1);
     });
@@ -118,10 +131,20 @@ void main() {
 
     test('toggleFavorite calls service correctly', () async {
       when(
-        mockService.toggleFavorite(userId: user.id, volunteeringId: 'v1', isFavorite: false),
+        mockService.toggleFavorite(
+          userId: user.id,
+          volunteeringId: 'v1',
+          isFavorite: false,
+        ),
       ).thenAnswer((_) async {});
       await controller.toggleFavorite('v1', false);
-      verify(mockService.toggleFavorite(userId: user.id, volunteeringId: 'v1', isFavorite: false)).called(1);
+      verify(
+        mockService.toggleFavorite(
+          userId: user.id,
+          volunteeringId: 'v1',
+          isFavorite: false,
+        ),
+      ).called(1);
     });
 
     test('getFavoritesCount returns correct count', () async {
@@ -131,50 +154,73 @@ void main() {
     });
 
     test('searchVolunteerings filters correctly by query', () async {
-      when(mockService.getAllVolunteeringsSorted(sortMode: SortMode.date)).thenAnswer((_) async => [volunteering]);
+      when(
+        mockService.getAllVolunteeringsSorted(sortMode: SortMode.date),
+      ).thenAnswer((_) async => [volunteering]);
       final result = await controller.searchVolunteerings(
-        VolunteeringQueryState(query: 'Título', sortMode: SortMode.date, userLocation: null),
+        VolunteeringQueryState(
+          query: 'Título',
+          sortMode: SortMode.date,
+          userLocation: null,
+        ),
       );
       expect(result.length, 1);
     });
 
     test('getVolunteeringById returns volunteering', () async {
-      when(mockService.getVolunteeringById('v1')).thenAnswer((_) async => volunteering);
+      when(
+        mockService.getVolunteeringById('v1'),
+      ).thenAnswer((_) async => volunteering);
       final v = await controller.getVolunteeringById('v1');
       expect(v.id, 'v1');
     });
 
     test('getVolunteeringById throws if null', () async {
-      when(mockService.getVolunteeringById('not_found')).thenAnswer((_) async => null);
-      expect(() => controller.getVolunteeringById('not_found'), throwsException);
+      when(
+        mockService.getVolunteeringById('not_found'),
+      ).thenAnswer((_) async => null);
+      expect(
+        () => controller.getVolunteeringById('not_found'),
+        throwsException,
+      );
     });
 
     test('logViewedVolunteering calls tracker and analytics', () async {
-      when(mockAnalyticsService.logViewedVolunteering(volunteering.id)).thenAnswer((_) async {});
+      when(
+        mockAnalyticsService.logViewedVolunteering(volunteering.id),
+      ).thenAnswer((_) async {});
 
       await controller.logViewedVolunteering(volunteering.id);
 
       verify(mockViewTracker.registerView(volunteering.id)).called(1);
-      verify(mockAnalyticsService.logViewedVolunteering(volunteering.id)).called(1);
-    });
-
-    test('logVolunteeringApplication calls analytics with views count and resets tracker', () async {
-      when(
-        mockAnalyticsService.logVolunteeringApplication(
-          volunteeringId: volunteering.id,
-          viewsBeforeApplying: anyNamed('viewsBeforeApplying'),
-        ),
-      ).thenAnswer((_) async {});
-
-      when(mockViewTracker.viewsCount).thenReturn(3);
-
-      await controller.logVolunteeringApplication(volunteering.id);
-
       verify(
-        mockAnalyticsService.logVolunteeringApplication(volunteeringId: volunteering.id, viewsBeforeApplying: 3),
+        mockAnalyticsService.logViewedVolunteering(volunteering.id),
       ).called(1);
-
-      verify(mockViewTracker.reset()).called(1);
     });
+
+    test(
+      'logVolunteeringApplication calls analytics with views count and resets tracker',
+      () async {
+        when(
+          mockAnalyticsService.logVolunteeringApplication(
+            volunteeringId: volunteering.id,
+            viewsBeforeApplying: anyNamed('viewsBeforeApplying'),
+          ),
+        ).thenAnswer((_) async {});
+
+        when(mockViewTracker.viewsCount).thenReturn(3);
+
+        await controller.logVolunteeringApplication(volunteering.id);
+
+        verify(
+          mockAnalyticsService.logVolunteeringApplication(
+            volunteeringId: volunteering.id,
+            viewsBeforeApplying: 3,
+          ),
+        ).called(1);
+
+        verify(mockViewTracker.reset()).called(1);
+      },
+    );
   });
 }

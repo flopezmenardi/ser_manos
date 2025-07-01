@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../../models/enums/sort_mode.dart';
-import '../../../models/volunteering_model.dart';
+import '../../../core/models/enums/sort_mode.dart';
+import '../../../core/models/volunteering_model.dart';
 
 abstract class VolunteeringsController {
   Future<void> applyToVolunteering(String volunteeringId);
@@ -9,8 +9,10 @@ abstract class VolunteeringsController {
   Future<void> withdrawApplication();
   Future<void> toggleFavorite(String volunteeringId, bool isFavorite);
   Future<int> getFavoritesCount(String volunteeringId);
-  Future<List<Volunteering>> searchVolunteerings(VolunteeringQueryState queryState);
-  Future<Volunteering> getVolunteeringById(String id);
+  Future<List<Volunteering>> searchVolunteerings(
+    VolunteeringQueryState queryState,
+  );
+  Future<Volunteering> getVolunteeringById(String volunteeringId);
   Future<void> logLikedVolunteering(String volunteeringId);
   Future<void> logViewedVolunteering(String volunteeringId);
   Future<void> logVolunteeringApplication(String volunteeringId);
@@ -23,9 +25,17 @@ class VolunteeringQueryState {
   final SortMode sortMode;
   final GeoPoint? userLocation;
 
-  VolunteeringQueryState({required this.query, required this.sortMode, this.userLocation});
+  VolunteeringQueryState({
+    required this.query,
+    required this.sortMode,
+    this.userLocation,
+  });
 
-  VolunteeringQueryState copyWith({String? query, SortMode? sortMode, GeoPoint? userLocation}) {
+  VolunteeringQueryState copyWith({
+    String? query,
+    SortMode? sortMode,
+    GeoPoint? userLocation,
+  }) {
     return VolunteeringQueryState(
       query: query ?? this.query,
       sortMode: sortMode ?? this.sortMode,

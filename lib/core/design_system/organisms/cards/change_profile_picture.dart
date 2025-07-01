@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ser_manos/design_system/organisms/cards/profile_picture_button.dart';
+import 'package:ser_manos/core/design_system/organisms/cards/profile_picture_button.dart';
 import '../../tokens/colors.dart';
 import '../../tokens/typography.dart';
-import '../../molecules/components/profile_picture.dart'; 
+import '../../molecules/components/profile_picture.dart';
 
 class ChangeProfilePictureCellule extends StatelessWidget {
   final String imagePath;
@@ -42,17 +42,15 @@ class ChangeProfilePictureCellule extends StatelessWidget {
                 const SizedBox(height: 8),
                 ProfilePictureButton(
                   text: 'Cambiar foto',
-                  onPressed: () async => onChangePressed(),      // forward to _pickPhoto()
+                  onPressed:
+                      () async => onChangePressed(), // forward to _pickPhoto()
                 ),
               ],
             ),
           ),
           const SizedBox(width: 16), // space between column and picture
           // Right Profile Picture (fixed size)
-          ProfilePicture(
-            imagePath: imagePath,
-            size: ProfilePictureSize.small,
-          ),
+          ProfilePicture(imagePath: imagePath, size: ProfilePictureSize.small),
         ],
       ),
     );
