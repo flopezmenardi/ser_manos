@@ -51,10 +51,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         if (isSame && isAccepted) {
           action = Column(
             children: [
-              Text(
-                'Estás participando',
-                style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
-              ),
+              Text('Estás participando', style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
               const SizedBox(height: 8),
               Text(
                 'La organización confirmó que ya estás participando de este voluntariado',
@@ -95,10 +92,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         } else if (isSame && !isAccepted) {
           action = Column(
             children: [
-              Text(
-                'Te has postulado',
-                style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
-              ),
+              Text('Te has postulado', style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
               const SizedBox(height: 8),
               Text(
                 'Pronto la organización se pondrá en contacto contigo y te inscribirá como participante.',
@@ -181,10 +175,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         } else if (!hasVacants) {
           action = Column(
             children: [
-              Text(
-                'No hay vacantes disponibles para postularse.',
-                style: AppTypography.body1,
-              ),
+              Text('No hay vacantes disponibles para postularse.', style: AppTypography.body1),
               const SizedBox(height: 16),
               CTAButton(text: 'Postularme', isEnabled: false, onPressed: () async {}),
             ],
@@ -304,10 +295,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                           style: AppTypography.overline.copyWith(color: AppColors.neutral75),
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          volunteering.titulo,
-                          style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
-                        ),
+                        Text(volunteering.titulo, style: AppTypography.headline1.copyWith(color: AppColors.neutral100)),
                         const SizedBox(height: 4),
                         Text(
                           volunteering.fechaInicio != null
@@ -316,10 +304,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                           style: AppTypography.body2.copyWith(color: AppColors.neutral50),
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          volunteering.resumen,
-                          style: AppTypography.body1.copyWith(color: AppColors.secondary200),
-                        ),
+                        Text(volunteering.resumen, style: AppTypography.body1.copyWith(color: AppColors.secondary200)),
                         const SizedBox(height: 24),
                         Text(
                           'Sobre la actividad',
@@ -333,11 +318,11 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         const SizedBox(height: 24),
                         InkWell(
                           onTap: () async {
-                            final scaffoldMessenger = ScaffoldMessenger.of(context); // capture BEFORE async gap
+                            final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-                            final query = Uri.encodeComponent(volunteering.direccion);
-                            final url = 'https://www.google.com/maps/search/?api=1&query=$query';
-                            final uri = Uri.parse(url);
+                            final lat = volunteering.ubicacion.latitude;
+                            final lng = volunteering.ubicacion.longitude;
+                            final uri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng");
 
                             if (await canLaunchUrl(uri)) {
                               await launchUrl(uri);
@@ -352,10 +337,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                           child: LocationImageCard(address: volunteering.direccion),
                         ),
                         const SizedBox(height: 24),
-                        Text(
-                          'Requisitos',
-                          style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
-                        ),
+                        Text('Requisitos', style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
                         const SizedBox(height: 8),
                         MarkdownBody(
                           data: volunteering.requisitos,
