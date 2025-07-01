@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ser_manos/constants/app_routes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../constants/app_routes.dart';
 import '../../../design_system/molecules/inputs/search_input.dart';
 import '../../../design_system/organisms/cards/current_volunteer_card.dart';
 import '../../../design_system/organisms/cards/volunteer_card.dart';
@@ -26,6 +26,8 @@ class VolunteeringListPage extends ConsumerStatefulWidget {
 }
 
 class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
+  bool _initializing = true;
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +35,9 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
 
     if (!remoteConfig.getBool('show_proximity_button')) {
       _determineSortMode();
+    } else {
+      // Si el botón está visible, dejamos que el usuario lo elija manualmente
+      _initializing = false;
     }
   }
 
@@ -42,6 +47,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
+
     if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
       try {
         final position = await Geolocator.getCurrentPosition();
@@ -53,10 +59,18 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
     } else {
       notifier.updateSortMode(SortMode.date);
     }
+
+    setState(() {
+      _initializing = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_initializing) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     final controller = ref.read(volunteeringsControllerProvider);
     final volunteeringListAsync = ref.watch(volunteeringSearchProvider);
     final volunteeringSearchNotifier = ref.read(volunteeringSearchProvider.notifier);

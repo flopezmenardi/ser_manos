@@ -1,8 +1,6 @@
 
 # Ser Manos
 
-[Image!](https://firebasestorage.googleapis.com/v0/b/ser-manos-d9350.firebasestorage.app/o/Screenshot%20from%202025-05-29%2011-35-39.png?alt=media&token=47ace2b4-2daf-4b5c-acb5-46c33823f2f1)
-
 ## Contributors
 
 - Felix Lopez Menardi
@@ -77,6 +75,8 @@ Intentamos mantener estos dos puntos lo más cercanos posibles y que se retroali
 
 ### Features
 
+[Main Screen with extra features](https://firebasestorage.googleapis.com/v0/b/ser-manos-d9350.firebasestorage.app/o/Screenshot%20from%202025-07-01%2009-21-44.png?alt=media&token=48929974-9b2e-4f74-90c0-0fde703a9b8a)
+
 **Sorting Button**: permite elegir entre ordenar por frescura o por geolocalización, el default siendo frescura.
 Creemos que la aplicación probablemente crezca a una red social donde organizaciones caritativas buscan obtener tracción y sponsors, perdiendo esa identidad totalmente funcional de oferta y postulación. Al fin y al cabo queremos que el usuario abra nuestra aplicación todos los días, no simplemente cuando se le urge inscribirse en un voluntariado, por esto priorizar y mantener como default la vejez nos parece la decisión correcta para mantener el engagement.
 Tampoco nos agradaba la idea de que lo primero que vea un usuario en su primer registro, al entrar al home de la aplicación sea un pop up pidiéndole permiso para usar la geolocalización. Otorgar la libertad de pasar al ordenamiento por cercanía nos pareció más constructivo y no tan invasivo. Como punto al margen, el botón no está posicionado en un lugar óptimo, ocupando demasiado espacio valioso en la primer sección del feed.
@@ -109,7 +109,10 @@ En base a nuestra visión del futuro de la aplicación y hacia dónde la queremo
     sudo apt install google-android-platform-tools-installer
     ```
 
-3. Conectar celular android físico o emular uno
+3. Conectar celular android físico o emular uno, se puede verificar la lista de dispositivos con el siguiente comando;
+    ```bash
+    adb devices
+    ```
 
 4. Correr el siguiente comando:
 
@@ -127,12 +130,14 @@ Donde el path es correcto si se buildeó el APK utilizando el comando en el paso
 4. Ir a su campo `voluntariadoAceptado` y poner el booleano en `true`
 5. Luego buscar el voluntariado correspondiente y restar 1 al campo `vacantes`
 
+---
+
 ## Unit Testing & Golden Tests
 
-Se desarrollaron tests unitarios para nuestros controllers (son los que contienen la logica de negocio en nuestra aplicacion) y los servicios, aunque los segundos, debido a la simplicidad y pocas dependencias externas, no son tan criticos y podrian ser obviados.
-Tambien se incluyeron golden-tests, los cuales no aportan mucho valor, si en cambio utilizaron como valor de verdad el design system estos podrian pasar a ser una pieza fundamental del desarrollo.
+Se desarrollaron tests unitarios para nuestros controllers (son los que contienen la lógica de negocio en nuestra aplicación) y los servicios, aunque estos últimos, debido a su simplicidad y pocas dependencias externas, no son tan críticos y podrían ser obviados.
+También se incluyeron golden tests, los cuales no aportan mucho valor. Sin embargo, si utilizaran como valor de verdad el *design system*, estos podrían pasar a ser una pieza fundamental del desarrollo.
 
-Se puede testear la aplicacion ejecutando el siguiente comando en el directorio del proyecto:
+Se puede testear la aplicación ejecutando el siguiente comando en el directorio del proyecto:
 
 ```bash
 flutter test --update-goldens
@@ -140,20 +145,22 @@ flutter test --update-goldens
 
 ## A/B Testing
 
-El A/B Testing es la confluencia de las ideas que venimos reiterando a lo largo de las secciones previas, tematicas como la gamification, el aumento del engagement y la expansion de la aplicacion por fuera del proposito funcional de inscripcion a voluntariados.
-Por esto, el A/B testing busca analizar el impacto de las features que planteamos en esos ejes centrales y para poder hacer este analisis critico se requiere informacion se recaudada por medio de las metricas.
-A continuacion se detallan algunos de los tests que ideamos:
+El A/B Testing es la confluencia de las ideas que venimos reiterando a lo largo de las secciones previas: temáticas como la *gamification*, el aumento del *engagement* y la expansión de la aplicación por fuera del propósito funcional de inscripción a voluntariados.
+Por esto, el A/B Testing busca analizar el impacto de las *features* que planteamos en esos ejes centrales. Para poder hacer este análisis crítico, se requiere que la información sea recaudada por medio de las métricas.
+A continuación, se detallan algunos de los tests que ideamos:
 
 ### Test 1
 
-Generando una variante donde los usuarios puedan ver el likes count, podemos analizar si hay una mejora en la cantidad de likes que los usuarios otorgan.
-La hipotesis y soporte para esta idea es el hecho de que los humanos suelen actuar en masa, por ende si un voluntariado esta likeado por muchas personas, el usuario se ve mas inclinado a likear si es que le genera algun agrado. Tambien genera una sensacion de comunidad y actividad, la aplicacion en su estado mas puro la hace parecer un marketplace de voluntariados, mientras que con esta adicion se empieza a perfilar la idea de una comunidad de voluntarios que aportan con algo que no es su presencia fisica.
-Tambien es interesante destacar que se puede generar el efecto adverso, si un usuario ve que los voluntariados tienen muy pocos likes, puede empezar a ver la aplicacion como menos confiable y sentirse menos inclinado a participar.
+Generando una variante donde los usuarios puedan ver el *likes count*, podemos analizar si hay una mejora en la cantidad de *likes* que los usuarios otorgan.
+La hipótesis y soporte para esta idea es el hecho de que los humanos suelen actuar en masa. Por ende, si un voluntariado está *likeado* por muchas personas, el usuario se ve más inclinado a *likear* si es que le genera algún agrado.
+También genera una sensación de comunidad y actividad. La aplicación, en su estado más puro, la hace parecer un *marketplace* de voluntariados, mientras que con esta adición se empieza a perfilar la idea de una comunidad de voluntarios que aportan con algo que no es su presencia física.
+También es interesante destacar que se puede generar el efecto adverso: si un usuario ve que los voluntariados tienen muy pocos *likes*, puede empezar a ver la aplicación como menos confiable y sentirse menos inclinado a participar.
 
 ### Test 2
 
-Otra experimento que se puede desarrollar se basaria en generar una variante con el boton de ordenamiento, y analizar la metrica que cuantifica cuantos voluntariados se vieron antes de que inscribirse en uno de ellos al igual que la cantidad de likes.
-En este caso lo que hipotetizamos es que se van a desarrollar dos tipos de usuarios distintos, uno que prefiere el ordenamiento por cercania ya que su objetivo es directamente inscribirse en un voluntariado sin mas distracciones, este tendria pocos likes otorgados y pocos voluntariados vistos hasta su postulacion. Luego tendriamos otro grupo de voluntariados que preferiria ordenar por frescura, ya que esta mas interesado en la actualidad y lo que esta sucediendo dinamicamente, este usuario entiende la pagina de voluntariados como un feed y no como un marketplace. Este usuario que desarrollaria un patron de uso mas parecido al de las redes sociales con mayores interacciones, otorgaria muchos mas likes y leeria muchos detalles de voluntariados antes de postularse o tal vez nunca lo haga.
+Otro experimento que se puede desarrollar se basaría en generar una variante con el botón de ordenamiento, y analizar la métrica que cuantifica cuántos voluntariados se vieron antes de inscribirse en uno de ellos, así como la cantidad de *likes*.
+En este caso, lo que hipotetizamos es que se van a desarrollar dos tipos de usuarios distintos: uno que prefiere el ordenamiento por cercanía, ya que su objetivo es directamente inscribirse en un voluntariado sin más distracciones. Este tendría pocos *likes* otorgados y pocos voluntariados vistos hasta su postulación.
+Luego tendríamos otro grupo de usuarios que preferiría ordenar por frescura, ya que está más interesado en la actualidad y lo que está sucediendo dinámicamente. Este usuario entiende la página de voluntariados como un *feed* y no como un *marketplace*. Este usuario desarrollaría un patrón de uso más parecido al de las redes sociales, con mayores interacciones, otorgaría muchos más *likes* y leería muchos detalles de voluntariados antes de postularse, o tal vez nunca lo haga.
 
 ## Decisions
 
