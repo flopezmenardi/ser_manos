@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/router.dart';
 
+import 'core/design_system/tokens/colors.dart';
 import 'firebase_options.dart';
 
 void main() {
@@ -52,7 +53,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(color: Colors.white, routerConfig: appRouter, debugShowCheckedModeBanner: false);
+    return MaterialApp.router(color: AppColors.neutral0, routerConfig: appRouter, debugShowCheckedModeBanner: false);
   }
 }
 

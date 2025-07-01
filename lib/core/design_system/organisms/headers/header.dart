@@ -67,7 +67,10 @@ class AppHeader extends StatelessWidget {
           alignment: Alignment.center,
           child: Text(
             label,
-            style: AppTypography.button.copyWith(color: AppColors.neutral25),
+            style:
+                isSelected
+                    ? AppTypography.button.copyWith(color: AppColors.neutral0)
+                    : AppTypography.button.copyWith(color: AppColors.neutral25),
             overflow: TextOverflow.ellipsis,
           ),
         ),

@@ -280,7 +280,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         top: 8,
                         left: 8,
                         child: IconButton(
-                          icon: AppIcons.getBackIcon(state: IconState.defaultState),
+                          icon: AppIcons.getBackIcon(state: IconState.white),
                           onPressed: () => context.go(AppRoutes.volunteerings),
                         ),
                       ),
