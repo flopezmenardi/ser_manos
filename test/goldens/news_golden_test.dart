@@ -17,21 +17,21 @@ void main() {
     final mockNews = [
       News(
         id: '1',
-        titulo: 'Título de prueba 1',
-        descripcion: 'Descripción de prueba 1',
-        resumen: 'Resumen de prueba 1',
-        emisor: 'Emisor 1',
-        imagenURL: AppAssets.novedades2,
-        fechaCreacion: Timestamp.fromDate(DateTime(2024, 1, 1)),
+        title: 'Título de prueba 1',
+        description: 'Descripción de prueba 1',
+        summary: 'Resumen de prueba 1',
+        creator: 'Emisor 1',
+        imageURL: AppAssets.novedades2,
+        creationDate: Timestamp.fromDate(DateTime(2024, 1, 1)),
       ),
       News(
         id: '2',
-        titulo: 'Título de prueba 2',
-        descripcion: 'Descripción de prueba 2',
-        resumen: 'Resumen de prueba 2',
-        emisor: 'Emisor 2',
-        imagenURL: AppAssets.novedades3,
-        fechaCreacion: Timestamp.fromDate(DateTime(2024, 1, 2)),
+        title: 'Título de prueba 2',
+        description: 'Descripción de prueba 2',
+        summary: 'Resumen de prueba 2',
+        creator: 'Emisor 2',
+        imageURL: AppAssets.novedades3,
+        creationDate: Timestamp.fromDate(DateTime(2024, 1, 2)),
       ),
     ];
 

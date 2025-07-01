@@ -43,13 +43,13 @@ class UserControllerImpl implements UserController {
   }
 
   @override
-  Future<void> updateUser(String uid, Map<String, dynamic> data) {
-    return _userService.updateUser(uid, data);
+  Future<void> updateUser(String userId, Map<String, dynamic> data) {
+    return _userService.updateUser(userId, data);
   }
 
   @override
-  Future<void> uploadProfilePicture(String uid, XFile xfile) async {
-    final ref = FirebaseStorage.instance.ref('users/$uid/profile_picture.jpg');
+  Future<void> uploadProfilePicture(String userId, XFile xfile) async {
+    final ref = FirebaseStorage.instance.ref('users/$userId/profile_picture.jpg');
 
     UploadTask task;
     if (kIsWeb) {
@@ -60,14 +60,14 @@ class UserControllerImpl implements UserController {
     }
 
     // debug logs
-    debugPrint('Uploading profile picture for user $uid');
+    debugPrint('Uploading profile picture for user $userId');
 
     final snapshot = await task.whenComplete(() {});
     final url = await snapshot.ref.getDownloadURL();
 
     debugPrint('Profile picture uploaded successfully: $url');
-    await _userService.updateUser(uid, {'photoUrl': url});
-    debugPrint('User $uid updated with new profile picture URL: $url');
+    await _userService.updateUser(userId, {'photoUrl': url});
+    debugPrint('User $userId updated with new profile picture URL: $url');
   }
 
   @override
@@ -152,9 +152,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> updateUser(Map<String, dynamic> data) async {
-    final uid = state.currentUser?.uuid;
-    if (uid == null) return;
-    await _authController.updateUser(uid, data);
+    final userId = state.currentUser?.id;
+    if (userId == null) return;
+    await _authController.updateUser(userId, data);
     await refreshUser();
   }
 

@@ -11,22 +11,22 @@ void main() {
 
     final news1 = News(
       id: '1',
-      titulo: 'Primera noticia',
-      descripcion: 'Descripción 1',
-      resumen: 'Resumen 1',
-      emisor: 'Emisor 1',
-      imagenURL: 'https://image1.com',
-      fechaCreacion: Timestamp.fromDate(DateTime(2023, 1, 1)),
+      title: 'Primera noticia',
+      description: 'Descripción 1',
+      summary: 'Resumen 1',
+      creator: 'Emisor 1',
+      imageURL: 'https://image1.com',
+      creationDate: Timestamp.fromDate(DateTime(2023, 1, 1)),
     );
 
     final news2 = News(
       id: '2',
-      titulo: 'Segunda noticia',
-      descripcion: 'Descripción 2',
-      resumen: 'Resumen 2',
-      emisor: 'Emisor 2',
-      imagenURL: 'https://image2.com',
-      fechaCreacion: Timestamp.fromDate(DateTime(2024, 1, 1)),
+      title: 'Segunda noticia',
+      description: 'Descripción 2',
+      summary: 'Resumen 2',
+      creator: 'Emisor 2',
+      imageURL: 'https://image2.com',
+      creationDate: Timestamp.fromDate(DateTime(2024, 1, 1)),
     );
 
     setUp(() async {
@@ -42,15 +42,15 @@ void main() {
 
       expect(result, isA<List<News>>());
       expect(result.length, 2);
-      expect(result.first.titulo, 'Segunda noticia'); // más nueva
-      expect(result.last.titulo, 'Primera noticia');  // más vieja
+      expect(result.first.title, 'Segunda noticia'); // más nueva
+      expect(result.last.title, 'Primera noticia');  // más vieja
     });
 
     test('getNewsById returns News if found', () async {
       final result = await newsService.getNewsById('1');
 
       expect(result, isNotNull);
-      expect(result?.titulo, 'Primera noticia');
+      expect(result?.title, 'Primera noticia');
     });
 
     test('getNewsById returns null if not found', () async {

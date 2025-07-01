@@ -32,9 +32,9 @@ class MockUserService extends _i1.Mock implements _i2.UserService {
   }
 
   @override
-  _i3.Future<_i4.User?> getUserById(String? uid) =>
+  _i3.Future<_i4.User?> getUserById(String? userId) =>
       (super.noSuchMethod(
-            Invocation.method(#getUserById, [uid]),
+            Invocation.method(#getUserById, [userId]),
             returnValue: _i3.Future<_i4.User?>.value(),
           )
           as _i3.Future<_i4.User?>);

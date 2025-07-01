@@ -27,32 +27,32 @@ void main() {
 
       volunteering = Volunteering(
         id: 'v1',
-        titulo: 'Título',
-        descripcion: 'Descripción',
-        resumen: 'Resumen',
-        emisor: 'Emisor',
-        vacantes: 5,
-        requisitos: 'Mayor de 18',
-        imagenURL: 'https://img.com',
-        direccion: 'Calle 123',
-        ubicacion: const GeoPoint(0, 0),
+        title: 'Título',
+        description: 'Descripción',
+        summary: 'Resumen',
+        creator: 'Emisor',
+        vacants: 5,
+        requirements: 'Mayor de 18',
+        imageURL: 'https://img.com',
+        address: 'Calle 123',
+        location: const GeoPoint(0, 0),
         likes: 0,
-        fechaCreacion: Timestamp.fromDate(DateTime(2024, 1, 1)),
-        fechaInicio: Timestamp.fromDate(DateTime(2025, 1, 1)),
+        creationDate: Timestamp.fromDate(DateTime(2024, 1, 1)),
+        startDate: Timestamp.fromDate(DateTime(2025, 1, 1)),
       );
 
       user = User(
-        uuid: 'u1',
-        nombre: 'Juan',
-        apellido: 'Pérez',
+        id: 'u1',
+        name: 'Juan',
+        surname: 'Pérez',
         email: 'juan@mail.com',
-        telefono: '123456789',
-        genero: 'Masculino',
-        fechaNacimiento: '01/01/2000',
-        favoritos: [],
-        voluntariado: '',
-        fechaRegistro: Timestamp.fromDate(DateTime(2023, 1, 1)),
-        voluntariadoAceptado: false,
+        phoneNumber: '123456789',
+        gender: 'Masculino',
+        birthDate: '01/01/2000',
+        favorites: [],
+        volunteering: '',
+        registerDate: Timestamp.fromDate(DateTime(2023, 1, 1)),
+        acceptedVolunteering: false,
       );
 
       controller = VolunteeringsControllerImpl(
@@ -65,16 +65,16 @@ void main() {
 
     test('applyToVolunteering - success', () async {
       when(mockService.getVolunteeringById(volunteering.id)).thenAnswer((_) async => volunteering);
-      when(mockService.applyToVolunteering(user.uuid, volunteering.id)).thenAnswer((_) async {});
+      when(mockService.applyToVolunteering(user.id, volunteering.id)).thenAnswer((_) async {});
 
       await controller.applyToVolunteering(volunteering.id);
 
       verify(mockService.getVolunteeringById(volunteering.id)).called(1);
-      verify(mockService.applyToVolunteering(user.uuid, volunteering.id)).called(1);
+      verify(mockService.applyToVolunteering(user.id, volunteering.id)).called(1);
     });
 
     test('applyToVolunteering - throws if profile incomplete', () async {
-      final incompleteUser = user.copyWith(telefono: '');
+      final incompleteUser = user.copyWith(phoneNumber: '');
       final c = VolunteeringsControllerImpl(
         volunteeringsService: mockService,
         analyticsService: mockAnalyticsService,
@@ -86,7 +86,7 @@ void main() {
     });
 
     test('applyToVolunteering - throws if already applied', () async {
-      final appliedUser = user.copyWith(voluntariado: 'some_id');
+      final appliedUser = user.copyWith(volunteering: 'some_id');
       final c = VolunteeringsControllerImpl(
         volunteeringsService: mockService,
         analyticsService: mockAnalyticsService,
@@ -98,30 +98,30 @@ void main() {
     });
 
     test('applyToVolunteering - throws if no vacancies', () async {
-      final noVacancies = volunteering.copyWith(vacantes: 0);
+      final noVacancies = volunteering.copyWith(vacants: 0);
       when(mockService.getVolunteeringById(volunteering.id)).thenAnswer((_) async => noVacancies);
 
       expect(() => controller.applyToVolunteering(volunteering.id), throwsException);
     });
 
     test('abandonVolunteering calls service', () async {
-      when(mockService.abandonVolunteering(user.uuid, 'v1')).thenAnswer((_) async {});
+      when(mockService.abandonVolunteering(user.id, 'v1')).thenAnswer((_) async {});
       await controller.abandonVolunteering('v1');
-      verify(mockService.abandonVolunteering(user.uuid, 'v1')).called(1);
+      verify(mockService.abandonVolunteering(user.id, 'v1')).called(1);
     });
 
     test('withdrawApplication calls service', () async {
-      when(mockService.withdrawApplication(user.uuid)).thenAnswer((_) async {});
+      when(mockService.withdrawApplication(user.id)).thenAnswer((_) async {});
       await controller.withdrawApplication();
-      verify(mockService.withdrawApplication(user.uuid)).called(1);
+      verify(mockService.withdrawApplication(user.id)).called(1);
     });
 
     test('toggleFavorite calls service correctly', () async {
       when(
-        mockService.toggleFavorite(userId: user.uuid, volunteeringId: 'v1', isFavorite: false),
+        mockService.toggleFavorite(userId: user.id, volunteeringId: 'v1', isFavorite: false),
       ).thenAnswer((_) async {});
       await controller.toggleFavorite('v1', false);
-      verify(mockService.toggleFavorite(userId: user.uuid, volunteeringId: 'v1', isFavorite: false)).called(1);
+      verify(mockService.toggleFavorite(userId: user.id, volunteeringId: 'v1', isFavorite: false)).called(1);
     });
 
     test('getFavoritesCount returns correct count', () async {

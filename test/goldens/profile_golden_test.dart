@@ -37,18 +37,18 @@ class FakeAuthNotifier extends StateNotifier<AuthState> implements AuthNotifier 
 void main() {
   testWidgets('ProfileScreen golden test - filled profile', (WidgetTester tester) async {
     final testUser = User(
-      uuid: 'u1',
-      nombre: 'Juan Pérez',
-      apellido: 'Pérez',
+      id: 'u1',
+      name: 'Juan Pérez',
+      surname: 'Pérez',
       email: 'juan@example.com',
-      fechaNacimiento: '2000-01-01',
-      fechaRegistro: Timestamp.fromDate(DateTime(2023, 1, 1)),
-      genero: 'Masculino',
-      telefono: '123456789',
-      voluntariado: null,
+      birthDate: '2000-01-01',
+      registerDate: Timestamp.fromDate(DateTime(2023, 1, 1)),
+      gender: 'Masculino',
+      phoneNumber: '123456789',
+      volunteering: null,
       photoUrl: null,
-      voluntariadoAceptado: false,
-      favoritos: [],
+      acceptedVolunteering: false,
+      favorites: [],
     );
 
     final authState = AuthState(isInitializing: false, isLoading: false, currentUser: testUser);

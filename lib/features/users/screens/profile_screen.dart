@@ -42,9 +42,9 @@ class ProfileScreen extends ConsumerWidget {
 
   Widget _buildProfileContent(BuildContext context, WidgetRef ref, User user) {
     final hasFullProfile =
-        user.nombre.isNotEmpty && user.email.isNotEmpty && user.genero.isNotEmpty && user.telefono.isNotEmpty;
+        user.name.isNotEmpty && user.email.isNotEmpty && user.gender.isNotEmpty && user.phoneNumber.isNotEmpty;
 
-    return hasFullProfile ? _buildFilledProfile(context, ref, user) : _buildEmptyProfile(context, ref, user.nombre);
+    return hasFullProfile ? _buildFilledProfile(context, ref, user) : _buildEmptyProfile(context, ref, user.name);
   }
 
   Widget _buildFilledProfile(BuildContext context, WidgetRef ref, User user) {
@@ -66,7 +66,7 @@ class ProfileScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            user.nombre,
+            user.name,
             style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
             overflow: TextOverflow.ellipsis,
           ),
@@ -80,15 +80,15 @@ class ProfileScreen extends ConsumerWidget {
           InformationCard(
             title: 'Información personal',
             firstLabel: 'FECHA DE NACIMIENTO',
-            firstContent: user.fechaNacimiento,
+            firstContent: user.birthDate,
             secondLabel: 'GÉNERO',
-            secondContent: user.genero,
+            secondContent: user.gender,
           ),
           const SizedBox(height: 16),
           InformationCard(
             title: 'Datos de contacto',
             firstLabel: 'TELÉFONO',
-            firstContent: user.telefono,
+            firstContent: user.phoneNumber,
             secondLabel: 'E-MAIL',
             secondContent: user.email,
           ),

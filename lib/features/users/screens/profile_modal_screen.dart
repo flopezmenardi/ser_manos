@@ -41,13 +41,13 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
     super.initState();
     final user = ref.read(authNotifierProvider).currentUser;
     if (user != null) {
-      _sexoIndex = _genderToIndex(user.genero);
+      _sexoIndex = _genderToIndex(user.gender);
     }
   }
 
-  int? _genderToIndex(String? genero) {
+  int? _genderToIndex(String? gender) {
     const options = ['Hombre', 'Mujer', 'No binario'];
-    return genero != null ? options.indexOf(genero) : null;
+    return gender != null ? options.indexOf(gender) : null;
   }
 
   String? _indexToGender(int? index) {
@@ -86,7 +86,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
               child: FormBuilder(
                 key: _formKey,
                 onChanged: _checkForChanges,
-                initialValue: {'birthDate': user.fechaNacimiento, 'email': user.email, 'phone': user.telefono},
+                initialValue: {'birthDate': user.birthDate, 'email': user.email, 'phone': user.phoneNumber},
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(horizontal: AppGrid.horizontalMargin),
                   child: Column(
@@ -196,11 +196,11 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                           final values = _formKey.currentState!.value;
 
                           if (_newPhoto != null) {
-                            await authController.uploadProfilePicture(user.uuid, _newPhoto!);
+                            await authController.uploadProfilePicture(user.id, _newPhoto!);
                             _newPhoto = null;
                           }
 
-                          await authController.updateUser(user.uuid, {
+                          await authController.updateUser(user.id, {
                             'fechaNacimiento': values['birthDate'],
                             'telefono': values['phone'],
                             'email': values['email'],
@@ -222,7 +222,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                                       (_) => Center(
                                         child: ModalSermanos(
                                           title: 'Te estás por postular a',
-                                          subtitle: volunteering.titulo,
+                                          subtitle: volunteering.title,
                                           confimationText: 'Confirmar',
                                           cancelText: 'Cancelar',
                                           onCancel: () => Navigator.of(context).pop(false),
@@ -259,12 +259,12 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
   void _checkForChanges() {
     final formValues = _formKey.currentState?.instantValue ?? {};
     final user = ref.read(authNotifierProvider).currentUser;
-    final genderChanged = _indexToGender(_sexoIndex) != user?.genero;
+    final genderChanged = _indexToGender(_sexoIndex) != user?.gender;
 
     final formChanged =
-      formValues['birthDate'] != user?.fechaNacimiento ||
+      formValues['birthDate'] != user?.birthDate ||
       formValues['email'] != user?.email ||
-      formValues['phone'] != user?.telefono ||
+      formValues['phone'] != user?.phoneNumber ||
       genderChanged ||
       _newPhoto != null;
 

@@ -12,23 +12,23 @@ void main() {
   late MockFirebaseAuth mockFirebaseAuth;
   late UserServiceImpl userService;
 
-  const String uid = 'test-uid';
+  const String userId = 'test-uid';
   const String email = 'test@example.com';
   const String password = 'password123';
 
   final testUser = User(
-    uuid: uid,
-    nombre: 'Juan',
-    apellido: 'Pérez',
+    id: userId,
+    name: 'Juan',
+    surname: 'Pérez',
     email: email,
-    fechaNacimiento: '2000-01-01',
-    fechaRegistro: Timestamp.fromDate(DateTime.now()),
-    genero: 'Masculino',
-    telefono: '123456789',
-    voluntariado: null,
+    birthDate: '2000-01-01',
+    registerDate: Timestamp.fromDate(DateTime.now()),
+    gender: 'Masculino',
+    phoneNumber: '123456789',
+    volunteering: null,
     photoUrl: null,
-    voluntariadoAceptado: false,
-    favoritos: [],
+    acceptedVolunteering: false,
+    favorites: [],
   );
 
   setUp(() {
@@ -40,13 +40,13 @@ void main() {
 
   group('createUser & getUserById', () {
     test('should create and retrieve user correctly', () async {
-      await userService.createUser(uid, testUser.nombre, testUser.apellido, testUser.email);
+      await userService.createUser(userId, testUser.name, testUser.surname, testUser.email);
 
-      final result = await userService.getUserById(uid);
+      final result = await userService.getUserById(userId);
 
       expect(result, isNotNull);
-      expect(result!.nombre, testUser.nombre);
-      expect(result.apellido, testUser.apellido);
+      expect(result!.name, testUser.name);
+      expect(result.surname, testUser.surname);
       expect(result.email, testUser.email);
     });
   });
@@ -61,24 +61,24 @@ void main() {
       ).thenAnswer((_) async => mockUserCredential);
 
       when(mockUserCredential.user).thenReturn(mockFirebaseUser);
-      when(mockFirebaseUser.uid).thenReturn(uid);
+      when(mockFirebaseUser.uid).thenReturn(userId);
 
       await userService.registerUser(
-        nombre: testUser.nombre,
-        apellido: testUser.apellido,
+        nombre: testUser.name,
+        apellido: testUser.surname,
         email: email,
         password: password,
       );
 
-      final storedUser = await fakeFirestore.collection('usuarios').doc(uid).get();
+      final storedUser = await fakeFirestore.collection('usuarios').doc(userId).get();
       expect(storedUser.exists, isTrue);
-      expect(storedUser.data()!['nombre'], testUser.nombre);
+      expect(storedUser.data()!['nombre'], testUser.name);
     });
   });
 
   group('loginUser', () {
     test('should login and return user', () async {
-      await userService.createUser(uid, testUser.nombre, testUser.apellido, testUser.email);
+      await userService.createUser(userId, testUser.name, testUser.surname, testUser.email);
 
       final mockUserCredential = MockUserCredential();
       final mockFirebaseUser = MockUser();
@@ -88,24 +88,24 @@ void main() {
       ).thenAnswer((_) async => mockUserCredential);
 
       when(mockUserCredential.user).thenReturn(mockFirebaseUser);
-      when(mockFirebaseUser.uid).thenReturn(uid);
+      when(mockFirebaseUser.uid).thenReturn(userId);
 
       final user = await userService.loginUser(email: email, password: password);
 
       expect(user, isNotNull);
-      expect(user!.uuid, uid);
-      expect(user.nombre, testUser.nombre);
+      expect(user!.id, userId);
+      expect(user.name, testUser.name);
     });
   });
 
   group('updateUser', () {
     test('should update user fields', () async {
-      await userService.createUser(uid, testUser.nombre, testUser.apellido, testUser.email);
+      await userService.createUser(userId, testUser.name, testUser.surname, testUser.email);
 
-      await userService.updateUser(uid, {'telefono': '999999999'});
+      await userService.updateUser(userId, {'telefono': '999999999'});
 
-      final updatedUser = await userService.getUserById(uid);
-      expect(updatedUser!.telefono, '999999999');
+      final updatedUser = await userService.getUserById(userId);
+      expect(updatedUser!.phoneNumber, '999999999');
     });
   });
 

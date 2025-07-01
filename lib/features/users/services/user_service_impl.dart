@@ -18,8 +18,8 @@ class UserServiceImpl implements UserService {
       _db = db ?? FirebaseFirestore.instance;
 
   @override
-  Future<User?> getUserById(String uid) async {
-    final doc = await _db.collection('usuarios').doc(uid).get();
+  Future<User?> getUserById(String userId) async {
+    final doc = await _db.collection('usuarios').doc(userId).get();
     if (!doc.exists) return null;
     return User.fromDocumentSnapshot(doc);
   }
@@ -32,17 +32,17 @@ class UserServiceImpl implements UserService {
     required String password,
   }) async {
     final userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-    final uid = userCredential.user!.uid;
+    final userId = userCredential.user!.uid;
 
-    await createUser(uid, nombre, apellido, email);
-    return getUserById(uid);
+    await createUser(userId, nombre, apellido, email);
+    return getUserById(userId);
   }
 
   @override
-  Future<void> createUser(String uid, String nombre, String apellido, String email) async {
-    await _db.collection('usuarios').doc(uid).set({
-      'nombre': nombre,
-      'apellido': apellido,
+  Future<void> createUser(String userId, String name, String surname, String email) async {
+    await _db.collection('usuarios').doc(userId).set({
+      'nombre': name,
+      'apellido': surname,
       'email': email,
       'fechaRegistro': FieldValue.serverTimestamp(),
       'telefono': '',
@@ -57,8 +57,8 @@ class UserServiceImpl implements UserService {
   @override
   Future<User?> loginUser({required String email, required String password}) async {
     final userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
-    final uid = userCredential.user!.uid;
-    return getUserById(uid);
+    final userId = userCredential.user!.uid;
+    return getUserById(userId);
   }
 
   @override
@@ -67,8 +67,8 @@ class UserServiceImpl implements UserService {
   }
 
   @override
-  Future<void> updateUser(String uid, Map<String, dynamic> data) async {
-    await _db.collection('usuarios').doc(uid).update(data);
+  Future<void> updateUser(String userId, Map<String, dynamic> data) async {
+    await _db.collection('usuarios').doc(userId).update(data);
   }
 
   @override

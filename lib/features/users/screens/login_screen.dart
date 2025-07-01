@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/constants/app_routes.dart';
 import 'package:ser_manos/design_system/organisms/modal.dart';
+import 'package:ser_manos/design_system/tokens/typography.dart';
 
 import '../../../design_system/atoms/logos/logo_square.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
@@ -21,6 +22,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  String _authError = ''; 
 
   final _formKey = GlobalKey<FormState>();
 
@@ -75,6 +77,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 passwordController: passwordController,
                               ),
                             ),
+                            if (_authError != '') ...[
+                              const SizedBox(height: 16),
+                              Text(
+                                _authError,
+                                style: AppTypography.caption.copyWith(color: AppColors.error100),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ],
                         ),
                       ),
@@ -93,22 +103,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       );
 
                       if (success) {
+                        setState(() {
+                          _authError = ''; // limpiar error anterior
+                        });
                         context.go(AppRoutes.volunteerings);
                       } else {
-                        showDialog(
-                          context: context,
-                          builder:
-                              (_) => Center(
-                                child: ModalSermanos(
-                                  title: 'Error al iniciar sesión',
-                                  subtitle: 'El email o la contraseña son incorrectos.',
-                                  confimationText: 'Reintentar',
-                                  cancelText: 'Cancelar',
-                                  onCancel: () => Navigator.of(context).pop(),
-                                  onConfirm: () => Navigator.of(context).pop(),
-                                ),
-                              ),
-                        );
+                        setState(() {
+                          _authError = 'Email o contraseña incorrectos';
+                        });
                       }
                     },
                   ),
