@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Required for SystemUiOverlayStyle
 
 import '../../tokens/colors.dart';
 import '../../tokens/grid.dart';
@@ -21,8 +22,21 @@ class StatusBar extends StatelessWidget {
     }
   }
 
+  SystemUiOverlayStyle get _overlayStyle {
+    switch (variant) {
+      case StatusBarVariant.main:
+      case StatusBarVariant.detail:
+        return SystemUiOverlayStyle.light.copyWith(statusBarColor: _backgroundColor);
+      case StatusBarVariant.form:
+        return SystemUiOverlayStyle.dark.copyWith(statusBarColor: _backgroundColor);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(width: AppGrid.screenWidth(context), height: 52, color: _backgroundColor);
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: _overlayStyle,
+      child: Container(width: AppGrid.screenWidth(context), height: 52, color: _backgroundColor),
+    );
   }
 }

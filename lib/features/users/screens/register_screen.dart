@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ser_manos/constants/app_routes.dart';
-import 'package:ser_manos/core/design_system/organisms/forms/register.dart';
 
+import '../../../constants/app_routes.dart';
 import '../../../core/design_system/atoms/logos/logo_square.dart';
 import '../../../core/design_system/molecules/buttons/cta_button.dart';
 import '../../../core/design_system/molecules/buttons/text_button.dart';
+import '../../../core/design_system/molecules/status_bar/status_bar.dart';
+import '../../../core/design_system/organisms/forms/register.dart';
 import '../../../core/design_system/tokens/colors.dart';
 import '../controllers/user_controller_impl.dart';
 
@@ -74,9 +75,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     if (error == null) {
       router.go('/welcome');
     } else {
-      scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text(error, overflow: TextOverflow.ellipsis)),
-      );
+      scaffoldMessenger.showSnackBar(SnackBar(content: Text(error, overflow: TextOverflow.ellipsis)));
     }
   }
 
@@ -92,57 +91,60 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.neutral0,
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const SizedBox(height: 24),
-                        const LogoSquare(size: 150),
-                        const SizedBox(height: 32),
+      body: Column(
+        children: [
+          const StatusBar(variant: StatusBarVariant.form),
+          Expanded(
+            child: SafeArea(
+              top: false,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                      child: IntrinsicHeight(
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const SizedBox(height: 24),
+                              const LogoSquare(size: 150),
+                              const SizedBox(height: 32),
 
-                        RegisterForms(
-                          nameController: _nameController,
-                          lastNameController: _lastNameController,
-                          emailController: _emailController,
-                          passwordController: _passwordController,
-                        ),
+                              RegisterForms(
+                                nameController: _nameController,
+                                lastNameController: _lastNameController,
+                                emailController: _emailController,
+                                passwordController: _passwordController,
+                              ),
 
-                        const SizedBox(height: 32),
-                        const Spacer(),
+                              const SizedBox(height: 32),
+                              const Spacer(),
 
-                        CTAButton(
-                          text:
-                              state.isLoading
-                                  ? 'Registrando...'
-                                  : 'Registrarse',
-                          isEnabled: _isFormFilled && !state.isLoading,
-                          onPressed: _handleRegister,
+                              CTAButton(
+                                text: state.isLoading ? 'Registrando...' : 'Registrarse',
+                                isEnabled: _isFormFilled && !state.isLoading,
+                                onPressed: _handleRegister,
+                              ),
+                              const SizedBox(height: 16),
+                              TextOnlyButton(
+                                text: 'Ya tengo cuenta',
+                                onPressed: () async => context.go(AppRoutes.login),
+                              ),
+                              const SizedBox(height: 24),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 16),
-                        TextOnlyButton(
-                          text: 'Ya tengo cuenta',
-                          onPressed: () async {
-                            context.go(AppRoutes.login);
-                          },
-                        ),
-                        const SizedBox(height: 24),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
-            );
-          },
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }
