@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/constants/app_routes.dart';
-import 'package:ser_manos/design_system/organisms/modal.dart';
 import 'package:ser_manos/design_system/tokens/typography.dart';
 
 import '../../../design_system/atoms/logos/logo_square.dart';
@@ -22,7 +21,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  String _authError = ''; 
+  String _authError = '';
 
   final _formKey = GlobalKey<FormState>();
 
@@ -102,14 +101,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         password: passwordController.text,
                       );
 
+                      if (!mounted) return;
+
+                      setState(() {
+                        _authError = success ? '' : 'Email o contraseña incorrectos';
+                      });
+
                       if (success) {
-                        setState(() {
-                          _authError = ''; // limpiar error anterior
-                        });
-                        context.go(AppRoutes.volunteerings);
-                      } else {
-                        setState(() {
-                          _authError = 'Email o contraseña incorrectos';
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          context.go(AppRoutes.volunteerings);
                         });
                       }
                     },

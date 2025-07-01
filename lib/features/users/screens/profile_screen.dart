@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ser_manos/constants/app_assets.dart';
-import 'package:ser_manos/constants/app_routes.dart';
-import 'package:ser_manos/design_system/molecules/buttons/short_button.dart';
-import 'package:ser_manos/design_system/organisms/modal.dart';
-import 'package:ser_manos/models/user_model.dart';
 
+import '../../../constants/app_assets.dart';
+import '../../../constants/app_routes.dart';
 import '../../../design_system/molecules/buttons/cta_button.dart';
+import '../../../design_system/molecules/buttons/short_button.dart';
 import '../../../design_system/molecules/buttons/text_button.dart';
 import '../../../design_system/molecules/components/profile_picture.dart';
 import '../../../design_system/organisms/cards/information_card.dart';
 import '../../../design_system/organisms/headers/header.dart';
+import '../../../design_system/organisms/modal.dart';
 import '../../../design_system/tokens/colors.dart';
 import '../../../design_system/tokens/grid.dart';
 import '../../../design_system/tokens/typography.dart';
+import '../../../models/user_model.dart';
 import '../controllers/user_controller_impl.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -99,19 +99,24 @@ class ProfileScreen extends ConsumerWidget {
             text: 'Cerrar sesión',
             color: AppColors.error100,
             onPressed: () async {
+              // Capture Navigator and GoRouter before showing dialog
+              final navigator = Navigator.of(context);
+              final goRouter = GoRouter.of(context);
+
               showDialog(
                 context: context,
                 builder:
-                    (_) => Center(
+                    (dialogContext) => Center(
                       child: ModalSermanos(
                         title: '¿Estás seguro que quieres cerrar sesión?',
                         confimationText: 'Cerrar sesión',
                         cancelText: 'Cancelar',
-                        onCancel: () => Navigator.of(context).pop(),
+                        onCancel: () => Navigator.of(dialogContext).pop(),
                         onConfirm: () async {
                           await ref.read(authNotifierProvider.notifier).logout();
-                          Navigator.of(context).pop();
-                          context.go(AppRoutes.initial);
+                          // Use captured navigator and goRouter instead of context
+                          navigator.pop();
+                          goRouter.go(AppRoutes.initial);
                         },
                       ),
                     ),
@@ -158,20 +163,25 @@ class ProfileScreen extends ConsumerWidget {
             text: 'Cerrar sesión',
             color: AppColors.error100,
             onPressed: () async {
+              // Capture Navigator and GoRouter before showing dialog
+              final navigator = Navigator.of(context);
+              final goRouter = GoRouter.of(context);
+
               showDialog(
                 context: context,
                 builder:
-                    (_) => Center(
+                    (dialogContext) => Center(
                       child: ModalSermanos(
                         title: 'Cerrar sesión',
                         subtitle: '¿Estás seguro que querés cerrar sesión?',
                         confimationText: 'Cerrar sesión',
                         cancelText: 'Cancelar',
-                        onCancel: () => Navigator.of(context).pop(),
+                        onCancel: () => Navigator.of(dialogContext).pop(),
                         onConfirm: () async {
                           await ref.read(authNotifierProvider.notifier).logout();
-                          Navigator.of(context).pop();
-                          context.go(AppRoutes.initial);
+                          // Use captured navigator and goRouter instead of context
+                          navigator.pop();
+                          goRouter.go(AppRoutes.initial);
                         },
                       ),
                     ),

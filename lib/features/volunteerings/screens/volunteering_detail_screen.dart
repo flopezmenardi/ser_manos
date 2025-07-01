@@ -139,28 +139,30 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
+
               TextOnlyButton(
                 text: 'Abandonar voluntariado actual',
                 onPressed: () async {
-                  final volunteeringToAbandon = await controller.getVolunteeringById(user.volunteering!);
                   final confirmed =
                       await showDialog<bool>(
                         context: context,
                         builder:
-                            (_) => Center(
+                            (dialogContext) => Center(
                               child: ModalSermanos(
                                 title: '¿Estás seguro que querés abandonar tu voluntariado?',
-                                subtitle: volunteeringToAbandon.title,
+                                subtitle: 'Esta acción no se puede deshacer',
                                 confimationText: 'Confirmar',
                                 cancelText: 'Cancelar',
-                                onCancel: () => Navigator.of(context).pop(false),
-                                onConfirm: () => Navigator.of(context).pop(true),
+                                onCancel: () => Navigator.of(dialogContext).pop(false),
+                                onConfirm: () => Navigator.of(dialogContext).pop(true),
                               ),
                             ),
                       ) ??
                       false;
 
                   if (!confirmed) return;
+
+                  // Now perform all async operations without needing context
                   await controller.withdrawApplication();
                   await ref.read(volunteeringDetailProvider(id).notifier).fetchVolunteeringDetail();
                   await ref.read(authNotifierProvider.notifier).refreshUser();
