@@ -97,30 +97,40 @@ En base a nuestra visión del futuro de la aplicación y hacia dónde la queremo
 
 ## How to Run
 
-1. Descargar archivo APK de [Google Drive](https://drive.google.com/drive/folders/12xucFu4HZSAOvB26NkTOLRpiJMANaS0y?usp=sharing) o buildeando el APK directamente desde directorio raíz del proyecto con el siguiente comando:
+1. Instalar las dependencias y asegurarse de usar la versión correcta de Flutter:
 
     ```bash
-    flutter build apk --release
+    fvm install
+    fvm flutter pub get
     ```
 
-2. Instalar adb con el siguiente comando:
+2. Descargar el archivo APK de [Google Drive](https://drive.google.com/drive/folders/12xucFu4HZSAOvB26NkTOLRpiJMANaS0y?usp=sharing) o buildearlo directamente desde el directorio raíz del proyecto:
+
+    ```bash
+    fvm flutter build apk --release
+    ```
+
+3. Instalar ADB con el siguiente comando:
 
     ```bash
     sudo apt install google-android-platform-tools-installer
     ```
 
-3. Conectar celular android físico o emular uno, se puede verificar la lista de dispositivos con el siguiente comando;
+4. Conectar celular Android físico o emular uno. Verificar que sea detectado:
+
     ```bash
     adb devices
     ```
 
-4. Correr el siguiente comando:
+5. Instalar el APK:
 
-  ```bash
-  adb install build/app/outputs/flutter-apk/app-release.apk
-  ```
+    ```bash
+    adb install build/app/outputs/flutter-apk/app-release.apk
+    ```
 
-Donde el path es correcto si se buildeó el APK utilizando el comando en el paso 1, y si no se debe colocar el path donde se guardó luego de descargarlo de Google Drive
+> Nota: El path del APK es válido si se buildeó localmente. En caso de descargarlo, ajustar el path según ubicación.
+ 
+> Si usás un IDE como VSCode o Android Studio, asegurate de configurar el path de Flutter a través de FVM (`.fvm/flutter_sdk`) para que coincida con la versión definida en `.fvmrc`. Esto evita inconsistencias al buildear o testear.
 
 ## Accepting a Volunteer
 
