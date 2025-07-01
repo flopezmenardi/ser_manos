@@ -295,10 +295,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                           style: AppTypography.overline.copyWith(color: AppColors.neutral75),
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          volunteering.title,
-                          style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
-                        ),
+                        Text(volunteering.title, style: AppTypography.headline1.copyWith(color: AppColors.neutral100)),
                         const SizedBox(height: 4),
                         Text(
                           volunteering.startDate != null
@@ -307,10 +304,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                           style: AppTypography.body2.copyWith(color: AppColors.neutral50),
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          volunteering.summary,
-                          style: AppTypography.body1.copyWith(color: AppColors.secondary200),
-                        ),
+                        Text(volunteering.summary, style: AppTypography.body1.copyWith(color: AppColors.secondary200)),
                         const SizedBox(height: 24),
                         Text(
                           'Sobre la actividad',

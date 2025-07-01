@@ -75,7 +75,7 @@ Intentamos mantener estos dos puntos lo más cercanos posibles y que se retroali
 
 ### Features
 
-[Main Screen with extra features](https://firebasestorage.googleapis.com/v0/b/ser-manos-d9350.firebasestorage.app/o/Screenshot%20from%202025-07-01%2009-21-44.png?alt=media&token=48929974-9b2e-4f74-90c0-0fde703a9b8a)
+![Main Screen with extra features](https://firebasestorage.googleapis.com/v0/b/ser-manos-d9350.firebasestorage.app/o/Screenshot%20from%202025-07-01%2009-21-44.png?alt=media&token=48929974-9b2e-4f74-90c0-0fde703a9b8a)
 
 **Sorting Button**: permite elegir entre ordenar por frescura o por geolocalización, el default siendo frescura.
 Creemos que la aplicación probablemente crezca a una red social donde organizaciones caritativas buscan obtener tracción y sponsors, perdiendo esa identidad totalmente funcional de oferta y postulación. Al fin y al cabo queremos que el usuario abra nuestra aplicación todos los días, no simplemente cuando se le urge inscribirse en un voluntariado, por esto priorizar y mantener como default la vejez nos parece la decisión correcta para mantener el engagement.
