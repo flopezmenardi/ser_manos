@@ -57,7 +57,13 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
 
   Future<void> _pickPhoto() async {
     final XFile? photo = await PhotoPickerUtil.selectFromCameraOrGallery(context);
-    if (photo == null) return;
+    if (photo == null) {
+      setState(() {
+        _newPhoto = null;
+        _newPhotoPath = null;
+      });
+      return;
+    };
 
     setState(() {
       _newPhoto = photo;

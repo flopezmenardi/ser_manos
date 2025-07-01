@@ -37,7 +37,7 @@ class PhotoPickerUtil {
                 ListTile(
                   leading: const Icon(Icons.close),
                   title: const Text('Cancelar', overflow: TextOverflow.ellipsis),
-                  onTap: () => Navigator.of(context).pop(),
+                  onTap: () => Navigator.of(context).pop(null),
                 ),
               ],
             ),
