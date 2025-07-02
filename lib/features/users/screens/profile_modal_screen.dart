@@ -63,7 +63,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
         _newPhotoPath = null;
       });
       return;
-    };
+    }
 
     setState(() {
       _newPhoto = photo;

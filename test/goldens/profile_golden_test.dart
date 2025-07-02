@@ -34,6 +34,11 @@ class FakeAuthNotifier extends StateNotifier<AuthState>
 
   @override
   Future<void> updateUser(Map<String, dynamic> data) async {}
+  
+  @override
+  void clearError() {
+    state = state.copyWith(errorMessage: null);
+  }
 }
 
 void main() {

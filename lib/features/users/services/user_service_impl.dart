@@ -41,7 +41,7 @@ class UserServiceImpl implements UserService {
 
       await createUser(userId, nombre, apellido, email);
       return getUserById(userId);
-    } on fb_auth.FirebaseAuthException catch (e) {
+    } on fb_auth.FirebaseAuthException catch (_) {
       final currentUser = _auth.currentUser;
       if (currentUser != null) {
         await currentUser.delete();

@@ -21,42 +21,50 @@ class WelcomeScreen extends StatelessWidget {
           Expanded(
             child: SafeArea(
               top: false,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
+              child: SingleChildScrollView( // <--- Scroll agregado
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height -
+                          MediaQuery.of(context).padding.top,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const SizedBox(height: 144),
-                        LogoSquare(size: 150),
-                        const SizedBox(height: 32),
-                        Text(
-                          '¡Bienvenido!',
-                          style: AppTypography.headline1,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          children: [
+                            const SizedBox(height: 144),
+                            LogoSquare(size: 150),
+                            const SizedBox(height: 32),
+                            Text(
+                              '¡Bienvenido!',
+                              style: AppTypography.headline1,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 32),
+                            Text(
+                              'Nunca subestimes tu habilidad para mejorar la vida de alguien.',
+                              style: AppTypography.subtitle1,
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 32),
-                        Text(
-                          'Nunca subestimes tu habilidad para mejorar la vida de alguien.',
-                          style: AppTypography.subtitle1,
-                          textAlign: TextAlign.center,
+                        Column(
+                          children: [
+                            CTAButton(
+                              text: 'Comenzar',
+                              onPressed: () async {
+                                context.go(AppRoutes.volunteerings);
+                              },
+                            ),
+                            const SizedBox(height: 84),
+                          ],
                         ),
                       ],
                     ),
-                    Column(
-                      children: [
-                        CTAButton(
-                          text: 'Comenzar',
-                          onPressed: () async {
-                            context.go(AppRoutes.volunteerings);
-                          },
-                        ),
-                        const SizedBox(height: 84),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
