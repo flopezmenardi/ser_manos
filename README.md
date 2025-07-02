@@ -9,64 +9,90 @@
 
 ## Stack Tecnológico
 
-Para el desarrollo de la aplicación se eligió un stack tecnológico simple, coherente y eficiente, priorizando un bajo costo de mantenimiento, una curva de aprendizaje accesible y un fuerte soporte de la comunidad. Las decisiones tomadas siguen en gran medida las mejores prácticas y recomendaciones de la comunidad Flutter, así como de los docentes involucrados en el proyecto.
+Para el desarrollo de la aplicación se eligió un stack tecnológico simple, coherente y eficiente, priorizando un bajo costo de mantenimiento, una curva de aprendizaje accesible y un fuerte soporte de la comunidad. Las decisiones técnicas siguen las mejores prácticas recomendadas por la comunidad Flutter y los docentes involucrados en el proyecto.
 
 ### Framework principal
 
-- **Flutter**
-  Framework de desarrollo multiplataforma, permite compartir la mayor parte del código entre iOS y Android, acelerando el ciclo de desarrollo y reduciendo los costos de mantenimiento.
+* **Flutter**
+  Framework multiplataforma que permite compartir la mayoría del código entre iOS y Android. Acelera el desarrollo y reduce los costos de mantenimiento.
 
 ### Gestión de navegación
 
-- **go\_router (`^15.1.3`)**
-  Se seleccionó `go_router` por su simplicidad y bajo nivel de complejidad en comparación con otros enrutadores. Su integración directa con Flutter y su soporte oficial lo convierten en una solución robusta y escalable para el manejo de rutas.
+* **go\_router (`^16.0.0`)**
+  Se eligió `go_router` por su integración oficial con Flutter, su soporte para navegación declarativa, rutas anidadas y redirecciones. Su simplicidad lo convierte en una solución escalable y fácil de mantener.
 
 ### Arquitectura y manejo de estado
 
-- **Riverpod (`flutter_riverpod: ^2.5.1`, `hooks_riverpod: ^2.4.0`, `flutter_hooks: ^0.21.2`)**
-  Riverpod fue elegido como gestor de estado por su flexibilidad, su enfoque declarativo y su fuerte integración con los principios de programación reactiva. Además, permite una mayor testabilidad y separación de responsabilidades dentro de la aplicación.
+* **Riverpod (`flutter_riverpod: ^2.5.1`, `hooks_riverpod: ^2.4.0`, `flutter_hooks: ^0.21.2`)**
+  Riverpod se adoptó como solución de gestión de estado por su enfoque declarativo, su independencia del árbol de widgets y su excelente integración con la programación reactiva. Facilita la separación de responsabilidades y mejora la testabilidad del código.
 
-### Backend & Servicios
+### Backend y servicios
 
-- **Firebase**
-  Se utilizó Firebase como backend-as-a-service (BaaS), lo que permitió acelerar el desarrollo y simplificar la gestión de infraestructura:
-  - `firebase_core: ^3.13.0`
-  - `cloud_firestore: ^5.6.7` (Base de datos NoSQL en tiempo real)
-  - `firebase_auth: ^5.5.3` (Autenticación de usuarios)
-  - `firebase_analytics: ^11.4.6` (Analítica de uso)
-  - `firebase_crashlytics: ^4.3.6` (Reporte de errores)
-  - `firebase_remote_config: ^5.4.5` (Configuración remota)
-  - `firebase_storage: ^12.1.0` (Almacenamiento de archivos)
+* **Firebase**
+  Se utilizó como backend-as-a-service (BaaS) para acelerar el desarrollo y evitar la gestión directa de infraestructura. Se integraron los siguientes módulos:
+
+    * `firebase_core: ^3.13.0`
+    * `cloud_firestore: ^5.6.7` — Base de datos NoSQL en tiempo real.
+    * `firebase_auth: ^5.5.3` — Autenticación de usuarios.
+    * `firebase_analytics: ^11.4.6` — Analítica de uso.
+    * `firebase_crashlytics: ^4.3.6` — Reporte de errores en producción.
+    * `firebase_remote_config: ^5.4.5` — Configuración remota dinámica.
+    * `firebase_storage: ^12.1.0` — Almacenamiento de archivos multimedia.
 
 ### Herramientas complementarias
 
-- **Geolocalización y mapas:**
-  `geolocator: ^14.0.1` (acceso a la ubicación del dispositivo).
-- **Compatibilidad con URLs y recursos externos:**
-  `url_launcher: ^6.2.4` (apertura de links externos), `share_plus: ^11.0.0` (compartir contenido).
-- **Captura y carga de imágenes:**
-  `image_picker: ^1.1.0` (selección de imágenes de la galería o cámara).
-- **Manejo de permisos:**
-  `permission_handler: ^12.0.0+1` (gestión de permisos en runtime).
-- **Formularios avanzados y validación:**
-  `flutter_form_builder: ^9.1.1`, `form_builder_validators: ^11.1.2`.
-- **Internacionalización:**
-  `intl: ^0.19.0` (todavia no implementamos i18n).
-- **Renderizado de markdown:**
-  `flutter_markdown: ^0.7.7+1`.
-- **HTTP Requests:**
-  `http: ^1.1.0`.
-- **Manejo de almacenamiento local**
-  `path_provider: ^2.1.5`.
+* **Geolocalización y mapas:**
 
-### Testing y desarrollo
+    * `geolocator: ^14.0.1` — Acceso a la ubicación del dispositivo.
 
-- **Mockito (`^5.4.4`) y Fake Cloud Firestore (`^3.1.0`):**
-  Herramientas utilizadas para la creación de mocks y pruebas unitarias.
-- **build\_runner (`^2.4.8`):**
-  Generación automática de código durante el desarrollo y testing.
-- **flutter\_launcher\_icons (`^0.13.1`):**
-  Generación de íconos de aplicación para múltiples plataformas.
+* **Integración con el sistema operativo:**
+
+    * `url_launcher: ^6.2.4` — Apertura de enlaces externos.
+    * `share_plus: ^11.0.0` — Compartir contenido mediante apps del dispositivo.
+
+* **Captura y carga de imágenes:**
+
+    * `image_picker: ^1.1.0` — Selección de imágenes desde la cámara o galería.
+
+* **Gestión de permisos en runtime:**
+
+    * `permission_handler: ^12.0.0+1`.
+
+* **Formularios avanzados y validación:**
+
+    * `flutter_form_builder: ^10.0.1`
+    * `form_builder_validators: ^11.1.2`.
+
+* **Internacionalización (aún no implementada):**
+
+    * `intl: ^0.19.0`.
+
+* **Renderizado de Markdown:**
+
+    * `flutter_markdown: ^0.7.7+1`.
+
+* **HTTP Requests:**
+
+    * `http: ^1.1.0`.
+
+* **Almacenamiento local:**
+
+    * `path_provider: ^2.1.5`.
+
+### Testing y herramientas de desarrollo
+
+* **Testing unitario y mocks:**
+
+    * `mockito: ^5.4.4`
+    * `fake_cloud_firestore: ^3.1.0`
+
+* **Generación automática de código:**
+
+    * `build_runner: ^2.4.8`
+
+* **Íconos personalizados para múltiples plataformas:**
+
+    * `flutter_launcher_icons: ^0.14.4`
 
 ## Metrics & Feature Flagging
 
@@ -126,7 +152,7 @@ En base a nuestra visión del futuro de la aplicación y hacia dónde la queremo
 
     Los hosts del dispositivo se encuentran en `/etc/hosts`. Para modificarlos, primero debemos obtener acceso root ya que son archivos protegidos del sistema. Para esto, se puede usar ADB:
 
-    ```
+    ```bash
     adb root
     adb remount
     adb pull /etc/hosts ./hosts
@@ -134,7 +160,7 @@ En base a nuestra visión del futuro de la aplicación y hacia dónde la queremo
 
     Luego, editar el archivo `hosts` y agregar la siguiente línea:
 
-    ```
+    ```bash
     10.2.2.0 sermanos.app
     ```
 
