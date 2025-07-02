@@ -122,7 +122,34 @@ En base a nuestra visión del futuro de la aplicación y hacia dónde la queremo
     adb devices
     ```
 
-5. Instalar el APK:
+5. Para poder verificar el funcionamiento de los deep links, debemos modificar los hosts del dispositivo.
+
+    Los hosts del dispositivo se encuentran en `/etc/hosts`. Para modificarlos, primero debemos obtener acceso root ya que son archivos protegidos del sistema. Para esto, se puede usar ADB:
+
+    ```
+    adb root
+    adb remount
+    adb pull /etc/hosts ./hosts
+    ```
+
+    Luego, editar el archivo `hosts` y agregar la siguiente línea:
+
+    ```
+    10.2.2.0 sermanos.app
+    ```
+
+    Finalmente, subir el archivo modificado al dispositivo:
+
+    ```bash
+    adb push ./hosts /etc/hosts
+    ```
+    Verificar que el archivo `hosts` se haya modificado correctamente:
+
+    ```bash
+    adb shell cat /etc/hosts
+    ```
+
+6. Instalar el APK:
 
     ```bash
     adb install build/app/outputs/flutter-apk/app-release.apk
