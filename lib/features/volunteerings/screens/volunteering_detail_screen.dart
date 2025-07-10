@@ -3,6 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/constants/app_routes.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ser_manos/core/design_system/atoms/icons.dart';
 import 'package:ser_manos/core/design_system/molecules/buttons/cta_button.dart';
 import 'package:ser_manos/core/design_system/molecules/buttons/text_button.dart';
@@ -51,16 +52,16 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         if (isSame && isAccepted) {
           action = Column(
             children: [
-              Text('Estás participando', style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
+              Text(AppLocalizations.of(context)!.participating, style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
               const SizedBox(height: 8),
               Text(
-                'La organización confirmó que ya estás participando de este voluntariado',
+                AppLocalizations.of(context)!.participatingDescription,
                 style: AppTypography.body1,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               TextOnlyButton(
-                text: 'Abandonar voluntariado',
+                text: AppLocalizations.of(context)!.abandonVolunteering,
                 onPressed: () async {
                   final confirmed =
                       await showDialog<bool>(
@@ -68,10 +69,10 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         builder:
                             (_) => Center(
                               child: ModalSermanos(
-                                title: '¿Estás seguro que querés abandonar tu voluntariado?',
+                                title: AppLocalizations.of(context)!.abandonVolunteeringConfirm,
                                 subtitle: volunteering.title,
-                                confimationText: 'Confirmar',
-                                cancelText: 'Cancelar',
+                                confimationText: AppLocalizations.of(context)!.confirm,
+                                cancelText: AppLocalizations.of(context)!.cancel,
                                 onCancel: () => Navigator.of(context).pop(false),
                                 onConfirm: () => Navigator.of(context).pop(true),
                               ),
@@ -92,16 +93,16 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         } else if (isSame && !isAccepted) {
           action = Column(
             children: [
-              Text('Te has postulado', style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
+              Text(AppLocalizations.of(context)!.youHaveApplied, style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
               const SizedBox(height: 8),
               Text(
-                'Pronto la organización se pondrá en contacto contigo y te inscribirá como participante.',
+                AppLocalizations.of(context)!.applicationPending,
                 style: AppTypography.body1,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               TextOnlyButton(
-                text: 'Retirar postulación',
+                text: AppLocalizations.of(context)!.withdrawApplication,
                 onPressed: () async {
                   final confirmed =
                       await showDialog<bool>(
@@ -109,10 +110,10 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         builder:
                             (_) => Center(
                               child: ModalSermanos(
-                                title: '¿Estás seguro que querés retirar tu postulación?',
+                                title: AppLocalizations.of(context)!.withdrawApplicationConfirm,
                                 subtitle: volunteering.title,
-                                confimationText: 'Confirmar',
-                                cancelText: 'Cancelar',
+                                confimationText: AppLocalizations.of(context)!.confirm,
+                                cancelText: AppLocalizations.of(context)!.cancel,
                                 onCancel: () => Navigator.of(context).pop(false),
                                 onConfirm: () => Navigator.of(context).pop(true),
                               ),
@@ -134,14 +135,14 @@ class VolunteeringDetailScreen extends ConsumerWidget {
           action = Column(
             children: [
               Text(
-                'Ya estás participando en otro voluntariado, debes abandonarlo primero para postularte a este.',
+                AppLocalizations.of(context)!.alreadyInOtherVolunteering,
                 style: AppTypography.body1,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
 
               TextOnlyButton(
-                text: 'Abandonar voluntariado actual',
+                text: AppLocalizations.of(context)!.abandonCurrentVolunteering,
                 onPressed: () async {
                   final confirmed =
                       await showDialog<bool>(
@@ -149,10 +150,10 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         builder:
                             (dialogContext) => Center(
                               child: ModalSermanos(
-                                title: '¿Estás seguro que querés abandonar tu voluntariado?',
-                                subtitle: 'Esta acción no se puede deshacer',
-                                confimationText: 'Confirmar',
-                                cancelText: 'Cancelar',
+                                title: AppLocalizations.of(context)!.abandonVolunteeringConfirm,
+                                subtitle: AppLocalizations.of(context)!.actionCannotBeUndone,
+                                confimationText: AppLocalizations.of(context)!.confirm,
+                                cancelText: AppLocalizations.of(context)!.cancel,
                                 onCancel: () => Navigator.of(dialogContext).pop(false),
                                 onConfirm: () => Navigator.of(dialogContext).pop(true),
                               ),
@@ -169,7 +170,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                 },
               ),
               const SizedBox(height: 8),
-              CTAButton(text: 'Postularme', isEnabled: false, onPressed: () async {}),
+              CTAButton(text: AppLocalizations.of(context)!.applyToVolunteering, isEnabled: false, onPressed: () async {}),
             ],
           );
 
@@ -177,16 +178,16 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         } else if (!hasVacants) {
           action = Column(
             children: [
-              Text('No hay vacantes disponibles para postularse.', style: AppTypography.body1),
+              Text(AppLocalizations.of(context)!.noVacanciesAvailable, style: AppTypography.body1),
               const SizedBox(height: 16),
-              CTAButton(text: 'Postularme', isEnabled: false, onPressed: () async {}),
+              CTAButton(text: AppLocalizations.of(context)!.applyToVolunteering, isEnabled: false, onPressed: () async {}),
             ],
           );
 
           // CASE: can apply
         } else {
           action = CTAButton(
-            text: 'Postularme',
+            text: AppLocalizations.of(context)!.applyToVolunteering,
             onPressed: () async {
               final navigator = Navigator.of(context);
               final router = GoRouter.of(context);
@@ -198,9 +199,9 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                       builder:
                           (_) => Center(
                             child: ModalSermanos(
-                              title: 'Para postularte debés primero completar tus datos.',
-                              confimationText: 'Completar datos',
-                              cancelText: 'Cancelar',
+                              title: AppLocalizations.of(context)!.completeDataToApply,
+                              confimationText: AppLocalizations.of(context)!.completeData,
+                              cancelText: AppLocalizations.of(context)!.cancel,
                               onCancel: () => navigator.pop(false),
                               onConfirm: () => navigator.pop(true),
                             ),
@@ -218,10 +219,10 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                     builder:
                         (_) => Center(
                           child: ModalSermanos(
-                            title: 'Te estás por postular a',
+                            title: AppLocalizations.of(context)!.aboutToApply,
                             subtitle: volunteering.title,
-                            confimationText: 'Confirmar',
-                            cancelText: 'Cancelar',
+                            confimationText: AppLocalizations.of(context)!.confirm,
+                            cancelText: AppLocalizations.of(context)!.cancel,
                             onCancel: () => Navigator.of(context).pop(false),
                             onConfirm: () => Navigator.of(context).pop(true),
                           ),

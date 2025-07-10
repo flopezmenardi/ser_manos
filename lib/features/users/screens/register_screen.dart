@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../constants/app_routes.dart';
 import '../../../core/design_system/atoms/logos/logo_square.dart';
@@ -133,13 +134,13 @@ Widget build(BuildContext context) {
                             const SizedBox(height: 32),
                             const Spacer(),
                             CTAButton(
-                              text: state.isLoading ? 'Registrando...' : 'Registrarse',
+                              text: state.isLoading ? AppLocalizations.of(context)!.registering : AppLocalizations.of(context)!.register,
                               isEnabled: (_formKey.currentState?.validate() ?? false) && !state.isLoading,
                               onPressed: _handleRegister,
                             ),
                             const SizedBox(height: 16),
                             TextOnlyButton(
-                              text: 'Ya tengo cuenta',
+                              text: AppLocalizations.of(context)!.alreadyHaveAccount,
                               onPressed: () async {
                                 context.go(AppRoutes.login);
                               },

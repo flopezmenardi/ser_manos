@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../molecules/inputs/inputs.dart';
 
 class RegisterForms extends StatefulWidget {
@@ -30,41 +31,41 @@ class _RegisterFormsState extends State<RegisterForms> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppInput(
-          label: 'Nombre',
-          placeholder: 'Ej: Juan',
+          label: AppLocalizations.of(context)!.name,
+          placeholder: AppLocalizations.of(context)!.namePlaceholder,
           controller: widget.nameController,
           validator: (value) {
-            if (value == null || value.isEmpty) return 'Nombre requerido';
+            if (value == null || value.isEmpty) return AppLocalizations.of(context)!.nameRequired;
             return null;
           },
         ),
         const SizedBox(height: 24),
         AppInput(
-          label: 'Apellido',
-          placeholder: 'Ej: Barcena',
+          label: AppLocalizations.of(context)!.lastName,
+          placeholder: AppLocalizations.of(context)!.lastNamePlaceholder,
           controller: widget.lastNameController,
           validator: (value) {
-            if (value == null || value.isEmpty) return 'Apellido requerido';
+            if (value == null || value.isEmpty) return AppLocalizations.of(context)!.lastNameRequired;
             return null;
           },
         ),
         const SizedBox(height: 24),
         AppInput(
-          label: 'Email',
-          placeholder: 'Ej: juanbarcena@mail.com',
+          label: AppLocalizations.of(context)!.email,
+          placeholder: AppLocalizations.of(context)!.emailPlaceholder,
           controller: widget.emailController,
           supportingText: widget.emailError,
           hasError: widget.emailError != null,
           validator: (value) {
-            if (value == null || value.isEmpty) return 'Email requerido';
-            if (!value.contains('@')) return 'Email inválido';
+            if (value == null || value.isEmpty) return AppLocalizations.of(context)!.emailRequired;
+            if (!value.contains('@')) return AppLocalizations.of(context)!.emailInvalid;
             return null;
           },
         ),
         const SizedBox(height: 24),
         AppInput(
-          label: 'Contraseña',
-          placeholder: 'Ej: Abcd123!',
+          label: AppLocalizations.of(context)!.password,
+          placeholder: AppLocalizations.of(context)!.passwordPlaceholder,
           controller: widget.passwordController,
           obscureText: !_isPasswordVisible,
           suffixIcon: IconButton(
@@ -78,10 +79,10 @@ class _RegisterFormsState extends State<RegisterForms> {
             },
           ),
           validator: (value) {
-            if (value == null || value.isEmpty) return 'Contraseña requerida';
-            if (value.length < 8) return 'Contraseña debe contener al menos 8 caracteres';
+            if (value == null || value.isEmpty) return AppLocalizations.of(context)!.passwordRequired;
+            if (value.length < 8) return AppLocalizations.of(context)!.passwordMinLength;
             if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)').hasMatch(value)) {
-              return 'Contraseña debe contener al menos una letra mayúscula, una minúscula y un número';
+              return AppLocalizations.of(context)!.passwordComplexity;
             }
             return null;
           },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../molecules/inputs/inputs.dart';
 import '../../tokens/colors.dart';
 
@@ -18,12 +19,12 @@ class LoginForms extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppInput(
-          label: 'Email',
-          placeholder: 'Ej: juanbarcena@mail.com',
+          label: AppLocalizations.of(context)!.email,
+          placeholder: AppLocalizations.of(context)!.emailPlaceholder,
           controller: emailController,
           validator: (value) {
-            if (value == null || value.isEmpty) return 'Email requerido';
-            if (!value.contains('@')) return 'Email inválido';
+            if (value == null || value.isEmpty) return AppLocalizations.of(context)!.emailRequired;
+            if (!value.contains('@')) return AppLocalizations.of(context)!.emailInvalid;
             return null;
           },
         ),
@@ -55,8 +56,8 @@ class _PasswordInputState extends State<_PasswordInput> {
   @override
   Widget build(BuildContext context) {
     return AppInput(
-      label: 'Contraseña',
-      placeholder: 'Ej: Abcd123!',
+      label: AppLocalizations.of(context)!.password,
+      placeholder: AppLocalizations.of(context)!.passwordPlaceholder,
       controller: widget.controller,
       obscureText: _obscureText,
       suffixIcon: IconButton(
@@ -67,7 +68,7 @@ class _PasswordInputState extends State<_PasswordInput> {
         onPressed: _toggleVisibility,
       ),
       validator: (value) {
-        if (value == null || value.isEmpty) return 'Contraseña requerida';
+        if (value == null || value.isEmpty) return AppLocalizations.of(context)!.passwordRequired;
         return null;
       },
     );

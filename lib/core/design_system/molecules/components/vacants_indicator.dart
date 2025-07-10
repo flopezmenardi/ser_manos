@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../atoms/person_icon.dart';
 import '../../tokens/colors.dart';
@@ -32,7 +33,7 @@ class VacantsIndicator extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Vacantes:',
+            AppLocalizations.of(context)!.vacancies,
             style: AppTypography.body2.copyWith(color: AppColors.neutral100),
             overflow: TextOverflow.ellipsis,
           ),

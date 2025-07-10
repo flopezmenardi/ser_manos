@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/constants/app_routes.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/design_system/organisms/cards/news_card.dart';
 import '../../../core/design_system/organisms/headers/header.dart';
@@ -31,7 +32,7 @@ class NewsScreen extends ConsumerWidget {
                   ),
               error:
                   (e, _) => Center(
-                    child: Text('Error: $e', overflow: TextOverflow.ellipsis),
+                    child: Text('${AppLocalizations.of(context)!.errorGeneric} $e', overflow: TextOverflow.ellipsis),
                   ),
               data:
                   (news) => RefreshIndicator(
