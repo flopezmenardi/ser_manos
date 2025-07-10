@@ -20,6 +20,10 @@ class AppInput extends StatelessWidget {
   final TextInputType keyboardType;
   final ValueChanged<String>? onChanged;
   final List<TextInputFormatter>? inputFormatters;
+  final TextInputAction? textInputAction;
+  final VoidCallback? onFieldSubmitted;
+  final FocusNode? focusNode;
+  final AutovalidateMode? autovalidateMode;
 
   const AppInput({
     super.key,
@@ -37,6 +41,10 @@ class AppInput extends StatelessWidget {
     this.keyboardType = TextInputType.text, 
     this.onChanged,                         
     this.inputFormatters,
+    this.textInputAction,
+    this.onFieldSubmitted,
+    this.focusNode,
+    this.autovalidateMode,
   });
 
   @override
@@ -60,8 +68,11 @@ class AppInput extends StatelessWidget {
       obscureText: obscureText,
       onChanged: onChanged, 
       keyboardType: keyboardType, 
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
       inputFormatters: inputFormatters,
+      textInputAction: textInputAction,
+      onFieldSubmitted: onFieldSubmitted != null ? (_) => onFieldSubmitted!() : null,
+      focusNode: focusNode,
       style: AppTypography.body1.copyWith(
         color: isEnabled ? AppColors.neutral100 : AppColors.neutral50,
       ),
