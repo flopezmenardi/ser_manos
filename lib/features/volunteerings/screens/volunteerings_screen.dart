@@ -193,7 +193,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
       GestureDetector(
         onTap: () {
           controller.logViewedVolunteering(current.id);
-          context.go(AppRoutes.volunteeringDetail(current.id));
+          context.push(AppRoutes.volunteeringDetail(current.id));
         },
         child: CurrentVolunteerCard(
           category: current.creator,
@@ -219,7 +219,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
           behavior: HitTestBehavior.translucent,
           onTap: () {
             controller.logViewedVolunteering(item.id);
-            context.go(AppRoutes.volunteeringDetail(item.id));
+            context.push(AppRoutes.volunteeringDetail(item.id));
           },
           child: FutureBuilder<int>(
             future: showLikeCounter ? controller.getFavoritesCount(item.id) : Future.value(0),

@@ -44,14 +44,14 @@ class InitialScreen extends StatelessWidget {
                         CTAButton(
                           text: 'Iniciar Sesión',
                           onPressed: () async {
-                            context.go(AppRoutes.login);
+                            context.push(AppRoutes.login);
                           },
                         ),
                         const SizedBox(height: 16),
                         TextOnlyButton(
                           text: 'Registrarse',
                           onPressed: () async {
-                            context.go(AppRoutes.register);
+                            context.push(AppRoutes.register);
                           },
                         ),
                         const SizedBox(height: 24),
