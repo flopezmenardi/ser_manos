@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+
 import '../../molecules/components/vacants_indicator.dart';
 import '../../tokens/colors.dart';
 import '../../tokens/shadow.dart';
 import '../../tokens/typography.dart';
 
-class VolunteeringCard extends StatelessWidget {
+class VolunteeringCard extends StatefulWidget {
   final String imagePath;
   final String category;
   final String title;
   final int vacancies;
   final bool isFavorite;
-  final VoidCallback onFavoritePressed;
+  final Future<void> Function() onFavoritePressed;
   final VoidCallback onLocationPressed;
   final int likeCount;
 
@@ -27,13 +28,30 @@ class VolunteeringCard extends StatelessWidget {
   });
 
   @override
+  State<VolunteeringCard> createState() => _VolunteeringCardState();
+}
+
+class _VolunteeringCardState extends State<VolunteeringCard> {
+  bool _isTogglingFavorite = false;
+
+  Future<void> _handleFavoritePress() async {
+    if (_isTogglingFavorite) return;
+
+    setState(() => _isTogglingFavorite = true);
+    try {
+      await widget.onFavoritePressed();
+    } finally {
+      if (mounted) {
+        setState(() => _isTogglingFavorite = false);
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       child: Container(
-        decoration: BoxDecoration(
-          boxShadow: AppShadows.shadow2,
-          borderRadius: BorderRadius.circular(2),
-        ),
+        decoration: BoxDecoration(boxShadow: AppShadows.shadow2, borderRadius: BorderRadius.circular(2)),
         child: Card(
           color: AppColors.neutral0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
@@ -43,76 +61,61 @@ class VolunteeringCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                width: double.infinity,
-                height: 138,
-                child: Image.network(imagePath, fit: BoxFit.cover),
-              ),
+              SizedBox(width: double.infinity, height: 138, child: Image.network(widget.imagePath, fit: BoxFit.cover)),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                 child: IntrinsicHeight(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Left
+                      // Left side
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            category.toUpperCase(),
-                            style: AppTypography.overline.copyWith(
-                              color: AppColors.neutral50,
-                              height: 1.0,
-                            ),
+                            widget.category.toUpperCase(),
+                            style: AppTypography.overline.copyWith(color: AppColors.neutral75),
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            title,
-                            style: AppTypography.subtitle1.copyWith(
-                              color: AppColors.neutral100,
-                              height: 1.0,
-                            ),
+                            widget.title,
+                            style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100, height: 1.0),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 8),
-                          VacantsIndicator(vacants: vacancies),
-                          const SizedBox(height: 8),
+                          VacantsIndicator(vacants: widget.vacancies),
                         ],
                       ),
-                      // Right
+                      // Right side
                       Expanded(
                         child: Align(
                           alignment: Alignment.bottomRight,
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              if (likeCount > 0)
+                              if (widget.likeCount > 0)
                                 Padding(
                                   padding: const EdgeInsets.only(right: 6),
                                   child: Text(
-                                    '$likeCount',
+                                    '${widget.likeCount}',
                                     style: AppTypography.body2.copyWith(color: AppColors.primary100),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               GestureDetector(
-                                onTap: onFavoritePressed,
+                                onTap: _isTogglingFavorite ? null : _handleFavoritePress,
                                 child: Icon(
-                                  isFavorite ? Icons.favorite : Icons.favorite_border,
-                                  color: AppColors.primary100,
+                                  widget.isFavorite ? Icons.favorite : Icons.favorite_border,
+                                  color: _isTogglingFavorite ? AppColors.neutral25 : AppColors.primary100,
                                   size: 24,
                                 ),
                               ),
                               const SizedBox(width: 16),
                               GestureDetector(
-                                onTap: onLocationPressed,
-                                child: Icon(
-                                  Icons.location_on_outlined,
-                                  color: AppColors.primary100,
-                                  size: 24,
-                                ),
+                                onTap: widget.onLocationPressed,
+                                child: Icon(Icons.location_on_outlined, color: AppColors.primary100, size: 24),
                               ),
                             ],
                           ),

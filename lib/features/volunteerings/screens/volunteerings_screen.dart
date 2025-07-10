@@ -240,11 +240,18 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                   }
                 },
                 likeCount: showLikeCounter ? item.likes : 0,
-                onLocationPressed: () {
+                onLocationPressed: () async {
+                  final scaffoldMessenger = ScaffoldMessenger.of(context);
                   final lat = item.location.latitude;
-                  final lng = item.locationlongitude;
+                  final lng = item.location.longitude;
                   final uri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng");
-                  launchUrl(uri);
+                  if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri);
+                  } else {
+                    scaffoldMessenger.showSnackBar(
+                      const SnackBar(content: Text('No se pudo abrir Google Maps', overflow: TextOverflow.ellipsis)),
+                    );
+                  }
                 },
               );
             },

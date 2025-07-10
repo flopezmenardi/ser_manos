@@ -35,10 +35,9 @@ class AppHeader extends StatelessWidget {
         children: [
           StatusBar(variant: StatusBarVariant.main),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
             child: Row(children: [Image.asset(AppAssets.logoRectangular, height: 25)]),
           ),
-          const SizedBox(height: 16),
           Row(
             children: [
               _buildTab(context, "Postularse", 0),

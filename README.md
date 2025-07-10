@@ -1,4 +1,3 @@
-
 # Ser Manos
 
 ## Contributors
@@ -13,86 +12,86 @@ Para el desarrollo de la aplicación se eligió un stack tecnológico simple, co
 
 ### Framework principal
 
-* **Flutter**
+- **Flutter**
   Framework multiplataforma que permite compartir la mayoría del código entre iOS y Android. Acelera el desarrollo y reduce los costos de mantenimiento.
 
 ### Gestión de navegación
 
-* **go\_router (`^16.0.0`)**
+- **go\_router (`^16.0.0`)**
   Se eligió `go_router` por su integración oficial con Flutter, su soporte para navegación declarativa, rutas anidadas y redirecciones. Su simplicidad lo convierte en una solución escalable y fácil de mantener.
 
 ### Arquitectura y manejo de estado
 
-* **Riverpod (`flutter_riverpod: ^2.5.1`, `hooks_riverpod: ^2.4.0`, `flutter_hooks: ^0.21.2`)**
+- **Riverpod (`flutter_riverpod: ^2.5.1`, `hooks_riverpod: ^2.4.0`, `flutter_hooks: ^0.21.2`)**
   Riverpod se adoptó como solución de gestión de estado por su enfoque declarativo, su independencia del árbol de widgets y su excelente integración con la programación reactiva. Facilita la separación de responsabilidades y mejora la testabilidad del código.
 
 ### Backend y servicios
 
-* **Firebase**
+- **Firebase**
   Se utilizó como backend-as-a-service (BaaS) para acelerar el desarrollo y evitar la gestión directa de infraestructura. Se integraron los siguientes módulos:
 
-    * `firebase_core: ^3.13.0`
-    * `cloud_firestore: ^5.6.7` — Base de datos NoSQL en tiempo real.
-    * `firebase_auth: ^5.5.3` — Autenticación de usuarios.
-    * `firebase_analytics: ^11.4.6` — Analítica de uso.
-    * `firebase_crashlytics: ^4.3.6` — Reporte de errores en producción.
-    * `firebase_remote_config: ^5.4.5` — Configuración remota dinámica.
-    * `firebase_storage: ^12.1.0` — Almacenamiento de archivos multimedia.
+  - `firebase_core: ^3.13.0`
+  - `cloud_firestore: ^5.6.7` — Base de datos NoSQL en tiempo real.
+  - `firebase_auth: ^5.5.3` — Autenticación de usuarios.
+  - `firebase_analytics: ^11.4.6` — Analítica de uso.
+  - `firebase_crashlytics: ^4.3.6` — Reporte de errores en producción.
+  - `firebase_remote_config: ^5.4.5` — Configuración remota dinámica.
+  - `firebase_storage: ^12.1.0` — Almacenamiento de archivos multimedia.
 
 ### Herramientas complementarias
 
-* **Geolocalización y mapas:**
+- **Geolocalización y mapas:**
 
-    * `geolocator: ^14.0.1` — Acceso a la ubicación del dispositivo.
+  - `geolocator: ^14.0.1` — Acceso a la ubicación del dispositivo.
 
-* **Integración con el sistema operativo:**
+- **Integración con el sistema operativo:**
 
-    * `url_launcher: ^6.2.4` — Apertura de enlaces externos.
-    * `share_plus: ^11.0.0` — Compartir contenido mediante apps del dispositivo.
+  - `url_launcher: ^6.2.4` — Apertura de enlaces externos.
+  - `share_plus: ^11.0.0` — Compartir contenido mediante apps del dispositivo.
 
-* **Captura y carga de imágenes:**
+- **Captura y carga de imágenes:**
 
-    * `image_picker: ^1.1.0` — Selección de imágenes desde la cámara o galería.
+  - `image_picker: ^1.1.0` — Selección de imágenes desde la cámara o galería.
 
-* **Gestión de permisos en runtime:**
+- **Gestión de permisos en runtime:**
 
-    * `permission_handler: ^12.0.0+1`.
+  - `permission_handler: ^12.0.0+1`.
 
-* **Formularios avanzados y validación:**
+- **Formularios avanzados y validación:**
 
-    * `flutter_form_builder: ^10.0.1`
-    * `form_builder_validators: ^11.1.2`.
+  - `flutter_form_builder: ^10.0.1`
+  - `form_builder_validators: ^11.1.2`.
 
-* **Internacionalización (aún no implementada):**
+- **Internacionalización (aún no implementada):**
 
-    * `intl: ^0.19.0`.
+  - `intl: ^0.19.0`.
 
-* **Renderizado de Markdown:**
+- **Renderizado de Markdown:**
 
-    * `flutter_markdown: ^0.7.7+1`.
+  - `flutter_markdown: ^0.7.7+1`.
 
-* **HTTP Requests:**
+- **HTTP Requests:**
 
-    * `http: ^1.1.0`.
+  - `http: ^1.1.0`.
 
-* **Almacenamiento local:**
+- **Almacenamiento local:**
 
-    * `path_provider: ^2.1.5`.
+  - `path_provider: ^2.1.5`.
 
 ### Testing y herramientas de desarrollo
 
-* **Testing unitario y mocks:**
+- **Testing unitario y mocks:**
 
-    * `mockito: ^5.4.4`
-    * `fake_cloud_firestore: ^3.1.0`
+  - `mockito: ^5.4.4`
+  - `fake_cloud_firestore: ^3.1.0`
 
-* **Generación automática de código:**
+- **Generación automática de código:**
 
-    * `build_runner: ^2.4.8`
+  - `build_runner: ^2.4.8`
 
-* **Íconos personalizados para múltiples plataformas:**
+- **Íconos personalizados para múltiples plataformas:**
 
-    * `flutter_launcher_icons: ^0.14.4`
+  - `flutter_launcher_icons: ^0.14.4`
 
 ## Metrics & Feature Flagging
 
@@ -169,6 +168,7 @@ En base a nuestra visión del futuro de la aplicación y hacia dónde la queremo
     ```bash
     adb push ./hosts /etc/hosts
     ```
+
     Verificar que el archivo `hosts` se haya modificado correctamente:
 
     ```bash
@@ -182,8 +182,25 @@ En base a nuestra visión del futuro de la aplicación y hacia dónde la queremo
     ```
 
 > Nota: El path del APK es válido si se buildeó localmente. En caso de descargarlo, ajustar el path según ubicación.
- 
 > Si usás un IDE como VSCode o Android Studio, asegurate de configurar el path de Flutter a través de FVM (`.fvm/flutter_sdk`) para que coincida con la versión definida en `.fvmrc`. Esto evita inconsistencias al buildear o testear.
+
+### Run in Debug Mode (Emulador o Simulador)
+
+Si no tenés un dispositivo físico, podés usar un emulador o simulador para correr la app en modo debug.
+
+1. Abrí tu IDE (VSCode o Android Studio)
+2. Asegurate de tener configurado el path de Flutter con FVM (VSCode lo detecta automáticamente si tenés el plugin instalado)
+3. Lanzá el emulador o simulador
+
+Ejecutá:
+
+```bash
+fvm flutter emulators
+fvm flutter emulators --launch <nombre_del_emulador>
+fvm flutter run
+```
+
+> También podés correr `fvm flutter run` directamente y Flutter detectará dispositivos disponibles, incluyendo emuladores abiertos.
 
 ## Accepting a Volunteer
 

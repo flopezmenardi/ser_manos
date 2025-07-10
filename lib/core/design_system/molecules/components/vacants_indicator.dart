@@ -13,21 +13,15 @@ class VacantsIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool hasVacants = vacants > 0;
 
-    final Color backgroundColor =
-        hasVacants ? AppColors.secondary25 : AppColors.neutral25;
+    final Color backgroundColor = hasVacants ? AppColors.secondary25 : AppColors.neutral25;
 
-    final PersonIconState iconState =
-        hasVacants ? PersonIconState.defaultState : PersonIconState.selected;
+    final PersonIconState iconState = hasVacants ? PersonIconState.defaultState : PersonIconState.selected;
 
-    final Color textColor =
-        hasVacants ? AppColors.secondary200 : AppColors.secondary80;
+    final Color textColor = hasVacants ? AppColors.secondary200 : AppColors.secondary80;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(8),
-      ),
+      decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(4)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -38,13 +32,7 @@ class VacantsIndicator extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           PersonIcon.get(state: iconState),
-          Text(
-            '$vacants',
-            style: AppTypography.subtitle1.copyWith(
-              color: textColor,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
+          Text('$vacants', style: AppTypography.subtitle1.copyWith(color: textColor), overflow: TextOverflow.ellipsis),
         ],
       ),
     );
