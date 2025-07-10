@@ -21,6 +21,8 @@ class RegisterScreen extends ConsumerStatefulWidget {
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   String? _emailError;
+  bool _enableValidation = false;
+  bool _isFormValid = false;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -56,11 +58,24 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   void _onFormChanged() {
-    setState(() {});
+    // Only check if fields have content without running validators
+    final hasContent = _nameController.text.trim().isNotEmpty &&
+        _lastNameController.text.trim().isNotEmpty &&
+        _emailController.text.trim().isNotEmpty &&
+        _passwordController.text.trim().isNotEmpty;
+    
+    if (_isFormValid != hasContent) {
+      setState(() {
+        _isFormValid = hasContent;
+      });
+    }
   }
 
   Future<void> _handleRegister() async {
-    setState(() { _emailError = null; });
+    setState(() { 
+      _emailError = null; 
+      _enableValidation = true;
+    });
     ref.read(authNotifierProvider.notifier).clearError(); // Clear error in provider's state
 
     if (!_formKey.currentState!.validate()) {
@@ -129,12 +144,13 @@ Widget build(BuildContext context) {
                               emailController: _emailController,
                               passwordController: _passwordController,
                               emailError: _emailError,
+                              enableValidation: _enableValidation,
                             ),
                             const SizedBox(height: 32),
                             const Spacer(),
                             CTAButton(
                               text: state.isLoading ? 'Registrando...' : 'Registrarse',
-                              isEnabled: (_formKey.currentState?.validate() ?? false) && !state.isLoading,
+                              isEnabled: _isFormValid && !state.isLoading,
                               onPressed: _handleRegister,
                             ),
                             const SizedBox(height: 16),
