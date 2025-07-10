@@ -69,24 +69,27 @@ class _VolunteeringCardState extends State<VolunteeringCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Left side
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.category.toUpperCase(),
-                            style: AppTypography.overline.copyWith(color: AppColors.neutral75),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            widget.title,
-                            style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100, height: 1.0),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 8),
-                          VacantsIndicator(vacants: widget.vacancies),
-                        ],
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 210),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.category.toUpperCase(),
+                              style: AppTypography.overline.copyWith(color: AppColors.neutral75),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              widget.title,
+                              style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100, height: 1.0),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 8),
+                            VacantsIndicator(vacants: widget.vacancies),
+                          ],
+                        ),
                       ),
                       // Right side
                       Expanded(
