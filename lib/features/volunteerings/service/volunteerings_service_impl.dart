@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ser_manos/features/volunteerings/service/volunteerings_service.dart';
 import 'package:ser_manos/core/models/volunteering_model.dart';
+import 'package:ser_manos/features/volunteerings/service/volunteerings_service.dart';
 
 import '../../../core/infrastructure/analytics_service.dart';
 import '../../../core/infrastructure/analytics_service_impl.dart';
@@ -19,30 +19,20 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
   final FirebaseFirestore _db;
   final AnalyticsService _analyticsService;
 
-  VolunteeringsServiceImpl({
-    FirebaseFirestore? db,
-    required AnalyticsService analyticsService,
-  }) : _db = db ?? FirebaseFirestore.instance,
-       _analyticsService = analyticsService;
+  VolunteeringsServiceImpl({FirebaseFirestore? db, required AnalyticsService analyticsService})
+    : _db = db ?? FirebaseFirestore.instance,
+      _analyticsService = analyticsService;
 
   @override
-  Future<List<Volunteering>> getAllVolunteeringsSorted({
-    required SortMode sortMode,
-    GeoPoint? userLocation,
-  }) async {
+  Future<List<Volunteering>> getAllVolunteeringsSorted({required SortMode sortMode, GeoPoint? userLocation}) async {
     final snapshot = await _db.collection('voluntariados').get();
-    final volunteerings =
-        snapshot.docs
-            .map((doc) => Volunteering.fromDocumentSnapshot(doc))
-            .toList();
+    final volunteerings = snapshot.docs.map((doc) => Volunteering.fromDocumentSnapshot(doc)).toList();
 
     switch (sortMode) {
       case SortMode.date:
         volunteerings.sort((a, b) {
-          final dateA =
-              a.creationDate ?? Timestamp.fromMillisecondsSinceEpoch(0);
-          final dateB =
-              b.creationDate ?? Timestamp.fromMillisecondsSinceEpoch(0);
+          final dateA = a.creationDate ?? Timestamp.fromMillisecondsSinceEpoch(0);
+          final dateB = b.creationDate ?? Timestamp.fromMillisecondsSinceEpoch(0);
           return dateB.compareTo(dateA);
         });
         break;
@@ -70,6 +60,15 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
   }
 
   @override
+  Stream<Volunteering> watchVolunteeringById(String id) {
+    return FirebaseFirestore.instance
+        .collection('voluntariados')
+        .doc(id)
+        .snapshots()
+        .map((doc) => Volunteering.fromDocumentSnapshot(doc));
+  }
+
+  @override
   Future<void> applyToVolunteering(String userId, String volunteeringId) async {
     await _db.collection('usuarios').doc(userId).update({
       'voluntariado': volunteeringId,
@@ -79,16 +78,12 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
 
   @override
   Future<void> withdrawApplication(String userId) async {
-    await _db.collection('usuarios').doc(userId).update({
-      'voluntariado': null,
-      'voluntariadoAceptado': false,
-    });
+    await _db.collection('usuarios').doc(userId).update({'voluntariado': null, 'voluntariadoAceptado': false});
   }
 
   @override
   Future<void> abandonVolunteering(String userId, String volunteeringId) async {
-    final volunteeringDoc =
-        await _db.collection('voluntariados').doc(volunteeringId).get();
+    final volunteeringDoc = await _db.collection('voluntariados').doc(volunteeringId).get();
     final data = volunteeringDoc.data();
 
     if (data != null && data['fechaInicio'] is Timestamp) {
@@ -97,23 +92,15 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
       final daysBefore = startDate.difference(now).inDays;
 
       try {
-        await _analyticsService.logWithdrawVolunteering(
-          volunteeringId: volunteeringId,
-          daysBeforeStart: daysBefore,
-        );
+        await _analyticsService.logWithdrawVolunteering(volunteeringId: volunteeringId, daysBeforeStart: daysBefore);
       } catch (e, stackTrace) {
         await FirebaseCrashlytics.instance.recordError(e, stackTrace);
       }
     }
 
-    await _db.collection('usuarios').doc(userId).update({
-      'voluntariado': null,
-      'voluntariadoAceptado': false,
-    });
+    await _db.collection('usuarios').doc(userId).update({'voluntariado': null, 'voluntariadoAceptado': false});
 
-    await _db.collection('voluntariados').doc(volunteeringId).update({
-      'vacantes': FieldValue.increment(1),
-    });
+    await _db.collection('voluntariados').doc(volunteeringId).update({'vacantes': FieldValue.increment(1)});
   }
 
   @override
@@ -128,16 +115,11 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
     await _db.runTransaction((transaction) async {
       // Update user favorites
       transaction.update(userRef, {
-        'favoritos':
-            isFavorite
-                ? FieldValue.arrayRemove([volunteeringId])
-                : FieldValue.arrayUnion([volunteeringId]),
+        'favoritos': isFavorite ? FieldValue.arrayRemove([volunteeringId]) : FieldValue.arrayUnion([volunteeringId]),
       });
 
       // Update volunteering likes
-      transaction.update(volunteeringRef, {
-        'likes': FieldValue.increment(isFavorite ? -1 : 1),
-      });
+      transaction.update(volunteeringRef, {'likes': FieldValue.increment(isFavorite ? -1 : 1)});
     });
   }
 
@@ -157,9 +139,7 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
     final deltaLat = (b.latitude - a.latitude) * (pi / 180);
     final deltaLng = (b.longitude - a.longitude) * (pi / 180);
 
-    final aVal =
-        sin(deltaLat / 2) * sin(deltaLat / 2) +
-        cos(lat1) * cos(lat2) * sin(deltaLng / 2) * sin(deltaLng / 2);
+    final aVal = sin(deltaLat / 2) * sin(deltaLat / 2) + cos(lat1) * cos(lat2) * sin(deltaLng / 2) * sin(deltaLng / 2);
     final c = 2 * atan2(sqrt(aVal), sqrt(1 - aVal));
 
     return R * c;

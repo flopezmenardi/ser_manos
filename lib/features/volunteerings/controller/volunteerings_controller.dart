@@ -9,10 +9,9 @@ abstract class VolunteeringsController {
   Future<void> withdrawApplication();
   Future<void> toggleFavorite(String volunteeringId, bool isFavorite);
   Future<int> getFavoritesCount(String volunteeringId);
-  Future<List<Volunteering>> searchVolunteerings(
-    VolunteeringQueryState queryState,
-  );
+  Future<List<Volunteering>> searchVolunteerings(VolunteeringQueryState queryState);
   Future<Volunteering> getVolunteeringById(String volunteeringId);
+  Stream<Volunteering> watchVolunteering(String id);
   Future<void> logLikedVolunteering(String volunteeringId);
   Future<void> logViewedVolunteering(String volunteeringId);
   Future<void> logVolunteeringApplication(String volunteeringId);
@@ -25,17 +24,9 @@ class VolunteeringQueryState {
   final SortMode sortMode;
   final GeoPoint? userLocation;
 
-  VolunteeringQueryState({
-    required this.query,
-    required this.sortMode,
-    this.userLocation,
-  });
+  VolunteeringQueryState({required this.query, required this.sortMode, this.userLocation});
 
-  VolunteeringQueryState copyWith({
-    String? query,
-    SortMode? sortMode,
-    GeoPoint? userLocation,
-  }) {
+  VolunteeringQueryState copyWith({String? query, SortMode? sortMode, GeoPoint? userLocation}) {
     return VolunteeringQueryState(
       query: query ?? this.query,
       sortMode: sortMode ?? this.sortMode,

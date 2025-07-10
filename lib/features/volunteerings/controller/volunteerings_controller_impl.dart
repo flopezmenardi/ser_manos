@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ser_manos/features/volunteerings/controller/volunteerings_controller.dart';
 import 'package:ser_manos/core/infrastructure/analytics_service_impl.dart';
 import 'package:ser_manos/core/infrastructure/volunteering_view_tracker.dart';
 import 'package:ser_manos/core/models/volunteering_model.dart';
+import 'package:ser_manos/features/volunteerings/controller/volunteerings_controller.dart';
 
 import '../../../core/infrastructure/analytics_service.dart';
 import '../../../core/models/enums/sort_mode.dart';
@@ -14,9 +14,7 @@ import '../../users/controllers/user_controller_impl.dart';
 import '../service/volunteerings_service.dart';
 import '../service/volunteerings_service_impl.dart';
 
-final volunteeringsControllerProvider = Provider<VolunteeringsController>((
-  ref,
-) {
+final volunteeringsControllerProvider = Provider<VolunteeringsController>((ref) {
   final volunteeringsService = ref.read(volunteeringsServiceProvider);
   final analyticsService = ref.read(analyticsServiceProvider);
   final currentUser = ref.watch(authNotifierProvider).currentUser!;
@@ -27,6 +25,11 @@ final volunteeringsControllerProvider = Provider<VolunteeringsController>((
     currentUser: currentUser,
     viewTracker: viewTracker,
   );
+});
+
+final volunteeringStreamProvider = StreamProvider.family<Volunteering, String>((ref, id) {
+  final controller = ref.read(volunteeringsControllerProvider);
+  return controller.watchVolunteering(id);
 });
 
 class VolunteeringsControllerImpl implements VolunteeringsController {
@@ -44,9 +47,7 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
 
   @override
   Future<void> applyToVolunteering(String volunteeringId) async {
-    if (currentUser.phoneNumber.isEmpty ||
-        currentUser.gender.isEmpty ||
-        currentUser.birthDate != null) {
+    if (currentUser.phoneNumber.isEmpty || currentUser.gender.isEmpty || currentUser.birthDate != null) {
       throw Exception('Tu perfil no está completo');
     }
 
@@ -54,25 +55,17 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
       throw Exception('Ya estás postulado a un voluntariado');
     }
 
-    final volunteering = await volunteeringsService.getVolunteeringById(
-      volunteeringId,
-    );
+    final volunteering = await volunteeringsService.getVolunteeringById(volunteeringId);
     if (volunteering == null || volunteering.vacants <= 0) {
       throw Exception('No hay vacantes disponibles');
     }
 
-    await volunteeringsService.applyToVolunteering(
-      currentUser.id,
-      volunteeringId,
-    );
+    await volunteeringsService.applyToVolunteering(currentUser.id, volunteeringId);
   }
 
   @override
   Future<void> abandonVolunteering(String volunteeringId) async {
-    await volunteeringsService.abandonVolunteering(
-      currentUser.id,
-      volunteeringId,
-    );
+    await volunteeringsService.abandonVolunteering(currentUser.id, volunteeringId);
   }
 
   @override
@@ -95,21 +88,16 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
   }
 
   @override
-  Future<List<Volunteering>> searchVolunteerings(
-    VolunteeringQueryState queryState,
-  ) async {
+  Future<List<Volunteering>> searchVolunteerings(VolunteeringQueryState queryState) async {
     List<Volunteering> all;
 
-    if (queryState.sortMode == SortMode.proximity &&
-        queryState.userLocation != null) {
+    if (queryState.sortMode == SortMode.proximity && queryState.userLocation != null) {
       all = await volunteeringsService.getAllVolunteeringsSorted(
         sortMode: SortMode.proximity,
         userLocation: queryState.userLocation,
       );
     } else {
-      all = await volunteeringsService.getAllVolunteeringsSorted(
-        sortMode: SortMode.date,
-      );
+      all = await volunteeringsService.getAllVolunteeringsSorted(sortMode: SortMode.date);
     }
 
     if (queryState.query.isEmpty) return all;
@@ -124,13 +112,16 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
 
   @override
   Future<Volunteering> getVolunteeringById(String volunteeringId) async {
-    final volunteering = await volunteeringsService.getVolunteeringById(
-      volunteeringId,
-    );
+    final volunteering = await volunteeringsService.getVolunteeringById(volunteeringId);
     if (volunteering == null) {
       throw Exception('Volunteering with id $volunteeringId not found');
     }
     return volunteering;
+  }
+
+  @override
+  Stream<Volunteering> watchVolunteering(String id) {
+    return volunteeringsService.watchVolunteeringById(id);
   }
 
   @override
@@ -155,19 +146,14 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
 }
 
 // =============== DETAIL STATE NOTIFIER
-final volunteeringDetailProvider = StateNotifierProvider.family<
-  VolunteeringDetailNotifier,
-  AsyncValue<Volunteering>,
-  String
->((ref, id) {
-  final controller = ref.read(volunteeringsControllerProvider);
-  return VolunteeringDetailNotifier(controller, id);
-});
+final volunteeringDetailProvider =
+    StateNotifierProvider.family<VolunteeringDetailNotifier, AsyncValue<Volunteering>, String>((ref, id) {
+      final controller = ref.read(volunteeringsControllerProvider);
+      return VolunteeringDetailNotifier(controller, id);
+    });
 
-class VolunteeringDetailNotifier
-    extends StateNotifier<AsyncValue<Volunteering>> {
-  VolunteeringDetailNotifier(this._controller, this.volunteeringId)
-    : super(const AsyncValue.loading()) {
+class VolunteeringDetailNotifier extends StateNotifier<AsyncValue<Volunteering>> {
+  VolunteeringDetailNotifier(this._controller, this.volunteeringId) : super(const AsyncValue.loading()) {
     fetchVolunteeringDetail();
   }
 
@@ -176,9 +162,7 @@ class VolunteeringDetailNotifier
 
   Future<void> fetchVolunteeringDetail() async {
     try {
-      final volunteering = await _controller.getVolunteeringById(
-        volunteeringId,
-      );
+      final volunteering = await _controller.getVolunteeringById(volunteeringId);
       state = AsyncValue.data(volunteering);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -195,10 +179,9 @@ class VolunteeringDetailNotifier
 // └──> the change is delayed due to the debouncing, after the delay the state is changed
 // └──> the VolunteeringSearchProvider which was watching the Query State is activated and the controller.searchVolunteerings is finally used
 
-final volunteeringSearchProvider =
-    AsyncNotifierProvider<VolunteeringSearchNotifier, List<Volunteering>>(() {
-      return VolunteeringSearchNotifier();
-    });
+final volunteeringSearchProvider = AsyncNotifierProvider<VolunteeringSearchNotifier, List<Volunteering>>(() {
+  return VolunteeringSearchNotifier();
+});
 
 class VolunteeringSearchNotifier extends AsyncNotifier<List<Volunteering>> {
   @override
@@ -214,22 +197,12 @@ class VolunteeringSearchNotifier extends AsyncNotifier<List<Volunteering>> {
   }
 }
 
-final volunteeringQueryProvider =
-    StateNotifierProvider<VolunteeringQueryNotifier, VolunteeringQueryState>((
-      ref,
-    ) {
-      return VolunteeringQueryNotifier();
-    });
+final volunteeringQueryProvider = StateNotifierProvider<VolunteeringQueryNotifier, VolunteeringQueryState>((ref) {
+  return VolunteeringQueryNotifier();
+});
 
 class VolunteeringQueryNotifier extends StateNotifier<VolunteeringQueryState> {
-  VolunteeringQueryNotifier()
-    : super(
-        VolunteeringQueryState(
-          query: '',
-          sortMode: SortMode.date,
-          userLocation: null,
-        ),
-      );
+  VolunteeringQueryNotifier() : super(VolunteeringQueryState(query: '', sortMode: SortMode.date, userLocation: null));
 
   Timer? _debounce;
 
@@ -249,9 +222,7 @@ class VolunteeringQueryNotifier extends StateNotifier<VolunteeringQueryState> {
 
   void setLocation(GeoPoint location) {
     final current = state.userLocation;
-    if (current != null &&
-        current.latitude == location.latitude &&
-        current.longitude == location.longitude) {
+    if (current != null && current.latitude == location.latitude && current.longitude == location.longitude) {
       return;
     }
     state = state.copyWith(userLocation: location);

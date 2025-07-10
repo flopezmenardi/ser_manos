@@ -25,7 +25,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final volunteeringAsync = ref.watch(volunteeringDetailProvider(id));
+    final volunteeringAsync = ref.watch(volunteeringStreamProvider(id));
     final user = ref.watch(authNotifierProvider).currentUser;
     final controller = ref.read(volunteeringsControllerProvider);
     ref.read(volunteeringDetailProvider(id).notifier).fetchVolunteeringDetail();
@@ -43,7 +43,8 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         final isSame = user.volunteering == volunteering.id;
         final hasAny = user.volunteering != null && user.volunteering != '';
         final isAccepted = user.acceptedVolunteering;
-        final profileComplete = user.phoneNumber.isNotEmpty && user.gender.isNotEmpty && user.birthDate != null && user.photoUrl != null;
+        final profileComplete =
+            user.phoneNumber.isNotEmpty && user.gender.isNotEmpty && user.birthDate != null && user.photoUrl != null;
 
         Widget action;
 
