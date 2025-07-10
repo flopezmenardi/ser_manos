@@ -32,6 +32,12 @@ final volunteeringStreamProvider = StreamProvider.family<Volunteering, String>((
   return controller.watchVolunteering(id);
 });
 
+final volunteeringSearchStreamProvider = StreamProvider<List<Volunteering>>((ref) {
+  final controller = ref.read(volunteeringsControllerProvider);
+  final queryState = ref.watch(volunteeringQueryProvider);
+  return controller.watchVolunteerings(queryState);
+});
+
 class VolunteeringsControllerImpl implements VolunteeringsController {
   final VolunteeringsService volunteeringsService;
   final AnalyticsService analyticsService;
@@ -142,6 +148,22 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
       viewsBeforeApplying: viewTracker.viewsCount,
     );
     viewTracker.reset();
+  }
+
+  @override
+  Stream<List<Volunteering>> watchVolunteerings(VolunteeringQueryState queryState) {
+    return volunteeringsService
+        .watchAllVolunteeringsSorted(sortMode: queryState.sortMode, userLocation: queryState.userLocation)
+        .map((volunteerings) {
+          if (queryState.query.isEmpty) return volunteerings;
+
+          final lowered = queryState.query.toLowerCase();
+          return volunteerings.where((v) {
+            return v.title.toLowerCase().contains(lowered) ||
+                v.description.toLowerCase().contains(lowered) ||
+                v.summary.toLowerCase().contains(lowered);
+          }).toList();
+        });
   }
 }
 

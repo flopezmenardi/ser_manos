@@ -130,6 +130,34 @@ class VolunteeringsServiceImpl implements VolunteeringsService {
     return likes is int ? likes : 0;
   }
 
+  @override
+  Stream<List<Volunteering>> watchAllVolunteeringsSorted({required SortMode sortMode, GeoPoint? userLocation}) {
+    return _db.collection('voluntariados').snapshots().map((snapshot) {
+      final volunteerings = snapshot.docs.map((doc) => Volunteering.fromDocumentSnapshot(doc)).toList();
+
+      switch (sortMode) {
+        case SortMode.date:
+          volunteerings.sort((a, b) {
+            final dateA = a.creationDate ?? Timestamp.fromMillisecondsSinceEpoch(0);
+            final dateB = b.creationDate ?? Timestamp.fromMillisecondsSinceEpoch(0);
+            return dateB.compareTo(dateA);
+          });
+          break;
+        case SortMode.proximity:
+          if (userLocation != null) {
+            volunteerings.sort((a, b) {
+              final distA = _distanceBetween(userLocation, a.location);
+              final distB = _distanceBetween(userLocation, b.location);
+              return distA.compareTo(distB);
+            });
+          }
+          break;
+      }
+
+      return volunteerings;
+    });
+  }
+
   /* Calculates the distance in metersbetween two georgraphic coordinates using the Haversine formula
     which takes into account the curvature of the Earth */
   double _distanceBetween(GeoPoint a, GeoPoint b) {

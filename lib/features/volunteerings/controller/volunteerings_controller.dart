@@ -11,10 +11,11 @@ abstract class VolunteeringsController {
   Future<int> getFavoritesCount(String volunteeringId);
   Future<List<Volunteering>> searchVolunteerings(VolunteeringQueryState queryState);
   Future<Volunteering> getVolunteeringById(String volunteeringId);
-  Stream<Volunteering> watchVolunteering(String id);
   Future<void> logLikedVolunteering(String volunteeringId);
   Future<void> logViewedVolunteering(String volunteeringId);
   Future<void> logVolunteeringApplication(String volunteeringId);
+  Stream<Volunteering> watchVolunteering(String id);
+  Stream<List<Volunteering>> watchVolunteerings(VolunteeringQueryState queryState);
 }
 
 // This could be transitioned into an implementation detail and simplify the contract into taking

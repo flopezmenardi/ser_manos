@@ -72,7 +72,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
     }
 
     final controller = ref.read(volunteeringsControllerProvider);
-    final volunteeringListAsync = ref.watch(volunteeringSearchProvider);
+    final volunteeringListAsync = ref.watch(volunteeringSearchStreamProvider);
     final volunteeringSearchNotifier = ref.read(volunteeringSearchProvider.notifier);
     final queryNotifier = ref.read(volunteeringQueryProvider.notifier);
     final queryState = ref.watch(volunteeringQueryProvider);
