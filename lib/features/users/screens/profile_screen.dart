@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../../../constants/app_assets.dart';
 import '../../../constants/app_routes.dart';

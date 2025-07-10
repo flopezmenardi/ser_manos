@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../../molecules/buttons/floating_button.dart';
 import '../../tokens/colors.dart';

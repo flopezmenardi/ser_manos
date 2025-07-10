@@ -3,7 +3,6 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/constants/app_routes.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ser_manos/core/design_system/atoms/icons.dart';
 import 'package:ser_manos/core/design_system/molecules/buttons/cta_button.dart';
 import 'package:ser_manos/core/design_system/molecules/buttons/text_button.dart';
@@ -14,6 +13,7 @@ import 'package:ser_manos/core/design_system/organisms/modal.dart';
 import 'package:ser_manos/core/design_system/tokens/colors.dart';
 import 'package:ser_manos/core/design_system/tokens/grid.dart';
 import 'package:ser_manos/core/design_system/tokens/typography.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../users/controllers/user_controller_impl.dart';
@@ -38,7 +38,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
 
     return volunteeringAsync.when(
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (error, _) => Scaffold(body: Center(child: Text('Error: $error', overflow: TextOverflow.ellipsis))),
+      error: (error, _) => Scaffold(body: Center(child: Text('${AppLocalizations.of(context)!.errorGeneric} $error', overflow: TextOverflow.ellipsis))),
       data: (volunteering) {
         final hasVacants = volunteering.vacants > 0;
         final isSame = user.volunteering == volunteering.id;
@@ -302,15 +302,15 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         const SizedBox(height: 4),
                         Text(
                           volunteering.startDate != null
-                              ? 'Fecha de inicio: ${volunteering.startDate!.toDate().day}/${volunteering.startDate!.toDate().month}/${volunteering.startDate!.toDate().year}'
-                              : 'Fecha de inicio no disponible',
+                              ? '${AppLocalizations.of(context)!.startDate} ${volunteering.startDate!.toDate().day}/${volunteering.startDate!.toDate().month}/${volunteering.startDate!.toDate().year}'
+                              : AppLocalizations.of(context)!.startDateNotAvailable,
                           style: AppTypography.body2.copyWith(color: AppColors.neutral50),
                         ),
                         const SizedBox(height: 8),
                         Text(volunteering.summary, style: AppTypography.body1.copyWith(color: AppColors.secondary200)),
                         const SizedBox(height: 24),
                         Text(
-                          'Sobre la actividad',
+                          AppLocalizations.of(context)!.aboutActivity,
                           style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
                         ),
                         const SizedBox(height: 8),
@@ -331,8 +331,8 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                               await launchUrl(uri);
                             } else {
                               scaffoldMessenger.showSnackBar(
-                                const SnackBar(
-                                  content: Text('No se pudo abrir Google Maps', overflow: TextOverflow.ellipsis),
+                                SnackBar(
+                                  content: Text(AppLocalizations.of(context)!.cannotOpenGoogleMaps, overflow: TextOverflow.ellipsis),
                                 ),
                               );
                             }
@@ -340,7 +340,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                           child: LocationImageCard(address: volunteering.address),
                         ),
                         const SizedBox(height: 24),
-                        Text('Requisitos', style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
+                        Text(AppLocalizations.of(context)!.requirements, style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
                         const SizedBox(height: 8),
                         MarkdownBody(
                           data: volunteering.requirements,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/constants/app_routes.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../../../core/design_system/atoms/logos/logo_square.dart';
 import '../../../core/design_system/molecules/buttons/cta_button.dart';

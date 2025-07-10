@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 import 'package:ser_manos/core/design_system/molecules/inputs/form_builder_input.dart';
 import 'package:ser_manos/core/design_system/organisms/cards/change_profile_picture.dart';
 import 'package:ser_manos/core/design_system/organisms/cards/upload_profile_picture.dart';

@@ -107,5 +107,19 @@
   "profileIncomplete": "Tu perfil no está completo",
   "alreadyAppliedToVolunteering": "Ya estás postulado a un voluntariado",
   "noVacanciesAvailableError": "No hay vacantes disponibles",
-  "newsIdCannotBeEmpty": "El ID de la novedad no puede estar vacío."
+  "newsIdCannotBeEmpty": "El ID de la novedad no puede estar vacío.",
+  "apply": "Postularse",
+  "myProfile": "Mi perfil",
+  "search": "Buscar",
+  "profilePicture": "Foto de perfil",
+  "uploadPhoto": "Subir foto",
+  "changePhoto": "Cambiar foto",
+  "location": "Ubicación",
+  "aboutActivity": "Sobre la actividad",
+  "requirements": "Requisitos",
+  "startDate": "Fecha de inicio:",
+  "startDateNotAvailable": "Fecha de inicio no disponible",
+  "cannotOpenGoogleMaps": "No se pudo abrir Google Maps",
+  "aboutToApplyTo": "Te estas por postular a",
+  "firebaseInitFailed": "Firebase init failed"
 }

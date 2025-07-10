@@ -10,7 +10,7 @@ import 'package:ser_manos/core/design_system/organisms/headers/header_section.da
 import 'package:ser_manos/core/design_system/tokens/colors.dart';
 import 'package:ser_manos/core/design_system/tokens/typography.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../controller/news_controller_impl.dart';
 

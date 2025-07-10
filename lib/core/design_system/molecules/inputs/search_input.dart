@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../../atoms/icons.dart';
 import '../../tokens/colors.dart';
@@ -87,7 +88,7 @@ class _SearchInputState extends State<SearchInput> {
             focusedBorder: InputBorder.none,
             enabledBorder: InputBorder.none,
             disabledBorder: InputBorder.none,
-            hintText: 'Buscar',
+            hintText: AppLocalizations.of(context)!.search,
             hintStyle: AppTypography.body1.copyWith(color: AppColors.neutral50),
             prefixIcon: Padding(
               padding: const EdgeInsets.only(left: 16, right: 8),
