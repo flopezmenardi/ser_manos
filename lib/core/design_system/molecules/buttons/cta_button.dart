@@ -50,7 +50,7 @@ class _CTAButtonState extends State<CTAButton> {
                   width: 20,
                   height: 20,
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.neutral0),
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.neutral50),
                     strokeWidth: 2,
                   ),
                 )

@@ -48,7 +48,7 @@ void main() {
         email: 'juan@mail.com',
         phoneNumber: '123456789',
         gender: 'Masculino',
-        birthDate: '01/01/2000',
+        birthDate: Timestamp.fromDate(DateTime(2000, 1, 1)),
         favorites: [],
         volunteering: '',
         registerDate: Timestamp.fromDate(DateTime(2023, 1, 1)),

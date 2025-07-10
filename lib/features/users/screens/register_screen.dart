@@ -38,20 +38,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     _emailController.addListener(() {
       if (_emailError != null) {
         setState(() => _emailError = null);
-        // Removed `ref.read(authNotifierProvider.notifier).clearError();` here
-        // as it will be cleared when _handleRegister is called or by the listener
-        // in the build method upon successful registration.
       }
     });
   }
-
-  // Remove didChangeDependencies entirely
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   // ref.listen here caused the error
-  // }
-
 
   @override
   void dispose() {

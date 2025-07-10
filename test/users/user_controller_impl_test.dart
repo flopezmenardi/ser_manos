@@ -17,7 +17,7 @@ void main() {
     name: 'Juan',
     surname: 'Pérez',
     email: 'juan@example.com',
-    birthDate: '2000-01-01',
+    birthDate: Timestamp.fromDate(DateTime(2000, 1, 1)),
     registerDate: Timestamp.fromDate(DateTime.now()),
     gender: 'Masculino',
     phoneNumber: '123456789',

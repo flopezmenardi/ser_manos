@@ -43,7 +43,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         final isSame = user.volunteering == volunteering.id;
         final hasAny = user.volunteering != null && user.volunteering != '';
         final isAccepted = user.acceptedVolunteering;
-        final profileComplete = user.phoneNumber.isNotEmpty && user.gender.isNotEmpty && user.birthDate.isNotEmpty;
+        final profileComplete = user.phoneNumber.isNotEmpty && user.gender.isNotEmpty && user.birthDate != null && user.photoUrl != null;
 
         Widget action;
 

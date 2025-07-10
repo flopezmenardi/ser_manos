@@ -17,6 +17,7 @@ class InputCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: Card(
+        elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         clipBehavior: Clip.antiAlias,
         child: Column(

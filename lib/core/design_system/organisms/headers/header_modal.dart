@@ -21,7 +21,7 @@ class HeaderModal extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: Padding(
             padding: const EdgeInsets.only(left: 16),
-            child: GestureDetector(onTap: onClose, child: AppIcons.getCloseIcon(state: IconState.defaultState)),
+            child: GestureDetector(onTap: onClose, child: AppIcons.getCloseIcon(state: IconState.closeColor)),
           ),
         ),
       ],

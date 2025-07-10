@@ -10,6 +10,7 @@ import 'package:ser_manos/core/design_system/organisms/cards/change_profile_pict
 import 'package:ser_manos/core/design_system/organisms/cards/upload_profile_picture.dart';
 import 'package:ser_manos/core/design_system/organisms/utils/photo_picker_model.dart';
 import 'package:ser_manos/core/design_system/tokens/typography.dart';
+import 'package:ser_manos/core/utils/date_utils.dart' as app_date_utils;
 
 import '../../../constants/app_routes.dart';
 import '../../../core/design_system/molecules/buttons/cta_button.dart';
@@ -86,16 +87,29 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
       backgroundColor: AppColors.neutral0,
       body: Column(
         children: [
-          HeaderModal(onClose: () => context.pop()),
+          HeaderModal(
+            onClose: () {
+              if (fromVolunteering != null) {
+                // If user came from volunteering, go back to that volunteering detail
+                context.go(AppRoutes.volunteeringDetail(fromVolunteering));
+              } else {
+                // Normal flow: go back to profile
+                context.pop();
+              }
+            },
+          ),
           Expanded(
-            child: SafeArea(
-              child: FormBuilder(
-                key: _formKey,
-                onChanged: _checkForChanges,
-                initialValue: {'birthDate': user.birthDate, 'email': user.email, 'phone': user.phoneNumber},
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: AppGrid.horizontalMargin),
-                  child: Column(
+            child: FormBuilder(
+              key: _formKey,
+              onChanged: _checkForChanges,
+              initialValue: {
+                'birthDate': user.birthDateString, 
+                'email': user.email, 
+                'phone': user.phoneNumber
+              },
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: AppGrid.horizontalMargin),
+                child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 24),
@@ -110,14 +124,14 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                       FormBuilderAppInput(
                         name: 'birthDate',
                         label: 'Fecha de nacimiento',
-                        placeholder: 'DD/MM/YYYY',
+                        placeholder: 'DD-MM-YYYY',
                         keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9/]'))],
+                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9-]'))],
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                           FormBuilderValidators.match(
-                            RegExp(r'^(\d{2})/(\d{2})/(\d{4})$'),
-                            errorText: 'Fecha inválida',
+                            RegExp(r'^(\d{2})-(\d{2})-(\d{4})$'),
+                            errorText: 'Fecha inválida. Formato: DD-MM-YYYY',
                           ),
                         ]),
                       ),
@@ -215,8 +229,11 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                                     _newPhoto = null;
                                   }
 
+                                  // Convert the birth date string to timestamp before saving
+                                  final birthDateTimestamp = app_date_utils.DateUtils.stringToTimestamp(values['birthDate']);
+
                                   await authController.updateUser(user.id, {
-                                    'fechaNacimiento': values['birthDate'],
+                                    'fechaNacimiento': birthDateTimestamp,
                                     'telefono': values['phone'],
                                     'email': values['email'],
                                     'genero': _indexToGender(_sexoIndex),
@@ -287,10 +304,9 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
   }
 
   void _checkForChanges() {
@@ -299,7 +315,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
     final genderChanged = _indexToGender(_sexoIndex) != user?.gender;
 
     final formChanged =
-        formValues['birthDate'] != user?.birthDate ||
+        formValues['birthDate'] != user?.birthDateString ||
         formValues['email'] != user?.email ||
         formValues['phone'] != user?.phoneNumber ||
         genderChanged ||

@@ -51,7 +51,7 @@ class _RegisterFormsState extends State<RegisterForms> {
         const SizedBox(height: 24),
         AppInput(
           label: 'Email',
-          placeholder: 'Ej: juan@mail.com',
+          placeholder: 'Ej: juanbarcena@mail.com',
           controller: widget.emailController,
           supportingText: widget.emailError,
           hasError: widget.emailError != null,

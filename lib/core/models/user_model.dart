@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../utils/date_utils.dart' as app_date_utils;
 
 class User {
   final String id;
   final String name;
   final String surname;
   final String email;
-  final String birthDate;
+  final Timestamp? birthDate;
   final Timestamp? registerDate;
   final String gender;
   final String phoneNumber;
@@ -19,7 +20,7 @@ class User {
     required this.name,
     required this.surname,
     required this.email,
-    required this.birthDate,
+    this.birthDate,
     this.registerDate,
     required this.gender,
     required this.phoneNumber,
@@ -29,14 +30,39 @@ class User {
     required this.favorites,
   });
 
+  /// Returns birth date as a DD-MM-YYYY string for display
+  String get birthDateString => app_date_utils.DateUtils.timestampToString(birthDate);
+
   factory User.fromDocumentSnapshot(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
+    
+    // Handle both old string format and new timestamp format for backwards compatibility
+    Timestamp? birthDateTimestamp;
+    final birthDateData = data['fechaNacimiento'];
+    
+    if (birthDateData == null) {
+      birthDateTimestamp = null;
+    } else if (birthDateData is Timestamp) {
+      birthDateTimestamp = birthDateData;
+    } else if (birthDateData is String) {
+      if (birthDateData.isEmpty) {
+        birthDateTimestamp = null;
+      } else {
+        // Handle both DD-MM-YYYY and DD/MM/YYYY formats for backwards compatibility
+        String normalizedDate = birthDateData.replaceAll('/', '-');
+        birthDateTimestamp = app_date_utils.DateUtils.stringToTimestamp(normalizedDate);
+      }
+    } else {
+      // Handle any other type by setting to null
+      birthDateTimestamp = null;
+    }
+    
     return User(
       id: doc.id,
       name: data['nombre'] ?? '',
       surname: data['apellido'] ?? '',
       email: data['email'] ?? '',
-      birthDate: data['fechaNacimiento'] ?? '',
+      birthDate: birthDateTimestamp,
       registerDate: data['fechaRegistro'],
       gender: data['genero'] ?? '',
       phoneNumber: data['telefono'] ?? '',
@@ -68,7 +94,7 @@ class User {
     String? name,
     String? surname,
     String? email,
-    String? birthDate,
+    Timestamp? birthDate,
     Timestamp? registerDate,
     String? gender,
     String? phoneNumber,

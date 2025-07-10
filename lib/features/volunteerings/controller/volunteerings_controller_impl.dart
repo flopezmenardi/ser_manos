@@ -46,7 +46,7 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
   Future<void> applyToVolunteering(String volunteeringId) async {
     if (currentUser.phoneNumber.isEmpty ||
         currentUser.gender.isEmpty ||
-        currentUser.birthDate.isEmpty) {
+        currentUser.birthDate != null) {
       throw Exception('Tu perfil no está completo');
     }
 

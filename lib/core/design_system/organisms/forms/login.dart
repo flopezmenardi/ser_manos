@@ -56,7 +56,7 @@ class _PasswordInputState extends State<_PasswordInput> {
   Widget build(BuildContext context) {
     return AppInput(
       label: 'Contraseña',
-      placeholder: 'Ej: ABCD1234',
+      placeholder: 'Ej: Abcd123!',
       controller: widget.controller,
       obscureText: _obscureText,
       suffixIcon: IconButton(

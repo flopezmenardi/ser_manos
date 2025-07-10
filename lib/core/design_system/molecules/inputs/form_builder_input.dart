@@ -4,7 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import 'inputs.dart';
 
-class FormBuilderAppInput extends StatelessWidget {
+class FormBuilderAppInput extends StatefulWidget {
   final String name;
   final String label;
   final String? placeholder;
@@ -25,23 +25,49 @@ class FormBuilderAppInput extends StatelessWidget {
   });
 
   @override
+  State<FormBuilderAppInput> createState() => _FormBuilderAppInputState();
+}
+
+class _FormBuilderAppInputState extends State<FormBuilderAppInput> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FormBuilderField<String>(
-      name: name,
-      validator: validator,
+      name: widget.name,
+      validator: widget.validator,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       builder: (field) {
+        // Only update controller text if the field value is different from controller text
+        // and the controller is not currently focused (to avoid cursor jumping during typing)
+        if (field.value != _controller.text && !_controller.selection.isValid) {
+          _controller.text = field.value ?? '';
+        }
+
         return AppInput(
-          label: label,
-          placeholder: placeholder,
-          controller: TextEditingController(text: field.value ?? '')
-            ..selection = TextSelection.fromPosition(TextPosition(offset: field.value?.length ?? 0)),
+          label: widget.label,
+          placeholder: widget.placeholder,
+          controller: _controller,
           hasError: field.hasError,
           supportingText: field.errorText,
-          keyboardType: keyboardType,
-          obscureText: obscureText,
-          onChanged: field.didChange,
-          inputFormatters: inputFormatters, // nuevo
+          keyboardType: widget.keyboardType,
+          obscureText: widget.obscureText,
+          onChanged: (value) {
+            field.didChange(value);
+          },
+          inputFormatters: widget.inputFormatters,
         );
       },
     );

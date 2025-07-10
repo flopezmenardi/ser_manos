@@ -64,7 +64,7 @@ class UserServiceImpl implements UserService {
       'fechaRegistro': FieldValue.serverTimestamp(),
       'telefono': '',
       'genero': '',
-      'fechaNacimiento': '',
+      'fechaNacimiento': null, // Changed from empty string to null
       'voluntariado': null,
       'voluntariadoAceptado': false,
       'favoritos': <String>[],

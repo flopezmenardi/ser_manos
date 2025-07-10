@@ -88,7 +88,7 @@ class ProfileScreen extends ConsumerWidget {
           InformationCard(
             title: 'Información personal',
             firstLabel: 'FECHA DE NACIMIENTO',
-            firstContent: user.birthDate,
+            firstContent: user.birthDateString,
             secondLabel: 'GÉNERO',
             secondContent: user.gender,
           ),
