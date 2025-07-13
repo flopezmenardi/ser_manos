@@ -33,6 +33,12 @@ final volunteeringStreamProvider = StreamProvider.family<Volunteering, String>((
 });
 
 final volunteeringSearchStreamProvider = StreamProvider<List<Volunteering>>((ref) {
+  final authState = ref.watch(authNotifierProvider);
+
+  if (authState.isInitializing || authState.currentUser == null) {
+    return Stream.value([]);
+  }
+  
   final controller = ref.read(volunteeringsControllerProvider);
   final queryState = ref.watch(volunteeringQueryProvider);
   return controller.watchVolunteerings(queryState);

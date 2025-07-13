@@ -324,6 +324,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         InkWell(
                           onTap: () async {
                             final scaffoldMessenger = ScaffoldMessenger.of(context);
+                            final localizations = AppLocalizations.of(context)!;
 
                             final lat = volunteering.location.latitude;
                             final lng = volunteering.location.longitude;
@@ -334,7 +335,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                             } else {
                               scaffoldMessenger.showSnackBar(
                                 SnackBar(
-                                  content: Text(AppLocalizations.of(context)!.cannotOpenGoogleMaps, overflow: TextOverflow.ellipsis),
+                                  content: Text(localizations.cannotOpenGoogleMaps, overflow: TextOverflow.ellipsis),
                                 ),
                               );
                             }

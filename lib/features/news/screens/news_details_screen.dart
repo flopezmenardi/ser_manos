@@ -138,6 +138,7 @@ class NewsDetailsScreen extends ConsumerWidget {
                           text: AppLocalizations.of(context)!.share,
                           onPressed: () async {
                             final messenger = ScaffoldMessenger.of(context);
+                            final localizations = AppLocalizations.of(context)!;
                             File? tempFile;
 
                             try {
@@ -166,15 +167,15 @@ class NewsDetailsScreen extends ConsumerWidget {
 
                               if (result.status == ShareResultStatus.success) {
                                 debugPrint(
-                                  AppLocalizations.of(context)!.thanksForSharing,
+                                  localizations.thanksForSharing,
                                 );
                               }
                             } catch (e) {
-                              debugPrint('${AppLocalizations.of(context)!.errorSharingNewsDebug} $e');
+                              debugPrint('${localizations.errorSharingNewsDebug} $e');
                               messenger.showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    AppLocalizations.of(context)!.errorSharingNews,
+                                    localizations.errorSharingNews,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
