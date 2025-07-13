@@ -53,7 +53,10 @@ class VolunteeringsControllerImpl implements VolunteeringsController {
 
   @override
   Future<void> applyToVolunteering(String volunteeringId) async {
-    if (currentUser.phoneNumber.isEmpty || currentUser.gender.isEmpty || currentUser.birthDate != null) {
+    if (currentUser.phoneNumber.isEmpty || 
+        currentUser.gender.isEmpty || 
+        currentUser.birthDate == null || 
+        currentUser.photoUrl == null) {
       throw Exception('Tu perfil no está completo');
     }
 
