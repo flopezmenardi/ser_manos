@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ser_manos/features/users/controllers/user_controller_impl.dart';
 import 'package:ser_manos/features/users/screens/profile_screen.dart';
 import 'package:ser_manos/core/models/user_model.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 // ----------------------------
 // FAKES & HELPERS
@@ -75,7 +77,16 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(home: ProfileScreen()),
+        child: MaterialApp(
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const ProfileScreen(),
+        ),
       ),
     );
 

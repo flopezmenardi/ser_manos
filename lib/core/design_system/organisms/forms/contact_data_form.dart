@@ -35,7 +35,6 @@ class ContactDataFormSermanos extends StatelessWidget {
             label: AppLocalizations.of(context)!.telephone,
             placeholder: AppLocalizations.of(context)!.telephonePlaceholder,
             controller: telephoneController,
-            // keyboardType: TextInputType.phone,
           ),
           const SizedBox(height: 16),
 
@@ -44,7 +43,6 @@ class ContactDataFormSermanos extends StatelessWidget {
             label: AppLocalizations.of(context)!.mail,
             placeholder: AppLocalizations.of(context)!.mailPlaceholder,
             controller: emailController,
-            // keyboardType: TextInputType.emailAddress,
           ),
         ],
       ),

@@ -22,7 +22,7 @@ class WelcomeScreen extends StatelessWidget {
           Expanded(
             child: SafeArea(
               top: false,
-              child: SingleChildScrollView( // <--- Scroll agregado
+              child: SingleChildScrollView( 
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: ConstrainedBox(

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -7,6 +8,7 @@ import 'package:ser_manos/constants/app_assets.dart';
 import 'package:ser_manos/features/news/controller/news_controller_impl.dart';
 import 'package:ser_manos/features/news/screens/news_screen.dart';
 import 'package:ser_manos/core/models/news_model.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../mocks/news_service_mock.mocks.dart';
 
@@ -53,7 +55,16 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(home: NewsScreen()),
+        child: MaterialApp(
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const NewsScreen(),
+        ),
       ),
     );
 

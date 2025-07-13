@@ -36,7 +36,7 @@ class LocationImageCard extends StatelessWidget {
           ),
           // Bottom texts (NO vertical padding to avoid overflow)
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), // ← reduced vertical padding
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -45,7 +45,7 @@ class LocationImageCard extends StatelessWidget {
                   style: AppTypography.overline.copyWith(color: AppColors.neutral75),
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2), // ← smaller space between texts
+                const SizedBox(height: 2),
                 Text(
                   address,
                   style: AppTypography.body1.copyWith(color: AppColors.neutral100),
