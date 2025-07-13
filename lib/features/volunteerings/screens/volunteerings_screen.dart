@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:ser_manos/generated/l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/app_routes.dart';
 import '../../../core/design_system/molecules/inputs/search_input.dart';
@@ -117,7 +117,9 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                         ),
                         icon: const Icon(Icons.my_location),
                         label: Text(
-                          queryState.sortMode == SortMode.proximity ? AppLocalizations.of(context)!.sortByDate : AppLocalizations.of(context)!.sortByProximity,
+                          queryState.sortMode == SortMode.proximity
+                              ? AppLocalizations.of(context)!.sortByDate
+                              : AppLocalizations.of(context)!.sortByProximity,
                           overflow: TextOverflow.ellipsis,
                         ),
                         onPressed: () async {
@@ -235,7 +237,6 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                   if (user == null) return;
                   await controller.toggleFavorite(item.id, isFavorite);
                   ref.read(authNotifierProvider.notifier).refreshUser();
-                  ref.invalidate(volunteeringSearchProvider);
                   if (!isFavorite) {
                     controller.logLikedVolunteering(item.id);
                   }
