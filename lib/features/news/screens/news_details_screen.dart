@@ -137,6 +137,7 @@ class NewsDetailsScreen extends ConsumerWidget {
                           text: "Compartir",
                           onPressed: () async {
                             final messenger = ScaffoldMessenger.of(context);
+                            File? tempFile;
 
                             try {
                               final response = await http.get(
@@ -145,17 +146,17 @@ class NewsDetailsScreen extends ConsumerWidget {
                               final bytes = response.bodyBytes;
 
                               final tempDir = await getTemporaryDirectory();
-                              final file = File(
+                              tempFile = File(
                                 '${tempDir.path}/shared_news.jpg',
                               );
-                              await file.writeAsBytes(bytes);
+                              await tempFile.writeAsBytes(bytes);
 
                               final url = 'http://sermanos.app/news/${news.id}';
 
                               final params = ShareParams(
                                 text: '${news.summary}\n\n$url',
                                 subject: news.title,
-                                files: [XFile(file.path)],
+                                files: [XFile(tempFile.path)],
                               );
 
                               final result = await SharePlus.instance.share(
@@ -177,6 +178,15 @@ class NewsDetailsScreen extends ConsumerWidget {
                                   ),
                                 ),
                               );
+                            } finally {
+                              // Always clean up the temporary file
+                              if (tempFile != null && await tempFile.exists()) {
+                                try {
+                                  await tempFile.delete();
+                                } catch (e) {
+                                  debugPrint('Error deleting temporary file: $e');
+                                }
+                              }
                             }
                           },
                         ),
