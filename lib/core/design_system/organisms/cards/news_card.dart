@@ -37,19 +37,17 @@ class NewsCard extends StatelessWidget {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(2),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
                 // Image section
                 SizedBox(
                   width: 118,
-                  height: 156,
-                  child: SizedBox.expand(
-                    child: imagePath.startsWith('assets/')
-                        ? Image.asset(imagePath, fit: BoxFit.cover)
-                        : Image.network(imagePath, fit: BoxFit.cover),
-                  ),
+                  child: imagePath.startsWith('assets/')
+                      ? Image.asset(imagePath, fit: BoxFit.cover)
+                      : Image.network(imagePath, fit: BoxFit.cover),
                 ),
                 // Text section
                 Expanded(
@@ -92,6 +90,7 @@ class NewsCard extends StatelessWidget {
                   ),
                 ),
               ],
+              ),
             ),
           ),
         ),
