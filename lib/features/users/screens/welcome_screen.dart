@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/constants/app_routes.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../../../core/design_system/atoms/logos/logo_square.dart';
 import '../../../core/design_system/molecules/buttons/cta_button.dart';
@@ -38,14 +39,14 @@ class WelcomeScreen extends StatelessWidget {
                             LogoSquare(size: 150),
                             const SizedBox(height: 32),
                             Text(
-                              '¡Bienvenido!',
+                              AppLocalizations.of(context)!.welcome,
                               style: AppTypography.headline1,
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 32),
                             Text(
-                              'Nunca subestimes tu habilidad para mejorar la vida de alguien.',
+                              AppLocalizations.of(context)!.welcomeSubtitle,
                               style: AppTypography.subtitle1,
                               textAlign: TextAlign.center,
                             ),
@@ -54,7 +55,7 @@ class WelcomeScreen extends StatelessWidget {
                         Column(
                           children: [
                             CTAButton(
-                              text: 'Comenzar',
+                              text: AppLocalizations.of(context)!.start,
                               onPressed: () async {
                                 context.go(AppRoutes.volunteerings);
                               },

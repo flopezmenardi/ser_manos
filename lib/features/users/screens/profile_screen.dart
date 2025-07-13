@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../../../constants/app_assets.dart';
 import '../../../constants/app_routes.dart';
@@ -53,6 +54,22 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   Widget _buildFilledProfile(BuildContext context, WidgetRef ref, User user) {
+    // Translates gender key to localized string
+    String getLocalizedGender(BuildContext context, String? genderKey) {
+      if (genderKey == null) return '';
+      
+      switch (genderKey) {
+        case 'Hombre':
+          return AppLocalizations.of(context)!.male;
+        case 'Mujer':
+          return AppLocalizations.of(context)!.female;
+        case 'No binario':
+          return AppLocalizations.of(context)!.nonBinary;
+        default:
+          return genderKey; 
+      }
+    }
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: AppGrid.horizontalMargin),
       child: Column(
@@ -66,7 +83,7 @@ class ProfileScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'VOLUNTARIO',
+            AppLocalizations.of(context)!.volunteer,
             style: AppTypography.overline.copyWith(color: AppColors.neutral75),
             overflow: TextOverflow.ellipsis,
           ),
@@ -86,28 +103,28 @@ class ProfileScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
           InformationCard(
-            title: 'Información personal',
-            firstLabel: 'FECHA DE NACIMIENTO',
+            title: AppLocalizations.of(context)!.personalInformation,
+            firstLabel: AppLocalizations.of(context)!.birthDateLabel,
             firstContent: user.birthDateString,
-            secondLabel: 'GÉNERO',
-            secondContent: user.gender,
+            secondLabel: AppLocalizations.of(context)!.genderLabel,
+            secondContent:  getLocalizedGender(context, user.gender),
           ),
           const SizedBox(height: 16),
           InformationCard(
-            title: 'Datos de contacto',
-            firstLabel: 'TELÉFONO',
+            title: AppLocalizations.of(context)!.contactDataLabel,
+            firstLabel: AppLocalizations.of(context)!.telephoneLabel,
             firstContent: user.phoneNumber,
-            secondLabel: 'E-MAIL',
+            secondLabel: AppLocalizations.of(context)!.emailLabel,
             secondContent: user.email,
           ),
           const SizedBox(height: 24),
           CTAButton(
-            text: 'Editar perfil',
+            text: AppLocalizations.of(context)!.editProfile,
             onPressed: () async => context.push(AppRoutes.profileEdit),
           ),
 
           TextOnlyButton(
-            text: 'Cerrar sesión',
+            text: AppLocalizations.of(context)!.logout,
             color: AppColors.error100,
             onPressed: () async {
               // Capture Navigator and GoRouter before showing dialog
@@ -119,9 +136,9 @@ class ProfileScreen extends ConsumerWidget {
                 builder:
                     (dialogContext) => Center(
                       child: ModalSermanos(
-                        title: '¿Estás seguro que quieres cerrar sesión?',
-                        confimationText: 'Cerrar sesión',
-                        cancelText: 'Cancelar',
+                        title: AppLocalizations.of(context)!.logoutConfirmation,
+                        confimationText: AppLocalizations.of(context)!.logoutConfirmationSimple,
+                        cancelText: AppLocalizations.of(context)!.cancel,
                         onCancel: () => Navigator.of(dialogContext).pop(),
                         onConfirm: () async {
                           await ref
@@ -159,7 +176,7 @@ class ProfileScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'VOLUNTARIO',
+                  AppLocalizations.of(context)!.volunteer,
                   style: AppTypography.overline.copyWith(
                     color: AppColors.neutral75,
                   ),
@@ -173,7 +190,7 @@ class ProfileScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  '¡Completá tu perfil para tener\nacceso a mejores oportunidades!',
+                  AppLocalizations.of(context)!.completeProfile,
                   textAlign: TextAlign.center,
                   style: AppTypography.body1.copyWith(
                     color: AppColors.neutral75,
@@ -184,13 +201,13 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ),
           ShortButton(
-            text: 'Completar',
+            text: AppLocalizations.of(context)!.complete,
             icon: Icons.add,
             onPressed: () => context.push(AppRoutes.profileEdit),
           ),
           const SizedBox(height: 16),
           TextOnlyButton(
-            text: 'Cerrar sesión',
+            text: AppLocalizations.of(context)!.logout,
             color: AppColors.error100,
             onPressed: () async {
               // Capture Navigator and GoRouter before showing dialog
@@ -202,10 +219,10 @@ class ProfileScreen extends ConsumerWidget {
                 builder:
                     (dialogContext) => Center(
                       child: ModalSermanos(
-                        title: 'Cerrar sesión',
-                        subtitle: '¿Estás seguro que querés cerrar sesión?',
-                        confimationText: 'Cerrar sesión',
-                        cancelText: 'Cancelar',
+                        title: AppLocalizations.of(context)!.logoutConfirmationSimple,
+                        subtitle: AppLocalizations.of(context)!.logoutConfirmationQuestion,
+                        confimationText: AppLocalizations.of(context)!.logoutConfirmationSimple,
+                        cancelText: AppLocalizations.of(context)!.cancel,
                         onCancel: () => Navigator.of(dialogContext).pop(),
                         onConfirm: () async {
                           await ref

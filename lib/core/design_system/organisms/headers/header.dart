@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ser_manos/constants/app_assets.dart';
 import 'package:ser_manos/constants/app_routes.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../../molecules/status_bar/status_bar.dart';
 import '../../tokens/colors.dart';
@@ -40,9 +41,9 @@ class AppHeader extends StatelessWidget {
           ),
           Row(
             children: [
-              _buildTab(context, "Postularse", 0),
-              _buildTab(context, "Mi perfil", 1),
-              _buildTab(context, "Novedades", 2),
+              _buildTab(context, AppLocalizations.of(context)!.apply, 0),
+              _buildTab(context, AppLocalizations.of(context)!.myProfile, 1),
+              _buildTab(context, AppLocalizations.of(context)!.news, 2),
             ],
           ),
         ],

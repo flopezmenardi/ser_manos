@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../../molecules/inputs/inputs.dart';
 import '../../tokens/typography.dart';
@@ -18,12 +19,12 @@ class ContactDataFormSermanos extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Title
-          Text('Datos de contacto', style: AppTypography.headline1, overflow: TextOverflow.ellipsis),
+          Text(AppLocalizations.of(context)!.contactData, style: AppTypography.headline1, overflow: TextOverflow.ellipsis),
           const SizedBox(height: 16),
 
           // Description
           Text(
-            'Estos datos serán compartidos con la organización para ponerse en contacto contigo',
+            AppLocalizations.of(context)!.contactDataDescription,
             style: AppTypography.subtitle1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -31,8 +32,8 @@ class ContactDataFormSermanos extends StatelessWidget {
 
           // Phone Input
           AppInput(
-            label: 'Teléfono',
-            placeholder: 'Ej: +541178445459',
+            label: AppLocalizations.of(context)!.telephone,
+            placeholder: AppLocalizations.of(context)!.telephonePlaceholder,
             controller: telephoneController,
             // keyboardType: TextInputType.phone,
           ),
@@ -40,8 +41,8 @@ class ContactDataFormSermanos extends StatelessWidget {
 
           // Email Input
           AppInput(
-            label: 'Mail',
-            placeholder: 'Ej: mimail@mail.com',
+            label: AppLocalizations.of(context)!.mail,
+            placeholder: AppLocalizations.of(context)!.mailPlaceholder,
             controller: emailController,
             // keyboardType: TextInputType.emailAddress,
           ),

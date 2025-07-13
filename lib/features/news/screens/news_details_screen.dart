@@ -10,6 +10,7 @@ import 'package:ser_manos/core/design_system/organisms/headers/header_section.da
 import 'package:ser_manos/core/design_system/tokens/colors.dart';
 import 'package:ser_manos/core/design_system/tokens/typography.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../controller/news_controller_impl.dart';
 
@@ -27,20 +28,20 @@ class NewsDetailsScreen extends ConsumerWidget {
           () =>
               const Scaffold(body: Center(child: CircularProgressIndicator())),
       error:
-          (e, _) => const Scaffold(
+          (e, _) => Scaffold(
             body: Center(
               child: Text(
-                'Error al cargar la novedad.',
+                AppLocalizations.of(context)!.errorLoadingNews,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
       data: (news) {
         if (news == null) {
-          return const Scaffold(
+          return Scaffold(
             body: Center(
               child: Text(
-                'Novedad no encontrada.',
+                AppLocalizations.of(context)!.newsNotFound,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -56,7 +57,7 @@ class NewsDetailsScreen extends ConsumerWidget {
                 child: SafeArea(
                   bottom: false,
                   child: HeaderSection(
-                    title: 'Novedades',
+                    title: AppLocalizations.of(context)!.news,
                     onBack: () => context.pop(),
                   ),
                 ),
@@ -125,7 +126,7 @@ class NewsDetailsScreen extends ConsumerWidget {
                         const SizedBox(height: 24),
                         Center(
                           child: Text(
-                            "Comparte esta nota",
+                            AppLocalizations.of(context)!.shareThisNote,
                             style: AppTypography.headline2.copyWith(
                               color: AppColors.neutral100,
                             ),
@@ -134,7 +135,7 @@ class NewsDetailsScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 16),
                         CTAButton(
-                          text: "Compartir",
+                          text: AppLocalizations.of(context)!.share,
                           onPressed: () async {
                             final messenger = ScaffoldMessenger.of(context);
                             File? tempFile;
@@ -165,15 +166,15 @@ class NewsDetailsScreen extends ConsumerWidget {
 
                               if (result.status == ShareResultStatus.success) {
                                 debugPrint(
-                                  '¡Gracias por compartir la novedad!',
+                                  AppLocalizations.of(context)!.thanksForSharing,
                                 );
                               }
                             } catch (e) {
-                              debugPrint('Error al compartir la novedad: $e');
+                              debugPrint('${AppLocalizations.of(context)!.errorSharingNewsDebug} $e');
                               messenger.showSnackBar(
-                                const SnackBar(
+                                SnackBar(
                                   content: Text(
-                                    'Error al compartir la novedad.',
+                                    AppLocalizations.of(context)!.errorSharingNews,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),

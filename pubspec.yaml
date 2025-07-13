@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   go_router: ^16.0.0
   firebase_core: ^3.13.0
   cloud_firestore: ^5.6.7
@@ -43,6 +45,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
   assets:
     - assets/images/
     - assets/logos/
@@ -51,4 +54,4 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/logos/app_icon.png"
+  image_path: assets/logos/app_icon.png

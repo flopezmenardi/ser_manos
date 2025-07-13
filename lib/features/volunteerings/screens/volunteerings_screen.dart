@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../../../constants/app_routes.dart';
 import '../../../core/design_system/molecules/inputs/search_input.dart';
@@ -116,7 +117,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                         ),
                         icon: const Icon(Icons.my_location),
                         label: Text(
-                          queryState.sortMode == SortMode.proximity ? "Ordenar por fecha" : "Ordenar por cercanía",
+                          queryState.sortMode == SortMode.proximity ? AppLocalizations.of(context)!.sortByDate : AppLocalizations.of(context)!.sortByProximity,
                           overflow: TextOverflow.ellipsis,
                         ),
                         onPressed: () async {
@@ -157,7 +158,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
                         children: [
                           if (hasCurrent) ..._buildCurrentVolunteering(volunteerings, user, controller),
                           Text(
-                            "Voluntariados",
+                            AppLocalizations.of(context)!.volunteerings,
                             style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -185,7 +186,7 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
     final current = volunteerings.firstWhere((v) => v.id == user.volunteering);
     return [
       Text(
-        "Tu actividad",
+        AppLocalizations.of(context)!.yourActivity,
         style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
         overflow: TextOverflow.ellipsis,
       ),
@@ -265,8 +266,8 @@ class _VolunteeringListPageState extends ConsumerState<VolunteeringListPage> {
   Widget _emptyVolunteeringsMessage(bool isGeneralEmpty) {
     final message =
         isGeneralEmpty
-            ? "Actualmente no hay voluntariados vigentes.\nPronto se irán incorporando nuevos."
-            : "No hay voluntariados vigentes para tu búsqueda.";
+            ? AppLocalizations.of(context)!.noVolunteeringsAvailable
+            : AppLocalizations.of(context)!.noVolunteeringsFound;
     return Container(
       padding: const EdgeInsets.all(32),
       alignment: Alignment.center,

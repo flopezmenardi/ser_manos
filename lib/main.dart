@@ -4,11 +4,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ser_manos/router.dart';
 
 import 'core/design_system/tokens/colors.dart';
 import 'firebase_options.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 void main() {
   runZonedGuarded(
@@ -39,7 +41,25 @@ class FirebaseInitWrapper extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           return const MainApp();
         } else if (snapshot.hasError) {
-          return const MaterialApp(home: Scaffold(body: Center(child: Text('Firebase init failed'))));
+          return MaterialApp(
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('es', ''),
+              Locale('en', ''),
+            ],
+            home: Scaffold(
+              body: Center(
+                child: Builder(
+                  builder: (context) => Text(AppLocalizations.of(context)!.firebaseInitFailed),
+                ),
+              ),
+            ),
+          );
         } else {
           return const MaterialApp(home: Scaffold(body: Center(child: CircularProgressIndicator())));
         }
@@ -53,7 +73,21 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(color: AppColors.neutral0, routerConfig: appRouter, debugShowCheckedModeBanner: false);
+    return MaterialApp.router(
+      color: AppColors.neutral0,
+      routerConfig: appRouter,
+      debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('es', ''),
+        Locale('en', ''),
+      ],
+    );
   }
 }
 

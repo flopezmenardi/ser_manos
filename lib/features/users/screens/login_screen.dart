@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../../../constants/app_routes.dart';
 import '../../../core/design_system/atoms/logos/logo_square.dart';
@@ -96,7 +97,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                         ),
                         CTAButton(
-                          text: 'Iniciar Sesión',
+                          text: AppLocalizations.of(context)!.login,
                           isEnabled: _isFormFilled && !authState.isLoading,
                           onPressed: () async {
                             final isValid = _formKey.currentState?.validate() ?? false;
@@ -110,7 +111,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             if (!mounted) return;
 
                             setState(() {
-                              _authError = success ? '' : 'Email o contraseña incorrectos';
+                              _authError = success ? '' : AppLocalizations.of(context)!.loginError;
                             });
 
                             if (success) {
@@ -122,7 +123,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         const SizedBox(height: 16),
                         TextOnlyButton(
-                          text: 'No tengo cuenta',
+                          text: AppLocalizations.of(context)!.noAccount,
                           onPressed: () async {
                             context.go(AppRoutes.register);
                           },

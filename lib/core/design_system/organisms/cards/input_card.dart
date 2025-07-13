@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../../tokens/colors.dart';
 import '../../tokens/typography.dart';
@@ -28,7 +29,7 @@ class InputCard extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Text(
-                "Información de perfil",
+                AppLocalizations.of(context)!.profileInformation,
                 style: AppTypography.subtitle1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -38,9 +39,9 @@ class InputCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Column(
                 children: [
-                  _buildRadioOption('Hombre'),
-                  _buildRadioOption('Mujer'),
-                  _buildRadioOption('No binario'),
+                  _buildRadioOption(context, 'Hombre', AppLocalizations.of(context)!.male),
+                  _buildRadioOption(context, 'Mujer', AppLocalizations.of(context)!.female),
+                  _buildRadioOption(context, 'No binario', AppLocalizations.of(context)!.nonBinary),
                 ],
               ),
             ),
@@ -50,7 +51,7 @@ class InputCard extends StatelessWidget {
     );
   }
 
-  Widget _buildRadioOption(String value) {
+  Widget _buildRadioOption(BuildContext context, String key, String displayValue) {
     return SizedBox(
       height: 32,
       child: RadioTheme(
@@ -64,14 +65,14 @@ class InputCard extends StatelessWidget {
             Radio<String>(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-              value: value,
+              value: key,
               groupValue: selectedGender,
               onChanged: onGenderChanged,
             ),
             const SizedBox(width: 4),
             Expanded(
               child: Text(
-                value,
+                displayValue,
                 style: AppTypography.body1,
                 overflow: TextOverflow.ellipsis,
               ),

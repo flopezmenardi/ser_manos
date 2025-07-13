@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
 
 class DateUtils {
   /// Converts a DD-MM-YYYY or DD/MM/YYYY string to a Firestore Timestamp
@@ -57,5 +59,26 @@ class DateUtils {
     } catch (e) {
       return false;
     }
+  }
+  
+  /// Formats a Timestamp to a localized date string
+  static String formatLocalizedDate(Timestamp? timestamp, Locale locale) {
+    if (timestamp == null) return '';
+    
+    final dateTime = timestamp.toDate();
+    final formatter = DateFormat.yMd(locale.languageCode);
+    return formatter.format(dateTime);
+  }
+  
+  /// Formats a double value as localized currency
+  static String formatLocalizedCurrency(double? amount, Locale locale) {
+    if (amount == null) return '';
+    
+    final formatter = NumberFormat.currency(
+      locale: locale.languageCode,
+      symbol: '\$',
+      decimalDigits: 2,
+    );
+    return formatter.format(amount);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../../molecules/buttons/text_button.dart';
 import '../../tokens/colors.dart';
@@ -80,7 +81,7 @@ class NewsCard extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextOnlyButton(
-                            text: 'Leer más',
+                            text: AppLocalizations.of(context)!.readMore,
                             onPressed: () async {
                               onConfirm();
                             },

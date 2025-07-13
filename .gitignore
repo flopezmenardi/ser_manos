@@ -51,3 +51,4 @@ android/app/google-services.json
 
 # FVM Version Cache
 .fvm/
+lib/generated/l10n/

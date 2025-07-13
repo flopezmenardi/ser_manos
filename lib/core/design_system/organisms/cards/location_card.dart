@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../../molecules/buttons/floating_button.dart';
 import '../../tokens/colors.dart';
@@ -30,7 +31,7 @@ class LocationCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             alignment: Alignment.centerLeft,
             child: Text(
-              'Información de perfil',
+              AppLocalizations.of(context)!.profileInformation,
               style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
               overflow: TextOverflow.ellipsis,
             ),
@@ -50,7 +51,7 @@ class LocationCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'DIRECCIÓN',
+                          AppLocalizations.of(context)!.address,
                           style: AppTypography.overline.copyWith(color: AppColors.neutral75),
                           overflow: TextOverflow.ellipsis,
                         ),

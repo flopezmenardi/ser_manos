@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 import 'package:ser_manos/core/design_system/organisms/cards/profile_picture_button.dart';
 import '../../tokens/colors.dart';
 import '../../tokens/typography.dart';
@@ -33,7 +34,7 @@ class ChangeProfilePictureCellule extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center, // center vertically
               children: [
                 Text(
-                  'Foto de perfil',
+                  AppLocalizations.of(context)!.profilePicture,
                   style: AppTypography.subtitle1.copyWith(
                     color: AppColors.neutral100,
                   ),
@@ -41,7 +42,7 @@ class ChangeProfilePictureCellule extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ProfilePictureButton(
-                  text: 'Cambiar foto',
+                  text: AppLocalizations.of(context)!.changePhoto,
                   onPressed:
                       () async => onChangePressed(), // forward to _pickPhoto()
                 ),

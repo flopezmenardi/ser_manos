@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 import 'package:ser_manos/core/design_system/molecules/inputs/form_builder_input.dart';
 import 'package:ser_manos/core/design_system/organisms/cards/change_profile_picture.dart';
 import 'package:ser_manos/core/design_system/organisms/cards/upload_profile_picture.dart';
@@ -46,14 +47,32 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
     }
   }
 
-  int? _genderToIndex(String? gender) {
-    const options = ['Hombre', 'Mujer', 'No binario'];
-    return gender != null ? options.indexOf(gender) : null;
+  static const Map<String, String> _genderKeyToDbValue = {
+    'male': 'Hombre',
+    'female': 'Mujer',
+    'nonBinary': 'No binario',
+  };
+
+  static const Map<String, String> _dbValueToGenderKey = {
+    'Hombre': 'male',
+    'Mujer': 'female',
+    'No binario': 'nonBinary',
+  };
+
+  int? _genderToIndex(String? dbValue) {
+    const options = ['male', 'female', 'nonBinary'];
+    final key = _dbValueToGenderKey[dbValue];
+    return key != null ? options.indexOf(key) : null;
   }
 
-  String? _indexToGender(int? index) {
-    const options = ['Hombre', 'Mujer', 'No binario'];
+  String? _indexToGenderKey(int? index) {
+    const options = ['male', 'female', 'nonBinary'];
     return (index != null && index >= 0 && index < options.length) ? options[index] : null;
+  }
+
+  String? _indexToDbGender(int? index) {
+    final key = _indexToGenderKey(index);
+    return key != null ? _genderKeyToDbValue[key] : null;
   }
 
   Future<void> _pickPhoto() async {
@@ -114,7 +133,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                     children: [
                       const SizedBox(height: 24),
                       Text(
-                        'Datos de perfil',
+                        AppLocalizations.of(context)!.profileData,
                         style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -123,15 +142,15 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                       // Fecha de nacimiento
                       FormBuilderAppInput(
                         name: 'birthDate',
-                        label: 'Fecha de nacimiento',
-                        placeholder: 'DD-MM-YYYY',
+                        label: AppLocalizations.of(context)!.birthDate,
+                        placeholder: AppLocalizations.of(context)!.birthDatePlaceholder,
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9-]'))],
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                           FormBuilderValidators.match(
                             RegExp(r'^(\d{2})-(\d{2})-(\d{4})$'),
-                            errorText: 'Fecha inválida. Formato: DD-MM-YYYY',
+                            errorText: AppLocalizations.of(context)!.invalidDateFormat,
                           ),
                         ]),
                       ),
@@ -139,7 +158,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
 
                       // Genero
                       InputCard(
-                        selectedGender: _indexToGender(_sexoIndex),
+                        selectedGender: _indexToDbGender(_sexoIndex),
                         onGenderChanged: (value) {
                           setState(() {
                             _sexoIndex = _genderToIndex(value);
@@ -159,13 +178,13 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                         UploadProfilePicture(onUploadPressed: _pickPhoto),
                       const SizedBox(height: 24),
                       Text(
-                        'Datos de contacto',
+                        AppLocalizations.of(context)!.contactDataTitle,
                         style: AppTypography.headline1.copyWith(color: AppColors.neutral100),
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'Estos datos serán compartidos con la organización para ponerse en contacto contigo',
+                        AppLocalizations.of(context)!.contactDataDescription,
                         style: AppTypography.subtitle1,
                       ),
                       const SizedBox(height: 24),
@@ -173,12 +192,12 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                       // Teléfono
                       FormBuilderAppInput(
                         name: 'phone',
-                        label: 'Teléfono',
-                        placeholder: 'Ej: 1133445566',
+                        label: AppLocalizations.of(context)!.telephone,
+                        placeholder: AppLocalizations.of(context)!.telephonePlaceholder2,
                         keyboardType: TextInputType.phone,
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
-                          FormBuilderValidators.match(RegExp(r'^\d{7,15}$'), errorText: 'Teléfono inválido'),
+                          FormBuilderValidators.match(RegExp(r'^\d{7,15}$'), errorText: AppLocalizations.of(context)!.telephoneInvalid),
                         ]),
                       ),
                       const SizedBox(height: 24),
@@ -186,18 +205,18 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                       // Email
                       FormBuilderAppInput(
                         name: 'email',
-                        label: 'Email',
-                        placeholder: 'ejemplo@mail.com',
+                        label: AppLocalizations.of(context)!.email,
+                        placeholder: AppLocalizations.of(context)!.emailPlaceholder2,
                         keyboardType: TextInputType.emailAddress,
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
-                          FormBuilderValidators.email(errorText: 'Email inválido'),
+                          FormBuilderValidators.email(errorText: AppLocalizations.of(context)!.emailInvalid2),
                         ]),
                       ),
                       const SizedBox(height: 32),
 
                       CTAButton(
-                        text: 'Guardar datos',
+                        text: AppLocalizations.of(context)!.saveData,
                         isEnabled: _hasChanges,
                         onPressed:
                             _hasChanges
@@ -208,9 +227,10 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                                       // Capture ScaffoldMessenger before any async operations
                                       final scaffoldMessenger = ScaffoldMessenger.of(context);
                                       WidgetsBinding.instance.addPostFrameCallback((_) {
+                                        final message = AppLocalizations.of(context)!.selectGender;
                                         scaffoldMessenger.showSnackBar(
-                                          const SnackBar(
-                                            content: Text('Seleccioná un género', overflow: TextOverflow.ellipsis),
+                                          SnackBar(
+                                            content: Text(message, overflow: TextOverflow.ellipsis),
                                           ),
                                         );
                                       });
@@ -236,7 +256,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                                     'fechaNacimiento': birthDateTimestamp,
                                     'telefono': values['phone'],
                                     'email': values['email'],
-                                    'genero': _indexToGender(_sexoIndex),
+                                    'genero': _indexToDbGender(_sexoIndex),
                                   });
 
                                   await ref.read(authNotifierProvider.notifier).refreshUser();
@@ -260,10 +280,10 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
                                           builder:
                                               (dialogContext) => Center(
                                                 child: ModalSermanos(
-                                                  title: 'Te estás por postular a',
+                                                  title: AppLocalizations.of(context)!.aboutToApply,
                                                   subtitle: volunteering.title,
-                                                  confimationText: 'Confirmar',
-                                                  cancelText: 'Cancelar',
+                                                  confimationText: AppLocalizations.of(context)!.confirm,
+                                                  cancelText: AppLocalizations.of(context)!.cancel,
                                                   onCancel: () => Navigator.of(dialogContext).pop(false),
                                                   onConfirm: () => Navigator.of(dialogContext).pop(true),
                                                 ),
@@ -312,7 +332,7 @@ class _ProfileModalScreenState extends ConsumerState<ProfileModalScreen> {
   void _checkForChanges() {
     final formValues = _formKey.currentState?.instantValue ?? {};
     final user = ref.read(authNotifierProvider).currentUser;
-    final genderChanged = _indexToGender(_sexoIndex) != user?.gender;
+    final genderChanged = _indexToGenderKey(_sexoIndex) != user?.gender;
 
     final formChanged =
         formValues['birthDate'] != user?.birthDateString ||

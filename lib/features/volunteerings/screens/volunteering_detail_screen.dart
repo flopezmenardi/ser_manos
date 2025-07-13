@@ -13,6 +13,8 @@ import 'package:ser_manos/core/design_system/organisms/modal.dart';
 import 'package:ser_manos/core/design_system/tokens/colors.dart';
 import 'package:ser_manos/core/design_system/tokens/grid.dart';
 import 'package:ser_manos/core/design_system/tokens/typography.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
+import 'package:ser_manos/core/utils/date_utils.dart' as custom_date_utils;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../users/controllers/user_controller_impl.dart';
@@ -37,7 +39,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
 
     return volunteeringAsync.when(
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (error, _) => Scaffold(body: Center(child: Text('Error: $error', overflow: TextOverflow.ellipsis))),
+      error: (error, _) => Scaffold(body: Center(child: Text('${AppLocalizations.of(context)!.errorGeneric} $error', overflow: TextOverflow.ellipsis))),
       data: (volunteering) {
         final hasVacants = volunteering.vacants > 0;
         final isSame = user.volunteering == volunteering.id;
@@ -52,16 +54,16 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         if (isSame && isAccepted) {
           action = Column(
             children: [
-              Text('Estás participando', style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
+              Text(AppLocalizations.of(context)!.participating, style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
               const SizedBox(height: 8),
               Text(
-                'La organización confirmó que ya estás participando de este voluntariado',
+                AppLocalizations.of(context)!.participatingDescription,
                 style: AppTypography.body1,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               TextOnlyButton(
-                text: 'Abandonar voluntariado',
+                text: AppLocalizations.of(context)!.abandonVolunteering,
                 onPressed: () async {
                   final confirmed =
                       await showDialog<bool>(
@@ -69,10 +71,10 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         builder:
                             (_) => Center(
                               child: ModalSermanos(
-                                title: '¿Estás seguro que querés abandonar tu voluntariado?',
+                                title: AppLocalizations.of(context)!.abandonVolunteeringConfirm,
                                 subtitle: volunteering.title,
-                                confimationText: 'Confirmar',
-                                cancelText: 'Cancelar',
+                                confimationText: AppLocalizations.of(context)!.confirm,
+                                cancelText: AppLocalizations.of(context)!.cancel,
                                 onCancel: () => Navigator.of(context).pop(false),
                                 onConfirm: () => Navigator.of(context).pop(true),
                               ),
@@ -93,16 +95,16 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         } else if (isSame && !isAccepted) {
           action = Column(
             children: [
-              Text('Te has postulado', style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
+              Text(AppLocalizations.of(context)!.youHaveApplied, style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
               const SizedBox(height: 8),
               Text(
-                'Pronto la organización se pondrá en contacto contigo y te inscribirá como participante.',
+                AppLocalizations.of(context)!.applicationPending,
                 style: AppTypography.body1,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               TextOnlyButton(
-                text: 'Retirar postulación',
+                text: AppLocalizations.of(context)!.withdrawApplication,
                 onPressed: () async {
                   final confirmed =
                       await showDialog<bool>(
@@ -110,10 +112,10 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         builder:
                             (_) => Center(
                               child: ModalSermanos(
-                                title: '¿Estás seguro que querés retirar tu postulación?',
+                                title: AppLocalizations.of(context)!.withdrawApplicationConfirm,
                                 subtitle: volunteering.title,
-                                confimationText: 'Confirmar',
-                                cancelText: 'Cancelar',
+                                confimationText: AppLocalizations.of(context)!.confirm,
+                                cancelText: AppLocalizations.of(context)!.cancel,
                                 onCancel: () => Navigator.of(context).pop(false),
                                 onConfirm: () => Navigator.of(context).pop(true),
                               ),
@@ -135,14 +137,14 @@ class VolunteeringDetailScreen extends ConsumerWidget {
           action = Column(
             children: [
               Text(
-                'Ya estás participando en otro voluntariado, debes abandonarlo primero para postularte a este.',
+                AppLocalizations.of(context)!.alreadyInOtherVolunteering,
                 style: AppTypography.body1,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
 
               TextOnlyButton(
-                text: 'Abandonar voluntariado actual',
+                text: AppLocalizations.of(context)!.abandonCurrentVolunteering,
                 onPressed: () async {
                   final confirmed =
                       await showDialog<bool>(
@@ -150,10 +152,10 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         builder:
                             (dialogContext) => Center(
                               child: ModalSermanos(
-                                title: '¿Estás seguro que querés abandonar tu voluntariado?',
-                                subtitle: 'Esta acción no se puede deshacer',
-                                confimationText: 'Confirmar',
-                                cancelText: 'Cancelar',
+                                title: AppLocalizations.of(context)!.abandonVolunteeringConfirm,
+                                subtitle: AppLocalizations.of(context)!.actionCannotBeUndone,
+                                confimationText: AppLocalizations.of(context)!.confirm,
+                                cancelText: AppLocalizations.of(context)!.cancel,
                                 onCancel: () => Navigator.of(dialogContext).pop(false),
                                 onConfirm: () => Navigator.of(dialogContext).pop(true),
                               ),
@@ -170,7 +172,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                 },
               ),
               const SizedBox(height: 8),
-              CTAButton(text: 'Postularme', isEnabled: false, onPressed: () async {}),
+              CTAButton(text: AppLocalizations.of(context)!.applyToVolunteering, isEnabled: false, onPressed: () async {}),
             ],
           );
 
@@ -178,16 +180,16 @@ class VolunteeringDetailScreen extends ConsumerWidget {
         } else if (!hasVacants) {
           action = Column(
             children: [
-              Text('No hay vacantes disponibles para postularse.', style: AppTypography.body1),
+              Text(AppLocalizations.of(context)!.noVacanciesAvailable, style: AppTypography.body1),
               const SizedBox(height: 16),
-              CTAButton(text: 'Postularme', isEnabled: false, onPressed: () async {}),
+              CTAButton(text: AppLocalizations.of(context)!.applyToVolunteering, isEnabled: false, onPressed: () async {}),
             ],
           );
 
           // CASE: can apply
         } else {
           action = CTAButton(
-            text: 'Postularme',
+            text: AppLocalizations.of(context)!.applyToVolunteering,
             onPressed: () async {
               final navigator = Navigator.of(context);
               final router = GoRouter.of(context);
@@ -199,9 +201,9 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                       builder:
                           (_) => Center(
                             child: ModalSermanos(
-                              title: 'Para postularte debés primero completar tus datos.',
-                              confimationText: 'Completar datos',
-                              cancelText: 'Cancelar',
+                              title: AppLocalizations.of(context)!.completeDataToApply,
+                              confimationText: AppLocalizations.of(context)!.completeData,
+                              cancelText: AppLocalizations.of(context)!.cancel,
                               onCancel: () => navigator.pop(false),
                               onConfirm: () => navigator.pop(true),
                             ),
@@ -219,10 +221,10 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                     builder:
                         (_) => Center(
                           child: ModalSermanos(
-                            title: 'Te estás por postular a',
+                            title: AppLocalizations.of(context)!.aboutToApply,
                             subtitle: volunteering.title,
-                            confimationText: 'Confirmar',
-                            cancelText: 'Cancelar',
+                            confimationText: AppLocalizations.of(context)!.confirm,
+                            cancelText: AppLocalizations.of(context)!.cancel,
                             onCancel: () => Navigator.of(context).pop(false),
                             onConfirm: () => Navigator.of(context).pop(true),
                           ),
@@ -302,15 +304,15 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         const SizedBox(height: 4),
                         Text(
                           volunteering.startDate != null
-                              ? 'Fecha de inicio: ${volunteering.startDate!.toDate().day}/${volunteering.startDate!.toDate().month}/${volunteering.startDate!.toDate().year}'
-                              : 'Fecha de inicio no disponible',
+                              ? '${AppLocalizations.of(context)!.startDate} ${volunteering.startDate!.toDate().day}/${volunteering.startDate!.toDate().month}/${volunteering.startDate!.toDate().year}'
+                              : AppLocalizations.of(context)!.startDateNotAvailable,
                           style: AppTypography.body2.copyWith(color: AppColors.neutral50),
                         ),
                         const SizedBox(height: 8),
                         Text(volunteering.summary, style: AppTypography.body1.copyWith(color: AppColors.secondary200)),
                         const SizedBox(height: 24),
                         Text(
-                          'Sobre la actividad',
+                          AppLocalizations.of(context)!.aboutActivity,
                           style: AppTypography.headline2.copyWith(color: AppColors.neutral100),
                         ),
                         const SizedBox(height: 8),
@@ -331,8 +333,8 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                               await launchUrl(uri);
                             } else {
                               scaffoldMessenger.showSnackBar(
-                                const SnackBar(
-                                  content: Text('No se pudo abrir Google Maps', overflow: TextOverflow.ellipsis),
+                                SnackBar(
+                                  content: Text(AppLocalizations.of(context)!.cannotOpenGoogleMaps, overflow: TextOverflow.ellipsis),
                                 ),
                               );
                             }
@@ -340,7 +342,7 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                           child: LocationImageCard(address: volunteering.address),
                         ),
                         const SizedBox(height: 24),
-                        Text('Requisitos', style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
+                        Text(AppLocalizations.of(context)!.requirements, style: AppTypography.headline2.copyWith(color: AppColors.neutral100)),
                         const SizedBox(height: 8),
                         MarkdownBody(
                           data: volunteering.requirements,
@@ -348,6 +350,40 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 16),
                         VacantsIndicator(vacants: volunteering.vacants),
+                        const SizedBox(height: 16),
+                        
+                        // Cost information
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.cost,
+                              style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
+                            ),
+                            Text(
+                              volunteering.cost != null && volunteering.cost! > 0
+                                  ? custom_date_utils.DateUtils.formatLocalizedCurrency(volunteering.cost, Localizations.localeOf(context))
+                                  : AppLocalizations.of(context)!.free,
+                              style: AppTypography.subtitle1.copyWith(color: AppColors.secondary200),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        
+                        // Creation date information
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.creationDate,
+                              style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
+                            ),
+                            Text(
+                              custom_date_utils.DateUtils.formatLocalizedDate(volunteering.creationDate, Localizations.localeOf(context)),
+                              style: AppTypography.subtitle1.copyWith(color: AppColors.secondary200),
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: 24),
                         Center(child: action),
                         const SizedBox(height: 24),

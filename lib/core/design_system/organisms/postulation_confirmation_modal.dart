@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ser_manos/generated/l10n/app_localizations.dart';
 
 import '../molecules/buttons/text_button.dart';
 import '../tokens/colors.dart';
@@ -34,7 +35,7 @@ class PostulationConfirmationModal extends StatelessWidget {
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                'Te estas por postular a',
+                AppLocalizations.of(context)!.aboutToApplyTo,
                 style: AppTypography.subtitle1.copyWith(
                   color: AppColors.neutral100,
                 ),
@@ -57,11 +58,11 @@ class PostulationConfirmationModal extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextOnlyButton(
-                  text: 'Cancelar',
+                  text: AppLocalizations.of(context)!.cancel,
                   onPressed: () async => onCancel(),
                 ),
                 TextOnlyButton(
-                  text: 'Confirmar',
+                  text: AppLocalizations.of(context)!.confirm,
                   onPressed: () async => onConfirm(),
                 ),
               ],
