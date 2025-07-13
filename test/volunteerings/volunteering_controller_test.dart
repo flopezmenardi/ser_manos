@@ -49,6 +49,7 @@ void main() {
         phoneNumber: '123456789',
         gender: 'Masculino',
         birthDate: Timestamp.fromDate(DateTime(2000, 1, 1)),
+        photoUrl: 'https://example.com/photo.jpg', 
         favorites: [],
         volunteering: '',
         registerDate: Timestamp.fromDate(DateTime(2023, 1, 1)),
