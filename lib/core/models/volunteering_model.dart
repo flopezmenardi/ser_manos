@@ -14,6 +14,7 @@ class Volunteering {
   final Timestamp? creationDate;
   final int likes;
   final Timestamp? startDate;
+  final double? cost;
 
   Volunteering({
     required this.id,
@@ -29,6 +30,7 @@ class Volunteering {
     required this.creationDate,
     required this.likes,
     required this.startDate,
+    this.cost,
   });
 
   factory Volunteering.fromDocumentSnapshot(DocumentSnapshot doc) {
@@ -47,6 +49,7 @@ class Volunteering {
       creationDate: data['fechaCreacion'],
       likes: data['likes'] ?? 0,
       startDate: data['fechaInicio'],
+      cost: data['costo']?.toDouble(),
     );
   }
 
@@ -64,6 +67,7 @@ class Volunteering {
       'fechaCreacion': creationDate,
       'likes': likes,
       'fechaInicio': startDate,
+      'costo': cost,
     };
   }
 
@@ -81,6 +85,7 @@ class Volunteering {
     Timestamp? creationDate,
     int? likes,
     Timestamp? startDate,
+    double? cost,
   }) {
     return Volunteering(
       id: id ?? this.id,
@@ -96,6 +101,7 @@ class Volunteering {
       creationDate: creationDate ?? this.creationDate,
       likes: likes ?? this.likes,
       startDate: startDate ?? this.startDate,
+      cost: cost ?? this.cost,
     );
   }
 }

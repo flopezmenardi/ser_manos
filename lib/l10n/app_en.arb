@@ -121,5 +121,8 @@
   "startDateNotAvailable": "Start date not available",
   "cannotOpenGoogleMaps": "Could not open Google Maps",
   "aboutToApplyTo": "You are about to apply to",
-  "firebaseInitFailed": "Firebase init failed"
+  "firebaseInitFailed": "Firebase no pudo inicializarse correctamente.",
+  "cost": "Price:",
+  "creationDate": "Creation date:",
+  "free": "Free"
 }

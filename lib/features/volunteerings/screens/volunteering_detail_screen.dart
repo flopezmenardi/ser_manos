@@ -14,6 +14,7 @@ import 'package:ser_manos/core/design_system/tokens/colors.dart';
 import 'package:ser_manos/core/design_system/tokens/grid.dart';
 import 'package:ser_manos/core/design_system/tokens/typography.dart';
 import 'package:ser_manos/generated/l10n/app_localizations.dart';
+import 'package:ser_manos/core/utils/date_utils.dart' as CustomDateUtils;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../users/controllers/user_controller_impl.dart';
@@ -348,6 +349,40 @@ class VolunteeringDetailScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 16),
                         VacantsIndicator(vacants: volunteering.vacants),
+                        const SizedBox(height: 16),
+                        
+                        // Cost information
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.cost,
+                              style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
+                            ),
+                            Text(
+                              volunteering.cost != null && volunteering.cost! > 0
+                                  ? CustomDateUtils.DateUtils.formatLocalizedCurrency(volunteering.cost, Localizations.localeOf(context))
+                                  : AppLocalizations.of(context)!.free,
+                              style: AppTypography.subtitle1.copyWith(color: AppColors.secondary200),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        
+                        // Creation date information
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.creationDate,
+                              style: AppTypography.subtitle1.copyWith(color: AppColors.neutral100),
+                            ),
+                            Text(
+                              CustomDateUtils.DateUtils.formatLocalizedDate(volunteering.creationDate, Localizations.localeOf(context)),
+                              style: AppTypography.subtitle1.copyWith(color: AppColors.secondary200),
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: 24),
                         Center(child: action),
                         const SizedBox(height: 24),
